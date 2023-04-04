@@ -1,0 +1,11 @@
+{
+  "Version": 1,
+  "Hash": "VVOBkyHWiUClPhHlRzJYa2Cwif7ViIxlqJ+KfXYy4Bg=",
+  "Source": "guacamole",
+  "BasePath": "_content/guacamole",
+  "Mode": "Default",
+  "ManifestType": "Build",
+  "ReferencedProjectsConfiguration": [],
+  "DiscoveryPatterns": [],
+  "Assets": []
+}
