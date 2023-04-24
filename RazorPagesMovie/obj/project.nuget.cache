@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "nfjVHK7jcJIp1+W4YB48WUgtgnUtXEgNvLDOwk16KLtZXRTXZ7zlwwLsEEhXAkmgHt4+21qIeoenWS0GCB+QRQ==",
+  "dgSpecHash": "98aBxaQWn5GvfQ29uCu1YsKRJfdRfJd7g8Xx+4+jSxdMsmgPESYiitLI6TsJ3HsLbUjAN/D6R2LaI5F9MohPpw==",
   "success": true,
-  "projectFilePath": "C:\\Users\\Matheus Lacerda\\source\\repos\\RazorPagesMovie\\RazorPagesMovie\\RazorPagesMovie.csproj",
+  "projectFilePath": "C:\\Users\\Matheus Lacerda\\Desktop\\Minhas coisas\\Git\\legendary-guacamole\\RazorPagesMovie\\RazorPagesMovie.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\Matheus Lacerda\\.nuget\\packages\\azure.core\\1.24.0\\azure.core.1.24.0.nupkg.sha512",
     "C:\\Users\\Matheus Lacerda\\.nuget\\packages\\azure.identity\\1.6.0\\azure.identity.1.6.0.nupkg.sha512",

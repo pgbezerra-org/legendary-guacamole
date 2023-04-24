@@ -10939,11 +10939,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\Matheus Lacerda\\source\\repos\\RazorPagesMovie\\RazorPagesMovie\\RazorPagesMovie.csproj",
+      "projectUniqueName": "C:\\Users\\Matheus Lacerda\\Desktop\\Minhas coisas\\Git\\legendary-guacamole\\RazorPagesMovie\\RazorPagesMovie.csproj",
       "projectName": "RazorPagesMovie",
-      "projectPath": "C:\\Users\\Matheus Lacerda\\source\\repos\\RazorPagesMovie\\RazorPagesMovie\\RazorPagesMovie.csproj",
+      "projectPath": "C:\\Users\\Matheus Lacerda\\Desktop\\Minhas coisas\\Git\\legendary-guacamole\\RazorPagesMovie\\RazorPagesMovie.csproj",
       "packagesPath": "C:\\Users\\Matheus Lacerda\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\Matheus Lacerda\\source\\repos\\RazorPagesMovie\\RazorPagesMovie\\obj\\",
+      "outputPath": "C:\\Users\\Matheus Lacerda\\Desktop\\Minhas coisas\\Git\\legendary-guacamole\\RazorPagesMovie\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
         "C:\\Users\\Matheus Lacerda\\AppData\\Roaming\\NuGet\\NuGet.Config",
