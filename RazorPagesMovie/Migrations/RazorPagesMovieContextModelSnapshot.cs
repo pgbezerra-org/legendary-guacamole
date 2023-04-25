@@ -34,6 +34,9 @@ namespace RazorPagesMovie.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int>("MinimumAge")
+                        .HasColumnType("int");
+
                     b.Property<decimal>("Price")
                         .HasColumnType("decimal(18, 2)");
 
@@ -43,9 +46,6 @@ namespace RazorPagesMovie.Migrations
                     b.Property<string>("Title")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("minimumAge")
-                        .HasColumnType("int");
 
                     b.HasKey("Id");
 

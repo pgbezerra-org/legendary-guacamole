@@ -604,3 +604,16 @@ C:\Users\Matheus Lacerda\Desktop\Minhas coisas\Git\legendary-guacamole\RazorPage
 C:\Users\Matheus Lacerda\Desktop\Minhas coisas\Git\legendary-guacamole\RazorPagesMovie\obj\Debug\net7.0\RazorPagesMovie.pdb
 C:\Users\Matheus Lacerda\Desktop\Minhas coisas\Git\legendary-guacamole\RazorPagesMovie\obj\Debug\net7.0\RazorPagesMovie.genruntimeconfig.cache
 C:\Users\Matheus Lacerda\Desktop\Minhas coisas\Git\legendary-guacamole\RazorPagesMovie\obj\Debug\net7.0\ref\RazorPagesMovie.dll
+C:\Users\Matheus Lacerda\Desktop\Minhas coisas\Git\legendary-guacamole\RazorPagesMovie\bin\Debug\net7.0\mysqlefcore\bin\Debug\net7.0\mysqlefcore.deps.json
+C:\Users\Matheus Lacerda\Desktop\Minhas coisas\Git\legendary-guacamole\RazorPagesMovie\bin\Debug\net7.0\mysqlefcore\bin\Debug\net7.0\mysqlefcore.runtimeconfig.json
+C:\Users\Matheus Lacerda\Desktop\Minhas coisas\Git\legendary-guacamole\RazorPagesMovie\bin\Debug\net7.0\mysqlefcore\obj\mysqlefcore.csproj.nuget.dgspec.json
+C:\Users\Matheus Lacerda\Desktop\Minhas coisas\Git\legendary-guacamole\RazorPagesMovie\bin\Debug\net7.0\mysqlefcore\obj\project.assets.json
+C:\Users\Matheus Lacerda\Desktop\Minhas coisas\Git\legendary-guacamole\RazorPagesMovie\bin\Debug\net7.0\Google.Protobuf.dll
+C:\Users\Matheus Lacerda\Desktop\Minhas coisas\Git\legendary-guacamole\RazorPagesMovie\bin\Debug\net7.0\K4os.Compression.LZ4.dll
+C:\Users\Matheus Lacerda\Desktop\Minhas coisas\Git\legendary-guacamole\RazorPagesMovie\bin\Debug\net7.0\K4os.Compression.LZ4.Streams.dll
+C:\Users\Matheus Lacerda\Desktop\Minhas coisas\Git\legendary-guacamole\RazorPagesMovie\bin\Debug\net7.0\K4os.Hash.xxHash.dll
+C:\Users\Matheus Lacerda\Desktop\Minhas coisas\Git\legendary-guacamole\RazorPagesMovie\bin\Debug\net7.0\MySql.Data.dll
+C:\Users\Matheus Lacerda\Desktop\Minhas coisas\Git\legendary-guacamole\RazorPagesMovie\bin\Debug\net7.0\Ubiety.Dns.Core.dll
+C:\Users\Matheus Lacerda\Desktop\Minhas coisas\Git\legendary-guacamole\RazorPagesMovie\bin\Debug\net7.0\ZstdNet.dll
+C:\Users\Matheus Lacerda\Desktop\Minhas coisas\Git\legendary-guacamole\RazorPagesMovie\bin\Debug\net7.0\MySql.EntityFrameworkCore.dll
+C:\Users\Matheus Lacerda\Desktop\Minhas coisas\Git\legendary-guacamole\RazorPagesMovie\bin\Debug\net7.0\BouncyCastle.Crypto.dll
