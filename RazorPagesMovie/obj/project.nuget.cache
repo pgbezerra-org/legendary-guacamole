@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "dgSpecHash": "pwODi4OzxHZIp0+/84ISySnAS4e/1AZ2Y3unruQeU+ks3fqiJm6dWozoMVTHcMoyEEAjH4Jz5cjMClWt0g2tGQ==",
+  "dgSpecHash": "FXYp2vMIHIqfiZZy+o4bB084uofbqIUOB1CBnoABi6bdL1THZFx/XMmGQnuaCFocpTM6gEHEaooIUc9pRmJJXg==",
   "success": true,
   "projectFilePath": "C:\\Users\\Matheus Lacerda\\Desktop\\Minhas coisas\\Git\\legendary-guacamole\\RazorPagesMovie\\RazorPagesMovie.csproj",
   "expectedPackageFiles": [
@@ -45,7 +45,7 @@
     "C:\\Users\\Matheus Lacerda\\.nuget\\packages\\microsoft.entityframeworkcore.sqlite\\7.0.5\\microsoft.entityframeworkcore.sqlite.7.0.5.nupkg.sha512",
     "C:\\Users\\Matheus Lacerda\\.nuget\\packages\\microsoft.entityframeworkcore.sqlite.core\\7.0.5\\microsoft.entityframeworkcore.sqlite.core.7.0.5.nupkg.sha512",
     "C:\\Users\\Matheus Lacerda\\.nuget\\packages\\microsoft.entityframeworkcore.sqlserver\\7.0.5\\microsoft.entityframeworkcore.sqlserver.7.0.5.nupkg.sha512",
-    "C:\\Users\\Matheus Lacerda\\.nuget\\packages\\microsoft.entityframeworkcore.tools\\7.0.4\\microsoft.entityframeworkcore.tools.7.0.4.nupkg.sha512",
+    "C:\\Users\\Matheus Lacerda\\.nuget\\packages\\microsoft.entityframeworkcore.tools\\7.0.5\\microsoft.entityframeworkcore.tools.7.0.5.nupkg.sha512",
     "C:\\Users\\Matheus Lacerda\\.nuget\\packages\\microsoft.extensions.caching.abstractions\\7.0.0\\microsoft.extensions.caching.abstractions.7.0.0.nupkg.sha512",
     "C:\\Users\\Matheus Lacerda\\.nuget\\packages\\microsoft.extensions.caching.memory\\7.0.0\\microsoft.extensions.caching.memory.7.0.0.nupkg.sha512",
     "C:\\Users\\Matheus Lacerda\\.nuget\\packages\\microsoft.extensions.configuration.abstractions\\7.0.0\\microsoft.extensions.configuration.abstractions.7.0.0.nupkg.sha512",
