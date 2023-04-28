@@ -64,9 +64,17 @@
               "target": "Package",
               "version": "[7.0.6, )"
             },
+            "MySql.Data": {
+              "target": "Package",
+              "version": "[8.0.33, )"
+            },
             "MySql.EntityFrameworkCore": {
               "target": "Package",
               "version": "[5.0.16, )"
+            },
+            "Pomelo.EntityFrameworkCore.MySql": {
+              "target": "Package",
+              "version": "[7.0.0, )"
             }
           },
           "imports": [
@@ -88,7 +96,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.202\\RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.203\\RuntimeIdentifierGraph.json"
         }
       }
     }
