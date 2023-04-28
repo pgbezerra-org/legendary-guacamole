@@ -24,6 +24,16 @@
                 <span asp-validation-for="Company.Country" class="text-danger"></span>
             </div>
             <div class="form-group">
+                <label asp-for="Company.State" class="control-label"></label>
+                <input asp-for="Company.State" class="form-control" />
+                <span asp-validation-for="Company.State" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Company.City" class="control-label"></label>
+                <input asp-for="Company.City" class="form-control" />
+                <span asp-validation-for="Company.City" class="text-danger"></span>
+            </div>
+            <div class="form-group">
                 <input type="submit" value="Create" class="btn btn-primary" />
             </div>
         </form>

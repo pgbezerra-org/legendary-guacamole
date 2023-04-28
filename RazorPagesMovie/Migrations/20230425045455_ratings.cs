@@ -5,7 +5,7 @@
 namespace RazorPagesMovie.Migrations
 {
     /// <inheritdoc />
-    public partial class ratings : Migration
+    public partial class Ratings : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)

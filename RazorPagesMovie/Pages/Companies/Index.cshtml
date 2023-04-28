@@ -19,6 +19,12 @@
             <th>
                 @Html.DisplayNameFor(model => model.Company[0].Country)
             </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Company[0].State)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Company[0].City)
+            </th>
             <th></th>
         </tr>
     </thead>
@@ -30,6 +36,12 @@
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.Country)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.State)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.City)
             </td>
             <td>
                 <a asp-page="./Edit" asp-route-id="@item.Id">Edit</a> |
