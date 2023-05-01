@@ -33,24 +33,33 @@ namespace RazorPagesMovie.Pages.Account {
         }
 
         public async Task<IActionResult> OnPostAsync() {
-
             if (!ModelState.IsValid) {
                 return Page();
             }
 
-            if(Credential.UserName== "admin" && Credential.Password == "password") {
-                var claims = new List<Claim> { new Claim(ClaimTypes.Name, "admin"), new Claim(ClaimTypes.Email, "admin@mywebsite.com") };
+            if (Credential.UserName == "admin" && Credential.Password == "password") {
+                var claims = new List<Claim>
+                {
+            new Claim(ClaimTypes.Name, "admin"),
+            new Claim(ClaimTypes.Email, "admin@mywebsite.com")
+        };
 
-                var identity = new ClaimsIdentity(claims, "MyCookieAuth");
-                ClaimsPrincipal claimsPrincipal=new ClaimsPrincipal(identity);
+                var claimsIdentity = new ClaimsIdentity(claims, "MyCookieAuth");
+                var authProperties = new AuthenticationProperties {
+                    ExpiresUtc = DateTimeOffset.UtcNow.AddMinutes(10),
+                    IsPersistent = false,
+                    IssuedUtc = DateTimeOffset.UtcNow
+                };
 
-                await HttpContext.SignInAsync("MyCookieAuth", claimsPrincipal);
+                await HttpContext.SignInAsync("MyCookieAuth", new ClaimsPrincipal(claimsIdentity), authProperties);
 
                 return RedirectToPage("/Index");
             }
 
             return Page();
         }
+
+
     }
 
     public class Credential {

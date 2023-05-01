@@ -3,28 +3,35 @@ using Microsoft.Extensions.DependencyInjection;
 using MySql.Data.MySqlClient;
 using RazorPagesMovie.Data;
 using RazorPagesMovie.Models;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.Extensions.Hosting;
+using System.Threading;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddRazorPages();
 
+// Add database context
 builder.Services.AddDbContext<RazorPagesMovieContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection") ?? throw new InvalidOperationException("Connection string 'RazorPagesMovieContext' not found.")));
-/*
-//string mysqlcon = builder.Configuration.GetConnectionString("mysqlcon");
-string mysqlcon = "server=(localdb)\\MSSQLLocalDB;user=root;database=RazorPagesMovieContext-bd990c08-ec81-438a-8d77-80da93634a86;port=3306;password=livro";
-MySqlConnection con = new MySqlConnection(mysqlcon);
-con.Open();
-*/
-var app = builder.Build();
-/*
-//Creates some Movies ("seed data.cs")
-using (var scope = app.Services.CreateScope()) {
-    var services = scope.ServiceProvider;
 
-    SeedData.Initialize(services);
-}*/
+// Add authentication
+builder.Services.AddAuthentication("MyCookieAuth")
+    .AddCookie("MyCookieAuth", options => {
+        options.Cookie.Name = "MyCookieAuth";
+        options.Cookie.SameSite = SameSiteMode.Strict;
+        options.Events.OnRedirectToAccessDenied = context => {
+            context.Response.StatusCode = 403;
+            return Task.CompletedTask;
+        };
+        options.Events.OnRedirectToLogin = context => {
+            context.Response.StatusCode = 401;
+            return Task.CompletedTask;
+        };
+    });
+
+var app = builder.Build();
 
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment()) {
@@ -38,6 +45,7 @@ app.UseStaticFiles();
 
 app.UseRouting();
 
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapRazorPages();
