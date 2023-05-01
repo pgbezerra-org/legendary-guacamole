@@ -33,16 +33,17 @@ namespace RazorPagesMovie.Pages.Account {
         }
 
         public async Task<IActionResult> OnPostAsync() {
+
             if (!ModelState.IsValid) {
                 return Page();
             }
 
             if (Credential.UserName == "admin" && Credential.Password == "password") {
-                var claims = new List<Claim>
-                {
-            new Claim(ClaimTypes.Name, "admin"),
-            new Claim(ClaimTypes.Email, "admin@mywebsite.com")
-        };
+
+                var claims = new List<Claim> {
+                    new Claim(ClaimTypes.Name, "admin"),
+                    new Claim(ClaimTypes.Email, "admin@mywebsite.com")
+                };
 
                 var claimsIdentity = new ClaimsIdentity(claims, "MyCookieAuth");
                 var authProperties = new AuthenticationProperties {
@@ -58,8 +59,6 @@ namespace RazorPagesMovie.Pages.Account {
 
             return Page();
         }
-
-
     }
 
     public class Credential {
