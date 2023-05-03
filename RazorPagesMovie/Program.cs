@@ -14,7 +14,7 @@ builder.Services.AddRazorPages();
 
 // Add database context
 builder.Services.AddDbContext<RazorPagesMovieContext>(options =>
-    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection") ?? throw new InvalidOperationException("Connection string 'RazorPagesMovieContext' not found.")));
+    options.UseSqlServer(builder.Configuration.GetConnectionString("MSSQL") ?? throw new InvalidOperationException("Connection string 'MSSQL' not found.")));
 
 // Add authentication
 builder.Services.AddAuthentication("MyCookieAuth")

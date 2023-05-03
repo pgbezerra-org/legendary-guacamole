@@ -16,26 +16,6 @@ build_property.GenerateRazorMetadataSourceChecksumAttributes =
 build_property.MSBuildProjectDirectory = C:\Users\Matheus Lacerda\Desktop\Minhas coisas\Git\legendary-guacamole\RazorPagesMovie
 build_property._RazorSourceGeneratorDebug = 
 
-[C:/Users/Matheus Lacerda/Desktop/Minhas coisas/Git/legendary-guacamole/RazorPagesMovie/Models/Create.cshtml]
-build_metadata.AdditionalFiles.TargetPath = TW9kZWxzXENyZWF0ZS5jc2h0bWw=
-build_metadata.AdditionalFiles.CssScope = 
-
-[C:/Users/Matheus Lacerda/Desktop/Minhas coisas/Git/legendary-guacamole/RazorPagesMovie/Models/Delete.cshtml]
-build_metadata.AdditionalFiles.TargetPath = TW9kZWxzXERlbGV0ZS5jc2h0bWw=
-build_metadata.AdditionalFiles.CssScope = 
-
-[C:/Users/Matheus Lacerda/Desktop/Minhas coisas/Git/legendary-guacamole/RazorPagesMovie/Models/Details.cshtml]
-build_metadata.AdditionalFiles.TargetPath = TW9kZWxzXERldGFpbHMuY3NodG1s
-build_metadata.AdditionalFiles.CssScope = 
-
-[C:/Users/Matheus Lacerda/Desktop/Minhas coisas/Git/legendary-guacamole/RazorPagesMovie/Models/Edit.cshtml]
-build_metadata.AdditionalFiles.TargetPath = TW9kZWxzXEVkaXQuY3NodG1s
-build_metadata.AdditionalFiles.CssScope = 
-
-[C:/Users/Matheus Lacerda/Desktop/Minhas coisas/Git/legendary-guacamole/RazorPagesMovie/Models/Index.cshtml]
-build_metadata.AdditionalFiles.TargetPath = TW9kZWxzXEluZGV4LmNzaHRtbA==
-build_metadata.AdditionalFiles.CssScope = 
-
 [C:/Users/Matheus Lacerda/Desktop/Minhas coisas/Git/legendary-guacamole/RazorPagesMovie/Pages/Account/Login.cshtml]
 build_metadata.AdditionalFiles.TargetPath = UGFnZXNcQWNjb3VudFxMb2dpbi5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
@@ -66,26 +46,6 @@ build_metadata.AdditionalFiles.CssScope =
 
 [C:/Users/Matheus Lacerda/Desktop/Minhas coisas/Git/legendary-guacamole/RazorPagesMovie/Pages/Index.cshtml]
 build_metadata.AdditionalFiles.TargetPath = UGFnZXNcSW5kZXguY3NodG1s
-build_metadata.AdditionalFiles.CssScope = 
-
-[C:/Users/Matheus Lacerda/Desktop/Minhas coisas/Git/legendary-guacamole/RazorPagesMovie/Pages/Movies/Create.cshtml]
-build_metadata.AdditionalFiles.TargetPath = UGFnZXNcTW92aWVzXENyZWF0ZS5jc2h0bWw=
-build_metadata.AdditionalFiles.CssScope = 
-
-[C:/Users/Matheus Lacerda/Desktop/Minhas coisas/Git/legendary-guacamole/RazorPagesMovie/Pages/Movies/Delete.cshtml]
-build_metadata.AdditionalFiles.TargetPath = UGFnZXNcTW92aWVzXERlbGV0ZS5jc2h0bWw=
-build_metadata.AdditionalFiles.CssScope = 
-
-[C:/Users/Matheus Lacerda/Desktop/Minhas coisas/Git/legendary-guacamole/RazorPagesMovie/Pages/Movies/Details.cshtml]
-build_metadata.AdditionalFiles.TargetPath = UGFnZXNcTW92aWVzXERldGFpbHMuY3NodG1s
-build_metadata.AdditionalFiles.CssScope = 
-
-[C:/Users/Matheus Lacerda/Desktop/Minhas coisas/Git/legendary-guacamole/RazorPagesMovie/Pages/Movies/Edit.cshtml]
-build_metadata.AdditionalFiles.TargetPath = UGFnZXNcTW92aWVzXEVkaXQuY3NodG1s
-build_metadata.AdditionalFiles.CssScope = 
-
-[C:/Users/Matheus Lacerda/Desktop/Minhas coisas/Git/legendary-guacamole/RazorPagesMovie/Pages/Movies/Index.cshtml]
-build_metadata.AdditionalFiles.TargetPath = UGFnZXNcTW92aWVzXEluZGV4LmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
 [C:/Users/Matheus Lacerda/Desktop/Minhas coisas/Git/legendary-guacamole/RazorPagesMovie/Pages/Privacy.cshtml]
