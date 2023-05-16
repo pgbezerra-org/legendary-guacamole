@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.5.33627.172
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Guacamole", "Guacamole.csproj", "{73B20D7E-E53A-47A6-AAE0-395D05EAA935}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RazorPagesMovie", "RazorPagesMovie.csproj", "{E1DD495D-4131-4BE5-898E-2E5711A34557}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{73B20D7E-E53A-47A6-AAE0-395D05EAA935}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{73B20D7E-E53A-47A6-AAE0-395D05EAA935}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{73B20D7E-E53A-47A6-AAE0-395D05EAA935}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{73B20D7E-E53A-47A6-AAE0-395D05EAA935}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E1DD495D-4131-4BE5-898E-2E5711A34557}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E1DD495D-4131-4BE5-898E-2E5711A34557}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E1DD495D-4131-4BE5-898E-2E5711A34557}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E1DD495D-4131-4BE5-898E-2E5711A34557}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {718DF511-ED35-40EF-A232-38AF84898304}
+	EndGlobalSection
+EndGlobal
