@@ -14,6 +14,6 @@ namespace RazorPagesMovie.Data
         {
         }
 
-        public DbSet<RazorPagesMovie.Models.Company> Company { get; set; } = default!;
+        public DbSet<Company> Company { get; set; } = default!;
     }
 }

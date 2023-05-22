@@ -1,11 +1,10 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using Microsoft.AspNetCore.Identity;
 
 namespace RazorPagesMovie.Models;
 
-public class Company {
-
-    public int Id { get; set; }
+public class Company : IdentityUser {
 
     [StringLength(20, MinimumLength = 3)]
     [Required]
@@ -22,4 +21,7 @@ public class Company {
     [StringLength(20, MinimumLength = 3)]
     [Required]
     public string City { get; set; } = string.Empty;
+
+    [Required]
+    public string Salt { get; set; } = string.Empty;
 }
