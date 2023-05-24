@@ -21,7 +21,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 
-namespace RazorPagesMovie.Pages.Account {
+namespace webserver.Pages.Account {
 
     public class LoginModel : PageModel {
 

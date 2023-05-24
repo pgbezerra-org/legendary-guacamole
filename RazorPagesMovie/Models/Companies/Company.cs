@@ -1,15 +1,10 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Microsoft.AspNetCore.Identity;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace RazorPagesMovie.Models;
+namespace webserver.Models;
 
-public class Company {
-
-    public int Id { get; set; }
-
-    [StringLength(20, MinimumLength = 3)]
-    [Required]
-    public string Name { get; set; } = string.Empty;
+public class Company : IdentityUser {
 
     [StringLength(20, MinimumLength = 3)]
     [Required]
