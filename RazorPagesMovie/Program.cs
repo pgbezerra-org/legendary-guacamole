@@ -1,16 +1,18 @@
-﻿using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.DependencyInjection;
+﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using MySql.Data.MySqlClient;
 using webserver.Data;
 using webserver.Models;
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.Extensions.Hosting;
-using System.Threading;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddRazorPages();
+
+//removable? check it out!
+/*builder.Services.AddIdentity<Company, IdentityRole>()
+    .AddEntityFrameworkStores<webserverContext>()
+    .AddDefaultTokenProviders();*/
 
 // Add database context
 builder.Services.AddDbContext<webserverContext>(options =>
