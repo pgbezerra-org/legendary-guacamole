@@ -27,7 +27,6 @@
 
   <ItemGroup>
     <Folder Include="Migrations\" />
-    <Folder Include="Pages\Account\" />
   </ItemGroup>
 
 </Project>
