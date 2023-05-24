@@ -11,24 +11,19 @@ namespace webserver.Pages.Account {
     public class RegisterModel : PageModel {
 
         [BindProperty]
-        public RegisterInputModel RegisterInput { get; set; }
+        public RegisterInputModel RegisterInput { get; set; } = new RegisterInputModel();
 
         private readonly UserManager<Company> _userManager;
         private readonly SignInManager<Company> _signInManager;
-        private readonly ILogger<RegisterModel> _logger;
-        private readonly webserverContext _context;
 
-        public RegisterModel(UserManager<Company> userManager, SignInManager<Company> signInManager, webserverContext context, ILogger<RegisterModel> logger) {
+        public RegisterModel(UserManager<Company> userManager, SignInManager<Company> signInManager) {
             _userManager = userManager;
             _signInManager = signInManager;
-            _logger = logger;
-            _context = context;
         }
 
         public void OnGet() {
             // Initialization or any other logic when the page is loaded
         }
-        //dotnet dev-certs https --trust
 
         //public IActionResult OnPost() {
         public async Task<IActionResult> OnPostAsync() {
