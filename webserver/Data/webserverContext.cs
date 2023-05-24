@@ -1,19 +1,22 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
-using RazorPagesMovie.Models;
+using Microsoft.AspNetCore.Identity;
+using webserver.Models;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 
 namespace webserver.Data
 {
-    public class webserverContext : DbContext
-    {
+    public class webserverContext : IdentityDbContext<Company> {
+
         public webserverContext (DbContextOptions<webserverContext> options)
             : base(options)
         {
+
         }
 
-        public DbSet<Company> Company { get; set; } = default!;
+        public DbSet<webserver.Models.Company> Company { get; set; } = default!;
     }
 }

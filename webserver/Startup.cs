@@ -10,7 +10,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 
-namespace RazorPagesMovie {
+namespace webserver {
 
     public class Startup {
 
