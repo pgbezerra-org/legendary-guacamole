@@ -54,7 +54,7 @@ namespace webserver.Pages.Account {
                 await _signInManager.SignInAsync(company, isPersistent: false);
 
                 // Redirect to a success page or the desired destination
-                return RedirectToPage("/Success");
+                return RedirectToPage("/Privacy");
             } else {
                 foreach (var error in result.Errors) {
                     ModelState.AddModelError(string.Empty, error.Description);
