@@ -15,8 +15,10 @@ namespace RazorPagesMovie.Pages.Account {
         public Credential Credential { get; set; } = new Credential();
 
         private readonly SignInManager<Company> _signInManager;
+        private readonly UserManager<Company> _userManager;
 
-        public LoginModel(SignInManager<Company> signInManager) {
+        public LoginModel(SignInManager<Company> signInManager, UserManager<Company> userManager) {
+            _userManager = userManager;
             _signInManager = signInManager;
         }
 
@@ -30,22 +32,44 @@ namespace RazorPagesMovie.Pages.Account {
                 return Page();
             }*/
 
-            var result = await _signInManager.PasswordSignInAsync(Credential.Email, Credential.Password, isPersistent: true, lockoutOnFailure: false);
+            var user = await _userManager.FindByEmailAsync(Credential.Email);
+
+            if (user == null) {
+                ModelState.AddModelError(string.Empty, "User not registered!");
+                return Page();
+            }
+
+            //Just to stop with the compiler warnings
+            // Ensure the user properties are not null before accessing them
+            if (user.PasswordHash is null || user.UserName is null || user.Email is null) {
+                // Handle the case where one or more properties are null
+                return Page();
+            }
+
+            var passwordHasher = new PasswordHasher<Company>();
+            var passwordResult = passwordHasher.VerifyHashedPassword(user, user.PasswordHash, Credential.Password);
+
+            if (passwordResult != PasswordVerificationResult.Success) {
+                ModelState.AddModelError(string.Empty, "Wrong Email or Password");
+                return Page();
+            }
+
+            var result = await _signInManager.PasswordSignInAsync(user, Credential.Password, isPersistent: true, lockoutOnFailure: false);
 
             if (!result.Succeeded) {
-                ModelState.AddModelError(string.Empty, "Invalid login attempt.");
+                ModelState.AddModelError(string.Empty, "Invalid login attempt. "+result.ToString());
                 return Page();
             }
 
             var claims = new List<Claim> {
-                    new Claim(ClaimTypes.Name, "admin"),
-                    new Claim(ClaimTypes.Email, "admin@mywebsite.com")
+                    new Claim(ClaimTypes.Name, user.UserName),
+                    new Claim(ClaimTypes.Email, user.Email)
                 };
 
             var claimsIdentity = new ClaimsIdentity(claims, "MyCookieAuth");
             var authProperties = new AuthenticationProperties {
                 ExpiresUtc = DateTimeOffset.UtcNow.AddMinutes(10),
-                IsPersistent = false,
+                IsPersistent = true,
                 IssuedUtc = DateTimeOffset.UtcNow
             };
 
