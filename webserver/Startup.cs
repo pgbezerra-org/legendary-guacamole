@@ -22,6 +22,15 @@ namespace webserver {
 
         public void ConfigureServices(IServiceCollection services) {
 
+            services.AddIdentity<Company, IdentityRole>()
+    .AddEntityFrameworkStores<webserverContext>()
+    .AddDefaultTokenProviders();
+
+            services.AddMvc();
+
+            services.AddDbContext<webserverContext>(options =>
+    options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
+
             services.AddAuthentication().AddCookie("MyCookieAuth", options => {
                 options.Cookie.Name = "MyCookieAuth";
             });
