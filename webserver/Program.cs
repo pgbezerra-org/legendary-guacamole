@@ -9,14 +9,13 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 builder.Services.AddRazorPages();
 
-//removable? check it out!
-/*builder.Services.AddIdentity<Company, IdentityRole>()
-    .AddEntityFrameworkStores<webserverContext>()
-    .AddDefaultTokenProviders();*/
-
 // Add database context
 builder.Services.AddDbContext<webserverContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection") ?? throw new InvalidOperationException("Connection string 'RazorPagesMovieContext' not found.")));
+
+builder.Services.AddIdentity<Company, IdentityRole>()
+    .AddEntityFrameworkStores<webserverContext>()
+    .AddDefaultTokenProviders();
 
 // Add authentication
 builder.Services.AddAuthentication("MyCookieAuth")

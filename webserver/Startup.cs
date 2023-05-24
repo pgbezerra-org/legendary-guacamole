@@ -19,6 +19,8 @@ namespace webserver {
     .AddEntityFrameworkStores<webserverContext>()
     .AddDefaultTokenProviders();
 
+            services.AddMvc();
+
             services.AddDbContext<webserverContext>(options =>
     options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
 
