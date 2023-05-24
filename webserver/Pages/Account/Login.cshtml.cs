@@ -3,6 +3,9 @@ using System.Security.Claims;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using System.Threading.Tasks;
+using Microsoft.AspNetCore.Identity;
+using webserver.Models;
 
 namespace RazorPagesMovie.Pages.Account {
 
@@ -11,45 +14,55 @@ namespace RazorPagesMovie.Pages.Account {
         [BindProperty]
         public Credential Credential { get; set; } = new Credential();
 
+        private readonly SignInManager<Company> _signInManager;
+
+        public LoginModel(SignInManager<Company> signInManager) {
+            _signInManager = signInManager;
+        }
+
         public void OnGet() {
             
         }
 
         public async Task<IActionResult> OnPostAsync() {
 
-            if (!ModelState.IsValid) {
+            /*if (!ModelState.IsValid) {
+                return Page();
+            }*/
+
+            var result = await _signInManager.PasswordSignInAsync(Credential.Email, Credential.Password, isPersistent: true, lockoutOnFailure: false);
+
+            if (!result.Succeeded) {
+                ModelState.AddModelError(string.Empty, "Invalid login attempt.");
                 return Page();
             }
 
-            if (Credential.UserName == "admin" && Credential.Password == "password") {
-
-                var claims = new List<Claim> {
+            var claims = new List<Claim> {
                     new Claim(ClaimTypes.Name, "admin"),
                     new Claim(ClaimTypes.Email, "admin@mywebsite.com")
                 };
 
-                var claimsIdentity = new ClaimsIdentity(claims, "MyCookieAuth");
-                var authProperties = new AuthenticationProperties {
-                    ExpiresUtc = DateTimeOffset.UtcNow.AddMinutes(10),
-                    IsPersistent = false,
-                    IssuedUtc = DateTimeOffset.UtcNow
-                };
+            var claimsIdentity = new ClaimsIdentity(claims, "MyCookieAuth");
+            var authProperties = new AuthenticationProperties {
+                ExpiresUtc = DateTimeOffset.UtcNow.AddMinutes(10),
+                IsPersistent = false,
+                IssuedUtc = DateTimeOffset.UtcNow
+            };
 
-                await HttpContext.SignInAsync("MyCookieAuth", new ClaimsPrincipal(claimsIdentity), authProperties);
+            await HttpContext.SignInAsync("MyCookieAuth", new ClaimsPrincipal(claimsIdentity), authProperties);
 
-                return RedirectToPage("/Index");
-            }
-
-            return Page();
+            // Redirect to the desired page after successful login
+            return RedirectToPage("/Privacy");
         }
     }
 
     public class Credential {
 
-        [System.ComponentModel.DataAnnotations.Required]
-        public string UserName { get; set; } = string.Empty;
+        [Required]
+        [EmailAddress]
+        public string Email { get; set; } = string.Empty;
 
-        [System.ComponentModel.DataAnnotations.Required]
+        [Required]
         [DataType(DataType.Password)]
         public string Password { get; set; } = string.Empty;
 
