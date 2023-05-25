@@ -1,8 +1,9 @@
 ﻿using Microsoft.AspNetCore.Identity;
-using Microsoft.EntityFrameworkCore;
-using MySql.Data.MySqlClient;
 using webserver.Data;
 using webserver.Models;
+using Microsoft.EntityFrameworkCore;
+
+using MySql.Data.MySqlClient;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -11,7 +12,7 @@ builder.Services.AddRazorPages();
 
 // Add database context
 builder.Services.AddDbContext<webserverContext>(options =>
-    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection") ?? throw new InvalidOperationException("Connection string 'RazorPagesMovieContext' not found.")));
+    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection") ?? throw new InvalidOperationException("Connection string 'Guacamole' not found.")));
 
 builder.Services.AddIdentity<Company, IdentityRole>()
     .AddEntityFrameworkStores<webserverContext>()
