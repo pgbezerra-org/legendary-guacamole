@@ -1,4 +1,9 @@
-﻿namespace webserver {
+﻿using Microsoft.AspNetCore.Identity;
+using webserver.Data;
+using webserver.Models;
+using Microsoft.EntityFrameworkCore;
+
+namespace webserver {
 
     public class Startup {
 
@@ -9,6 +14,15 @@
         }
 
         public void ConfigureServices(IServiceCollection services) {
+
+            services.AddIdentity<Company, IdentityRole>()
+    .AddEntityFrameworkStores<webserverContext>()
+    .AddDefaultTokenProviders();
+
+            services.AddMvc();
+
+            services.AddDbContext<webserverContext>(options =>
+    options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
 
             services.AddAuthentication().AddCookie("MyCookieAuth", options => {
                 options.Cookie.Name = "MyCookieAuth";
@@ -40,5 +54,6 @@
                 endpoints.MapRazorPages();
             });
         }
+
     }
 }
