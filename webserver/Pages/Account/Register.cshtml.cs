@@ -5,6 +5,8 @@ using System.ComponentModel.DataAnnotations;
 using webserver.Data;
 using webserver.Models;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Authentication;
+using System.Security.Claims;
 
 namespace webserver.Pages.Account {
 
@@ -42,21 +44,38 @@ namespace webserver.Pages.Account {
                 Country = RegisterInput.Country
             };
 
-            var result = await _userManager.CreateAsync(company, RegisterInput.Password);
+            var createResult = await _userManager.CreateAsync(company, RegisterInput.Password);
 
-            if (result.Succeeded) {
-                // Optionally, you can sign in the user after successful registration
-                await _signInManager.SignInAsync(company, isPersistent: false);
+            if (!createResult.Succeeded) {
 
-                // Redirect to a success page or the desired destination
-                return RedirectToPage("/Privacy");
-            } else {
-                foreach (var error in result.Errors) {
+                foreach (var error in createResult.Errors) {
                     ModelState.AddModelError(string.Empty, error.Description);
                 }
-
-                return Page();
+                return RedirectToPage("/Privacy");
             }
+
+            var signInResult = await _signInManager.PasswordSignInAsync(company, RegisterInput.Password, isPersistent: true, lockoutOnFailure: false);
+
+            if (!signInResult.Succeeded) {
+                ModelState.AddModelError(string.Empty, "Invalid login attempt. " + createResult.ToString());
+            }
+
+            var claims = new List<Claim> {
+                    new Claim(RegisterInput.Name, company.UserName),
+                    new Claim(RegisterInput.Name, company.Email)
+                };
+
+            var claimsIdentity = new ClaimsIdentity(claims, LoginModel.loginCookie);
+            var authProperties = new AuthenticationProperties {
+                ExpiresUtc = DateTimeOffset.UtcNow.AddMinutes(10),
+                IsPersistent = true,
+                IssuedUtc = DateTimeOffset.UtcNow
+            };
+
+            await HttpContext.SignInAsync(LoginModel.loginCookie, new ClaimsPrincipal(claimsIdentity), authProperties);
+
+            // Redirect to the desired page after successful login
+            return RedirectToPage("/Privacy");
         }
 
 

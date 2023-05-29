@@ -2,6 +2,7 @@
 using webserver.Data;
 using webserver.Models;
 using Microsoft.EntityFrameworkCore;
+using webserver.Pages.Account;
 
 namespace webserver {
 
@@ -24,8 +25,8 @@ namespace webserver {
             services.AddDbContext<webserverContext>(options =>
     options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
 
-            services.AddAuthentication().AddCookie("MyCookieAuth", options => {
-                options.Cookie.Name = "MyCookieAuth";
+            services.AddAuthentication().AddCookie(LoginModel.loginCookie, options => {
+                options.Cookie.Name = LoginModel.loginCookie;
             });
 
             services.AddRazorPages();
@@ -54,6 +55,5 @@ namespace webserver {
                 endpoints.MapRazorPages();
             });
         }
-
     }
 }
