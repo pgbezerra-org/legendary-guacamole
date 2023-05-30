@@ -11,7 +11,7 @@ namespace webserver.Pages.Account {
 
     public class LoginModel : PageModel {
 
-        public static string loginCookie = "LogInIdentity";
+        public readonly static string loginCookie = "LogInIdentity";
 
         [BindProperty]
         public Credential Credential { get; set; } = new Credential();
