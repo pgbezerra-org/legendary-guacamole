@@ -1,5 +1,10 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Identity;
 using webserver.Data;
+using webserver.Models;
+using Microsoft.EntityFrameworkCore;
+
+using MySql.Data.MySqlClient;
+using webserver.Pages.Account;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -10,10 +15,14 @@ builder.Services.AddRazorPages();
 builder.Services.AddDbContext<webserverContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection") ?? throw new InvalidOperationException("Connection string 'Guacamole' not found.")));
 
+builder.Services.AddIdentity<Company, IdentityRole>()
+    .AddEntityFrameworkStores<webserverContext>()
+    .AddDefaultTokenProviders();
+
 // Add authentication
-builder.Services.AddAuthentication("MyCookieAuth")
-    .AddCookie("MyCookieAuth", options => {
-        options.Cookie.Name = "MyCookieAuth";
+builder.Services.AddAuthentication(LoginModel.loginCookie)
+    .AddCookie(LoginModel.loginCookie, options => {
+        options.Cookie.Name = LoginModel.loginCookie;
         options.Cookie.SameSite = SameSiteMode.Strict;
         options.Events.OnRedirectToAccessDenied = context => {
             context.Response.StatusCode = 403;

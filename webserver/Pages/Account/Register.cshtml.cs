@@ -1,18 +1,12 @@
-using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using System.ComponentModel.DataAnnotations;
 using webserver.Data;
 using webserver.Models;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.AspNetCore.HttpsPolicy;
-using Microsoft.AspNetCore.Authentication.Cookies;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading;
 using Microsoft.AspNetCore.Authentication;
+using System.Security.Claims;
 
 namespace webserver.Pages.Account {
 
@@ -21,64 +15,67 @@ namespace webserver.Pages.Account {
         [BindProperty]
         public RegisterInputModel RegisterInput { get; set; } = new RegisterInputModel();
 
-        private readonly UserManager<IdentityUser> _userManager;
-        private readonly SignInManager<IdentityUser> _signInManager;
-        private readonly ILogger<RegisterModel> _logger;
-        private readonly webserverContext _context;
+        private readonly UserManager<Company> _userManager;
+        private readonly SignInManager<Company> _signInManager;
 
-        public RegisterModel(UserManager<IdentityUser> userManager, SignInManager<IdentityUser> signInManager, webserverContext context, ILogger<RegisterModel> logger) {
+        public RegisterModel(UserManager<Company> userManager, SignInManager<Company> signInManager) {
             _userManager = userManager;
             _signInManager = signInManager;
-            _logger = logger;
-            _context = context;
         }
 
         public void OnGet() {
+            // Initialization or any other logic when the page is loaded
         }
 
+        //public IActionResult OnPost() {
         public async Task<IActionResult> OnPostAsync() {
+
             /*if (!ModelState.IsValid) {
                 return Page();
             }*/
 
             // Create a new user based on the registration input
-            var user = new Company {
+            var company = new Company {
                 UserName = RegisterInput.Name,
                 Email = RegisterInput.Email,
-                PhoneNumber = RegisterInput.Phone,
+                PhoneNumber=RegisterInput.PhoneNumber,
                 City = RegisterInput.City,
                 State = RegisterInput.State,
                 Country = RegisterInput.Country
             };
 
-            var passwordHasher = new PasswordHasher<Company>();
+            var createResult = await _userManager.CreateAsync(company, RegisterInput.Password);
 
-            var salt = Guid.NewGuid().ToString();
-            var hashedPassword = passwordHasher.HashPassword(user, salt + RegisterInput.Password);
+            if (!createResult.Succeeded) {
 
-            user.Salt = salt;
-            user.PasswordHash = hashedPassword;
-
-            _context.Company.Add(user);
-
-            var result = await _userManager.CreateAsync(user, RegisterInput.Password);
-
-            if (result.Succeeded) {
-                // Optionally, you can sign in the user after successful registration
-                await _signInManager.SignInAsync(user, isPersistent: false);
-
-                // Redirect to a success page or the desired destination
-                Console.WriteLine("User SignUp successfull");
-                return RedirectToPage("/Success");
-            } else {
-
-                foreach (var error in result.Errors) {
+                foreach (var error in createResult.Errors) {
                     ModelState.AddModelError(string.Empty, error.Description);
                 }
-
-                Console.WriteLine("SignUp fail");
-                return Page();
+                return RedirectToPage("/Privacy");
             }
+
+            var signInResult = await _signInManager.PasswordSignInAsync(company, RegisterInput.Password, isPersistent: true, lockoutOnFailure: false);
+
+            if (!signInResult.Succeeded) {
+                ModelState.AddModelError(string.Empty, "Invalid login attempt. " + createResult.ToString());
+            }
+
+            var claims = new List<Claim> {
+                    new Claim(RegisterInput.Name, company.UserName),
+                    new Claim(RegisterInput.Name, company.Email)
+                };
+
+            var claimsIdentity = new ClaimsIdentity(claims, LoginModel.loginCookie);
+            var authProperties = new AuthenticationProperties {
+                ExpiresUtc = DateTimeOffset.UtcNow.AddMinutes(10),
+                IsPersistent = true,
+                IssuedUtc = DateTimeOffset.UtcNow
+            };
+
+            await HttpContext.SignInAsync(LoginModel.loginCookie, new ClaimsPrincipal(claimsIdentity), authProperties);
+
+            // Redirect to the desired page after successful login
+            return RedirectToPage("/Privacy");
         }
 
 
@@ -92,9 +89,6 @@ namespace webserver.Pages.Account {
             public string Email { get; set; } = string.Empty;
 
             [Required]
-            [Phone] public string Phone { get; set; } = string.Empty;
-
-            [Required]
             [DataType(DataType.Password)]
             public string Password { get; set; } = string.Empty;
 
@@ -102,6 +96,10 @@ namespace webserver.Pages.Account {
             [DataType(DataType.Password)]
             [Compare("Password", ErrorMessage = "The password and confirmation password do not match.")]
             public string ConfirmPassword { get; set; } = string.Empty;
+
+            [Required]
+            [Phone]
+            public string PhoneNumber { get; set; } = string.Empty;
 
             [Required]
             public string City { get; set; } = string.Empty;
@@ -114,4 +112,3 @@ namespace webserver.Pages.Account {
         }
     }
 }
-
