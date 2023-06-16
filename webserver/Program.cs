@@ -1,6 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using webserver.Data;
-using webserver;
 using Pomelo.EntityFrameworkCore.MySql.Infrastructure;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -8,14 +7,14 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 builder.Services.AddRazorPages();
 
-// Add database context
-//builder.Services.AddDbContext<webserverContext>(options =>
-    //options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection") ?? throw new InvalidOperationException("Connection string 'Guacamole' not found.")));
-
 builder.Services.AddDbContext<webserverContext>((serviceProvider, options) =>
-    options.UseMySql(builder.Configuration.GetConnectionString("mysqlcon"),
-    mysqlOptions => mysqlOptions.ServerVersion(new Version(8, 0, 26), ServerType.MySql)));
-    
+    options.UseMySql(
+        builder.Configuration.GetConnectionString("mysqlcon"),
+        new MySqlServerVersion(new Version(8, 0, 26))
+    )
+);
+
+
 // Add authentication
 builder.Services.AddAuthentication("MyCookieAuth")
     .AddCookie("MyCookieAuth", options => {
