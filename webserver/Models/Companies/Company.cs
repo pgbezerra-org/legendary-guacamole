@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace webserver.Models;
 
-public class Company : IdentityUser {
+public class Company {
 
     [StringLength(20, MinimumLength = 3)]
     [Required]
