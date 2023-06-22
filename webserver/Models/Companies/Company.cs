@@ -16,4 +16,5 @@ public class Company : IdentityUser {
     [StringLength(20, MinimumLength = 3)]
     [Required]
     public string City { get; set; } = string.Empty;
+
 }
