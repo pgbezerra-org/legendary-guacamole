@@ -9,5 +9,5 @@ public class RealEstate {
 
     // Foreign key to associate the RealEstate with a Company
     public int CompanyId { get; set; }
-    public Company Company { get; set; }
+    //public Company Company { get; set; }
 }

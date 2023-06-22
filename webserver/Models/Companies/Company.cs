@@ -1,9 +1,14 @@
-﻿using Microsoft.AspNetCore.Identity;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 
 namespace webserver.Models;
 
 public class Company {
+
+    public Company() {
+
+        RealEstates = new List<RealEstate> { new RealEstate() };
+
+    }
 
     [StringLength(20, MinimumLength = 3)]
     [Required]
