@@ -17,4 +17,6 @@ public class Company : IdentityUser {
     [Required]
     public string City { get; set; } = string.Empty;
 
+    // Navigation property for the related real estates
+    public List<RealEstate> RealEstates { get; set; }
 }
