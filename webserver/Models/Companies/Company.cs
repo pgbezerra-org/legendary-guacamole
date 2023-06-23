@@ -1,8 +1,9 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Microsoft.AspNetCore.Identity;
+using System.ComponentModel.DataAnnotations;
 
 namespace webserver.Models;
 
-public class Company {
+public class Company : IdentityUser {
 
     public Company() {
 

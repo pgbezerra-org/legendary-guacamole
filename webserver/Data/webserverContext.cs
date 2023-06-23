@@ -14,6 +14,10 @@ namespace webserver.Data
 
         }
 
-        public DbSet<webserver.Models.Company> Company { get; set; } = default!;
+        public DbSet<Company> Company { get; set; } = default!;
+
+        public DbSet<Client> Clients { get; set; } = default!;
+
+        public DbSet<RealEstate> RealEstates { get; set; } = default!;
     }
 }
