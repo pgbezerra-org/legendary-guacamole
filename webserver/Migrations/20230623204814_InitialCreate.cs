@@ -31,6 +31,7 @@ namespace webserver.Migrations
                 {
                     Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     Discriminator = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Occupation = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Country = table.Column<string>(type: "nvarchar(20)", maxLength: 20, nullable: true),
                     State = table.Column<string>(type: "nvarchar(20)", maxLength: 20, nullable: true),
                     City = table.Column<string>(type: "nvarchar(20)", maxLength: 20, nullable: true),
@@ -161,7 +162,7 @@ namespace webserver.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "RealEstate",
+                name: "RealEstates",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
@@ -174,9 +175,9 @@ namespace webserver.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_RealEstate", x => x.Id);
+                    table.PrimaryKey("PK_RealEstates", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_RealEstate_AspNetUsers_CompanyId1",
+                        name: "FK_RealEstates_AspNetUsers_CompanyId1",
                         column: x => x.CompanyId1,
                         principalTable: "AspNetUsers",
                         principalColumn: "Id");
@@ -222,8 +223,8 @@ namespace webserver.Migrations
                 filter: "[NormalizedUserName] IS NOT NULL");
 
             migrationBuilder.CreateIndex(
-                name: "IX_RealEstate_CompanyId1",
-                table: "RealEstate",
+                name: "IX_RealEstates_CompanyId1",
+                table: "RealEstates",
                 column: "CompanyId1");
         }
 
@@ -246,7 +247,7 @@ namespace webserver.Migrations
                 name: "AspNetUserTokens");
 
             migrationBuilder.DropTable(
-                name: "RealEstate");
+                name: "RealEstates");
 
             migrationBuilder.DropTable(
                 name: "AspNetRoles");

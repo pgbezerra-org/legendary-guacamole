@@ -12,7 +12,7 @@ using webserver.Data;
 namespace webserver.Migrations
 {
     [DbContext(typeof(webserverContext))]
-    [Migration("20230623192020_InitialCreate")]
+    [Migration("20230623204814_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -260,7 +260,18 @@ namespace webserver.Migrations
 
                     b.HasIndex("CompanyId1");
 
-                    b.ToTable("RealEstate");
+                    b.ToTable("RealEstates");
+                });
+
+            modelBuilder.Entity("webserver.Models.Client", b =>
+                {
+                    b.HasBaseType("Microsoft.AspNetCore.Identity.IdentityUser");
+
+                    b.Property<string>("Occupation")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasDiscriminator().HasValue("Client");
                 });
 
             modelBuilder.Entity("webserver.Models.Company", b =>
