@@ -2,6 +2,7 @@
 using webserver.Data;
 using webserver.Models;
 using Microsoft.EntityFrameworkCore;
+using MySql.Data.EntityFrameworkCore.Extensions;
 
 namespace webserver {
 
@@ -23,6 +24,10 @@ namespace webserver {
 
             services.AddDbContext<webserverContext>(options =>
     options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
+
+            services.AddDbContext<webserverContext>(options =>
+    options.UseMySql(Configuration.GetConnectionString("MyConnection"),
+        new MySqlServerVersion(new Version(8, 0, 26))));
 
             services.AddAuthentication().AddCookie("MyCookieAuth", options => {
                 options.Cookie.Name = "MyCookieAuth";
