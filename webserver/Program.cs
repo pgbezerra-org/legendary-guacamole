@@ -12,10 +12,6 @@ builder.Services.AddRazorPages();
 builder.Services.AddDbContext<webserverContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection") ?? throw new InvalidOperationException("Connection string 'Guacamole' not found.")));
 
-builder.Services.AddDbContext<webserverContext>(options =>
-    options.UseMySql(builder.Configuration.GetConnectionString("MyConnection") ?? throw new InvalidOperationException("Connection string 'Guacamole' not found."), new MySqlServerVersion(new Version(8, 0, 26))));
-
-
 builder.Services.AddIdentity<Company, IdentityRole>()
     .AddEntityFrameworkStores<webserverContext>()
     .AddDefaultTokenProviders();
