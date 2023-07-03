@@ -4,15 +4,6 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using webserver.Data;
 using webserver.Models;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.AspNetCore.HttpsPolicy;
-using Microsoft.AspNetCore.Authentication.Cookies;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading;
-using Microsoft.AspNetCore.Authentication;
 
 namespace webserver.Pages.Account {
 
@@ -46,18 +37,12 @@ namespace webserver.Pages.Account {
                 UserName = RegisterInput.Name,
                 Email = RegisterInput.Email,
                 PhoneNumber = RegisterInput.Phone,
-                City = RegisterInput.City,
-                State = RegisterInput.State,
-                Country = RegisterInput.Country
             };
 
             var passwordHasher = new PasswordHasher<Company>();
 
             var salt = Guid.NewGuid().ToString();
             var hashedPassword = passwordHasher.HashPassword(user, salt + RegisterInput.Password);
-
-            user.Salt = salt;
-            user.PasswordHash = hashedPassword;
 
             _context.Company.Add(user);
 
@@ -103,14 +88,6 @@ namespace webserver.Pages.Account {
             [Compare("Password", ErrorMessage = "The password and confirmation password do not match.")]
             public string ConfirmPassword { get; set; } = string.Empty;
 
-            [Required]
-            public string City { get; set; } = string.Empty;
-
-            [Required]
-            public string State { get; set; } = string.Empty;
-
-            [Required]
-            public string Country { get; set; } = string.Empty;
         }
     }
 }
