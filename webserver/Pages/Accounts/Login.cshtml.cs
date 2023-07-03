@@ -11,7 +11,7 @@ namespace webserver.Pages.Account {
     public class LoginModel : PageModel {
 
         [BindProperty]
-        public Credential Credential { get; set; } = new Credential();
+        public Credential credential { get; set; } = new Credential();
         
         public readonly static string loginCookie = "BZEmploy";
 
@@ -33,7 +33,7 @@ namespace webserver.Pages.Account {
                 return Page();
             }*/
 
-            var user = await _userManager.FindByEmailAsync(Credential.Email);
+            var user = await _userManager.FindByEmailAsync(credential.Email);
 
             if (user == null) {
                 ModelState.AddModelError(string.Empty, "User not registered!");
@@ -48,14 +48,14 @@ namespace webserver.Pages.Account {
             }
 
             var passwordHasher = new PasswordHasher<Company>();
-            var passwordResult = passwordHasher.VerifyHashedPassword(user, user.PasswordHash, Credential.Password);
+            var passwordResult = passwordHasher.VerifyHashedPassword(user, user.PasswordHash, credential.Password);
 
             if (passwordResult != PasswordVerificationResult.Success) {
                 ModelState.AddModelError(string.Empty, "Wrong Email or Password");
                 return Page();
             }
 
-            var result = await _signInManager.PasswordSignInAsync(user, Credential.Password, isPersistent: true, lockoutOnFailure: false);
+            var result = await _signInManager.PasswordSignInAsync(user, credential.Password, isPersistent: true, lockoutOnFailure: false);
 
             if (!result.Succeeded) {
                 ModelState.AddModelError(string.Empty, "Invalid login attempt. " + result.ToString());
@@ -67,14 +67,14 @@ namespace webserver.Pages.Account {
                     new Claim(ClaimTypes.Email, user.Email)
                 };
 
-            var claimsIdentity = new ClaimsIdentity(claims, "MyCookieAuth");
+            var claimsIdentity = new ClaimsIdentity(claims, loginCookie);
             var authProperties = new AuthenticationProperties {
                 ExpiresUtc = DateTimeOffset.UtcNow.AddMinutes(10),
                 IsPersistent = true,
                 IssuedUtc = DateTimeOffset.UtcNow
             };
 
-            await HttpContext.SignInAsync("MyCookieAuth", new ClaimsPrincipal(claimsIdentity), authProperties);
+            await HttpContext.SignInAsync(loginCookie, new ClaimsPrincipal(claimsIdentity), authProperties);
 
             // Redirect to the desired page after successful login
             return RedirectToPage("/Privacy");
@@ -84,6 +84,9 @@ namespace webserver.Pages.Account {
 
             [System.ComponentModel.DataAnnotations.Required]
             public string UserName { get; set; } = string.Empty;
+
+            [System.ComponentModel.DataAnnotations.Required]
+            public string Email { get; set; } = string.Empty;
 
             [System.ComponentModel.DataAnnotations.Required]
             [DataType(DataType.Password)]
