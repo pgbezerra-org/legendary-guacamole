@@ -1,7 +1,5 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using MySql.Data.EntityFrameworkCore;
-using MySql.Data.MySqlClient;
 using webserver.Data;
 using webserver.Models;
 

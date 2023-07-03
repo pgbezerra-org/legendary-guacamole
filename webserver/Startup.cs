@@ -2,7 +2,6 @@
 using webserver.Data;
 using webserver.Models;
 using Microsoft.EntityFrameworkCore;
-using MySql.Data.EntityFrameworkCore.Extensions;
 
 namespace webserver {
 
