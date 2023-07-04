@@ -1,14 +1,11 @@
-using Microsoft.Extensions.Configuration;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Configuration;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
-using Microsoft.AspNetCore.Authentication.Cookies;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading;
+using webserver.Data;
+using webserver.Models;
 
 namespace webserver {
 
@@ -22,9 +19,9 @@ namespace webserver {
 
         public void ConfigureServices(IServiceCollection services) {
 
-            services.AddIdentity<Company, IdentityRole>()
-    .AddEntityFrameworkStores<webserverContext>()
-    .AddDefaultTokenProviders();
+            services.AddIdentity<BZEmployee, IdentityRole>()
+        .AddEntityFrameworkStores<webserverContext>()
+        .AddDefaultTokenProviders();
 
             services.AddMvc();
 

@@ -32,7 +32,7 @@ namespace webserver.Pages.Account {
             }*/
 
             // Create a new user based on the registration input
-            var company = new Company {
+            var user = new BZEmployee {
                 UserName = RegisterInput.Name,
                 Email = RegisterInput.Email,
                 PhoneNumber=RegisterInput.PhoneNumber,
