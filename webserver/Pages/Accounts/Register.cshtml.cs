@@ -1,4 +1,5 @@
 using System.ComponentModel.DataAnnotations;
+using System.Diagnostics;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
@@ -33,24 +34,23 @@ namespace webserver.Pages.Account {
             }*/
 
             // Create a new user based on the registration input
-            var user = new Company {
+            var user = new BZEmployee {
                 UserName = RegisterInput.Name,
                 Email = RegisterInput.Email,
                 PhoneNumber = RegisterInput.Phone,
             };
 
-            var passwordHasher = new PasswordHasher<Company>();
+            var passwordHasher = new PasswordHasher<BZEmployee>();
 
             var salt = Guid.NewGuid().ToString();
             var hashedPassword = passwordHasher.HashPassword(user, salt + RegisterInput.Password);
-
-            _context.Company.Add(user);
 
             var result = await _userManager.CreateAsync(user, RegisterInput.Password);
 
             if (result.Succeeded) {
                 // Optionally, you can sign in the user after successful registration
-                await _signInManager.SignInAsync(user, isPersistent: false);
+                Console.Write("Implementa o automatic login aqui");
+                //await _signInManager.SignInAsync(user, isPersistent: false);
 
                 // Redirect to a success page or the desired destination
                 Console.WriteLine("User SignUp successfull");
@@ -91,4 +91,3 @@ namespace webserver.Pages.Account {
         }
     }
 }
-
