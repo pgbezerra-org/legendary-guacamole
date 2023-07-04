@@ -15,10 +15,10 @@ namespace webserver.Pages.Account {
         
         public readonly static string loginCookie = "BZEmploy";
 
-        private readonly SignInManager<Company> _signInManager;
-        private readonly UserManager<Company> _userManager;
+        private readonly SignInManager<BZEmployee> _signInManager;
+        private readonly UserManager<BZEmployee> _userManager;
 
-        public LoginModel(SignInManager<Company> signInManager, UserManager<Company> userManager) {
+        public LoginModel(SignInManager<BZEmployee> signInManager, UserManager<BZEmployee> userManager) {
             _userManager = userManager;
             _signInManager = signInManager;
         }
@@ -47,7 +47,7 @@ namespace webserver.Pages.Account {
                 return Page();
             }
 
-            var passwordHasher = new PasswordHasher<Company>();
+            var passwordHasher = new PasswordHasher<BZEmployee>();
             var passwordResult = passwordHasher.VerifyHashedPassword(user, user.PasswordHash, credential.Password);
 
             if (passwordResult != PasswordVerificationResult.Success) {

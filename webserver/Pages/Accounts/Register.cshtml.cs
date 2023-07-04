@@ -13,12 +13,12 @@ namespace webserver.Pages.Account {
         [BindProperty]
         public RegisterInputModel RegisterInput { get; set; } = new RegisterInputModel();
 
-        private readonly UserManager<IdentityUser> _userManager;
-        private readonly SignInManager<IdentityUser> _signInManager;
+        private readonly UserManager<BZEmployee> _userManager;
+        private readonly SignInManager<BZEmployee> _signInManager;
         private readonly ILogger<RegisterModel> _logger;
         private readonly webserverContext _context;
 
-        public RegisterModel(UserManager<IdentityUser> userManager, SignInManager<IdentityUser> signInManager, webserverContext context, ILogger<RegisterModel> logger) {
+        public RegisterModel(UserManager<BZEmployee> userManager, SignInManager<BZEmployee> signInManager, webserverContext context, ILogger<RegisterModel> logger) {
             _userManager = userManager;
             _signInManager = signInManager;
             _logger = logger;
