@@ -14,6 +14,8 @@ namespace webserver.Data
 
         }
 
+        public DbSet<BZEmployee> BZEmployees { get; set; } = default!;
+
         public DbSet<webserver.Models.Company> Company { get; set; } = default!;
     }
 }

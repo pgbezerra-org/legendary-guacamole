@@ -13,9 +13,9 @@ builder.Services.AddRazorPages();
 builder.Services.AddDbContext<webserverContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection") ?? throw new InvalidOperationException("Connection string 'Guacamole' not found.")));
 
-builder.Services.AddIdentity<Company, IdentityRole>()
-    .AddEntityFrameworkStores<webserverContext>()
-    .AddDefaultTokenProviders();
+builder.Services.AddIdentity<BZEmployee, IdentityRole>()
+        .AddEntityFrameworkStores<webserverContext>()
+        .AddDefaultTokenProviders();
 
 // Add authentication
 builder.Services.AddAuthentication("MyCookieAuth")
