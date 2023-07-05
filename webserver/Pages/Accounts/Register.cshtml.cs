@@ -38,6 +38,7 @@ namespace webserver.Pages.Account {
                 UserName = RegisterInput.Name,
                 Email = RegisterInput.Email,
                 PhoneNumber = RegisterInput.Phone,
+                
             };
 
             var passwordHasher = new PasswordHasher<BZEmployee>();
@@ -45,7 +46,7 @@ namespace webserver.Pages.Account {
             var salt = Guid.NewGuid().ToString();
             var hashedPassword = passwordHasher.HashPassword(user, salt + RegisterInput.Password);
 
-            var result = await _userManager.CreateAsync(user, RegisterInput.Password);
+            var result = await _userManager.CreateAsync(user);
 
             if (result.Succeeded) {
                 // Optionally, you can sign in the user after successful registration
