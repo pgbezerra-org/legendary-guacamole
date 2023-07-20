@@ -33,6 +33,11 @@ namespace webserver.Pages.Account {
                 return Page();
             }*/
 
+            if (RegisterInput.Password != RegisterInput.ConfirmPassword) {
+                ModelState.AddModelError(string.Empty, "The password and confirmation password do not match.");
+                return Page();
+            }
+
             // Create a new user based on the registration input
             var user = new BZEmployee {
                 UserName = RegisterInput.Name,
