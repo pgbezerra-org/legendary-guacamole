@@ -5,10 +5,9 @@ using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 
 namespace webserver.Data
 {
-    public class webserverContext : IdentityDbContext<Company, IdentityRole, string>
-    {
+    public class WebserverContext : IdentityDbContext {
 
-        public webserverContext (DbContextOptions<webserverContext> options)
+        public WebserverContext (DbContextOptions<WebserverContext> options)
             : base(options)
         {
 
