@@ -16,9 +16,9 @@ namespace webserver.Pages.Account {
         private readonly UserManager<BZEmployee> _userManager;
         private readonly SignInManager<BZEmployee> _signInManager;
         private readonly ILogger<RegisterModel> _logger;
-        private readonly webserverContext _context;
+        private readonly WebserverContext _context;
 
-        public RegisterModel(UserManager<BZEmployee> userManager, SignInManager<BZEmployee> signInManager, webserverContext context, ILogger<RegisterModel> logger) {
+        public RegisterModel(UserManager<BZEmployee> userManager, SignInManager<BZEmployee> signInManager, WebserverContext context, ILogger<RegisterModel> logger) {
             _userManager = userManager;
             _signInManager = signInManager;
             _logger = logger;

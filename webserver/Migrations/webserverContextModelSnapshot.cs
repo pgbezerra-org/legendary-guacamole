@@ -10,7 +10,7 @@ using webserver.Data;
 
 namespace webserver.Migrations
 {
-    [DbContext(typeof(webserverContext))]
+    [DbContext(typeof(WebserverContext))]
     partial class webserverContextModelSnapshot : ModelSnapshot
     {
         protected override void BuildModel(ModelBuilder modelBuilder)

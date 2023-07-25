@@ -20,7 +20,7 @@ namespace webserver {
         public void ConfigureServices(IServiceCollection services) {
 
             services.AddIdentity<BZEmployee, IdentityRole>()
-        .AddEntityFrameworkStores<webserverContext>()
+        .AddEntityFrameworkStores<WebserverContext>()
         .AddDefaultTokenProviders();
 
             services.AddMvc();
@@ -28,7 +28,7 @@ namespace webserver {
             /*services.AddDbContext<webserverContext>(options =>
     options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));*/
 
-            services.AddDbContext<webserverContext>(options =>
+            services.AddDbContext<WebserverContext>(options =>
     options.UseMySQL(Configuration.GetConnectionString("MyConnection")));
 
             services.AddAuthentication().AddCookie("MyCookieAuth", options => {

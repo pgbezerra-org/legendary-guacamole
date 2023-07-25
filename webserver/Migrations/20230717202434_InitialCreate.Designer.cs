@@ -11,7 +11,7 @@ using webserver.Data;
 
 namespace webserver.Migrations
 {
-    [DbContext(typeof(webserverContext))]
+    [DbContext(typeof(WebserverContext))]
     [Migration("20230717202434_InitialCreate")]
     partial class InitialCreate
     {
