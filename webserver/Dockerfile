@@ -6,17 +6,23 @@ WORKDIR /app
 COPY ./*.csproj ./
 RUN dotnet restore
 
-# Copy the rest of the application and build it
+# Copy the rest of the application
 COPY . ./
+
+# Build the application
 RUN dotnet build -c Release -o out
 
-# Use the ASP.NET Core 7.0 runtime image to run the application
+# Use a volume to persist the static files
+VOLUME /app/wwwroot
+
+# Set the working directory to the output folder
+WORKDIR /app/out
+
 FROM mcr.microsoft.com/dotnet/aspnet:7.0 AS runtime
-WORKDIR /app
+
+# Copy the application build from the previous stage
 COPY --from=build /app/out ./
 
-# Expose the port the application listens on
 EXPOSE 80
 
-# Run the application
 ENTRYPOINT ["dotnet", "webserver.dll"]
