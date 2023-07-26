@@ -51,7 +51,7 @@ namespace webserver.Pages.Account {
             var salt = Guid.NewGuid().ToString();
             var hashedPassword = passwordHasher.HashPassword(user, salt + RegisterInput.Password);
 
-            var result = await _userManager.CreateAsync(user);
+            var result = await _userManager.CreateAsync(user, hashedPassword);
 
             if (result.Succeeded) {
                 // Optionally, you can sign in the user after successful registration
