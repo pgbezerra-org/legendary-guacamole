@@ -1,0 +1,14 @@
+# Exclude compiled binaries, build artifacts, and NuGet packages
+bin/
+obj/
+packages/
+node_modules/
+
+# Exclude development-specific files and directories
+.vs/
+.vscode/
+*.userprefs
+*.suo
+*.user
+*.log
+*.cache
