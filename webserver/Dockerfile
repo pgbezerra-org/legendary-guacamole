@@ -1,5 +1,5 @@
 # Use the .NET SDK 7.0 image to build the application
-FROM mcr.microsoft.com/dotnet/sdk:7.0 AS build
+FROM mcr.microsoft.com/dotnet/sdk:7.0 AS build-env
 WORKDIR /app
 
 # Copy the project files and restore the dependencies

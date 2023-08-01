@@ -48,10 +48,10 @@ namespace webserver.Pages.Account {
 
             var passwordHasher = new PasswordHasher<BZEmployee>();
 
-            var salt = Guid.NewGuid().ToString();
-            var hashedPassword = passwordHasher.HashPassword(user, salt + RegisterInput.Password);
+            //var salt = Guid.NewGuid().ToString();
+            //var hashedPassword = passwordHasher.HashPassword(user, salt + RegisterInput.Password);
 
-            var result = await _userManager.CreateAsync(user, hashedPassword);
+            var result = await _userManager.CreateAsync(user, RegisterInput.Password);
 
             if (result.Succeeded) {
                 // Optionally, you can sign in the user after successful registration

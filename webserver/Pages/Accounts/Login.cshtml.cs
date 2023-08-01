@@ -59,12 +59,12 @@ namespace webserver.Pages.Account {
 
             var passwordHasher = new PasswordHasher<BZEmployee>();
             var passwordResult = passwordHasher.VerifyHashedPassword(user, user.PasswordHash, credential.Password);
-
+/*
             if (passwordResult != PasswordVerificationResult.Success) {
                 ModelState.AddModelError(string.Empty, "Wrong Email or Password");
                 return Page();
             }
-
+*/
             var result = await _signInManager.PasswordSignInAsync(user, credential.Password, isPersistent: true, lockoutOnFailure: false);
 
             if (!result.Succeeded) {
