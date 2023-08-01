@@ -1,4 +1,5 @@
 using System.ComponentModel.DataAnnotations;
+using System.Diagnostics;
 using System.Security.Claims;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Identity;
@@ -10,10 +11,10 @@ namespace webserver.Pages.Account {
 
     public class LoginModel : PageModel {
 
+        public readonly static string loginCookie = "BZEmploy";
+
         [BindProperty]
         public Credential credential { get; set; } = new Credential();
-        
-        public readonly static string loginCookie = "BZEmploy";
 
         private readonly SignInManager<BZEmployee> _signInManager;
         private readonly UserManager<BZEmployee> _userManager;
@@ -33,16 +34,19 @@ namespace webserver.Pages.Account {
                 return Page();
             }*/
 
-            if (_userManager == null) {
-                ModelState.AddModelError(string.Empty, "manager not registered!");
-                Console.Write("debug is on the table");
-                return Page();
-            }
-
             var user = await _userManager.FindByEmailAsync(credential.Email);
 
+            if (_userManager == null) {
+
+                var anyUser = _userManager.Users.FirstOrDefault();
+
+                ModelState.AddModelError(string.Empty, "manager not registered!+\nAnyUser="+anyUser.Email);
+                Console.Write("debug is on the table");
+                return Page();
+            }            
+
             if (user == null) {
-                ModelState.AddModelError(string.Empty, "User not registered!");
+                ModelState.AddModelError(string.Empty, "Email not registered!");
                 return Page();
             }
 
@@ -89,9 +93,7 @@ namespace webserver.Pages.Account {
         public class Credential {
 
             [System.ComponentModel.DataAnnotations.Required]
-            public string UserName { get; set; } = string.Empty;
-
-            [System.ComponentModel.DataAnnotations.Required]
+            [EmailAddress]
             public string Email { get; set; } = string.Empty;
 
             [System.ComponentModel.DataAnnotations.Required]
