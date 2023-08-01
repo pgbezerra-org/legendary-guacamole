@@ -20,9 +20,9 @@ builder.Services.AddIdentity<BZEmployee, IdentityRole>()
         .AddDefaultTokenProviders();
 
 // Add authentication
-builder.Services.AddAuthentication("MyCookieAuth")
-    .AddCookie("MyCookieAuth", options => {
-        options.Cookie.Name = "MyCookieAuth";
+builder.Services.AddAuthentication(Common.BZECookie)
+    .AddCookie(Common.BZECookie, options => {
+        options.Cookie.Name = Common.BZECookie;
         options.Cookie.SameSite = SameSiteMode.Strict;
         options.Events.OnRedirectToAccessDenied = context => {
             context.Response.StatusCode = 403;

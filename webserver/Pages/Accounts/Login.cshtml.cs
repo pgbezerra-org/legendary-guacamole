@@ -5,13 +5,12 @@ using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using webserver.Data;
 using webserver.Models;
 
 namespace webserver.Pages.Account {
 
     public class LoginModel : PageModel {
-
-        public readonly static string loginCookie = "BZEmploy";
 
         [BindProperty]
         public CredentialInput Credential { get; set; } = new CredentialInput();
@@ -55,7 +54,7 @@ namespace webserver.Pages.Account {
             }
 /*
             var passwordHasher = new PasswordHasher<BZEmployee>();
-            var passwordResult = passwordHasher.VerifyHashedPassword(user, user.PasswordHash, credential.Password);
+            var passwordResult = passwordHasher.VerifyHashedPassword(user, user.PasswordHash, Credential.Password);
 
             if (passwordResult != PasswordVerificationResult.Success) {
                 ModelState.AddModelError(string.Empty, "Wrong Email or Password");
@@ -74,14 +73,14 @@ namespace webserver.Pages.Account {
                     new Claim(ClaimTypes.Email, user.Email)
                 };
 
-            var claimsIdentity = new ClaimsIdentity(claims, loginCookie);
+            var claimsIdentity = new ClaimsIdentity(claims, Common.BZECookie);
             var authProperties = new AuthenticationProperties {
                 ExpiresUtc = DateTimeOffset.UtcNow.AddMinutes(10),
                 IsPersistent = true,
                 IssuedUtc = DateTimeOffset.UtcNow
             };
 
-            await HttpContext.SignInAsync(loginCookie, new ClaimsPrincipal(claimsIdentity), authProperties);
+            await HttpContext.SignInAsync(Common.BZECookie, new ClaimsPrincipal(claimsIdentity), authProperties);
 
             // Redirect to the desired page after successful login
             return RedirectToPage("/Privacy");

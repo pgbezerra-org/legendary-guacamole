@@ -31,8 +31,8 @@ namespace webserver {
             services.AddDbContext<WebserverContext>(options =>
                 options.UseMySQL(Configuration.GetConnectionString("MyConnection")));
 
-            services.AddAuthentication().AddCookie("MyCookieAuth", options => {
-                options.Cookie.Name = "MyCookieAuth";
+            services.AddAuthentication().AddCookie(Common.BZECookie, options => {
+                options.Cookie.Name = Common.BZECookie;
             });
 
             services.AddRazorPages();
