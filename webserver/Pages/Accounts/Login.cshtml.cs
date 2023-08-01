@@ -14,7 +14,7 @@ namespace webserver.Pages.Account {
         public readonly static string loginCookie = "BZEmploy";
 
         [BindProperty]
-        public Credential credential { get; set; } = new Credential();
+        public CredentialInput Credential { get; set; } = new CredentialInput();
 
         private readonly SignInManager<BZEmployee> _signInManager;
         private readonly UserManager<BZEmployee> _userManager;
@@ -34,13 +34,10 @@ namespace webserver.Pages.Account {
                 return Page();
             }*/
 
-            var user = await _userManager.FindByEmailAsync(credential.Email);
+            var user = await _userManager.FindByEmailAsync(Credential.Email);
 
             if (_userManager == null) {
-
-                var anyUser = _userManager.Users.FirstOrDefault();
-
-                ModelState.AddModelError(string.Empty, "manager not registered!+\nAnyUser="+anyUser.Email);
+                ModelState.AddModelError(string.Empty, "manager not registered!");
                 Console.Write("debug is on the table");
                 return Page();
             }            
@@ -56,16 +53,16 @@ namespace webserver.Pages.Account {
                 // Handle the case where one or more properties are null
                 return Page();
             }
-
+/*
             var passwordHasher = new PasswordHasher<BZEmployee>();
             var passwordResult = passwordHasher.VerifyHashedPassword(user, user.PasswordHash, credential.Password);
-/*
+
             if (passwordResult != PasswordVerificationResult.Success) {
                 ModelState.AddModelError(string.Empty, "Wrong Email or Password");
                 return Page();
             }
 */
-            var result = await _signInManager.PasswordSignInAsync(user, credential.Password, isPersistent: true, lockoutOnFailure: false);
+            var result = await _signInManager.PasswordSignInAsync(user, Credential.Password, isPersistent: true, lockoutOnFailure: false);
 
             if (!result.Succeeded) {
                 ModelState.AddModelError(string.Empty, "Invalid login attempt. " + result.ToString());
@@ -90,7 +87,7 @@ namespace webserver.Pages.Account {
             return RedirectToPage("/Privacy");
         }
 
-        public class Credential {
+        public class CredentialInput {
 
             [System.ComponentModel.DataAnnotations.Required]
             [EmailAddress]

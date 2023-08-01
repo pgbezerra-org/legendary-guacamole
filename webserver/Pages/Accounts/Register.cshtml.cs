@@ -15,14 +15,14 @@ namespace webserver.Pages.Account {
 
         private readonly UserManager<BZEmployee> _userManager;
         private readonly SignInManager<BZEmployee> _signInManager;
-        private readonly ILogger<RegisterModel> _logger;
-        private readonly WebserverContext _context;
+        //private readonly ILogger<RegisterModel> _logger;
+        //private readonly WebserverContext _context;
 
-        public RegisterModel(UserManager<BZEmployee> userManager, SignInManager<BZEmployee> signInManager, WebserverContext context, ILogger<RegisterModel> logger) {
+        public RegisterModel(UserManager<BZEmployee> userManager, SignInManager<BZEmployee> signInManager) {
             _userManager = userManager;
             _signInManager = signInManager;
-            _logger = logger;
-            _context = context;
+            //_logger = logger;
+            //_context = context;
         }
 
         public void OnGet() {
@@ -32,11 +32,11 @@ namespace webserver.Pages.Account {
             /*if (!ModelState.IsValid) {
                 return Page();
             }*/
-
+/*
             if (RegisterInput.Password != RegisterInput.ConfirmPassword) {
                 ModelState.AddModelError(string.Empty, "The password and confirmation password do not match.");
                 return Page();
-            }
+            }*/
 
             // Create a new user based on the registration input
             var user = new BZEmployee {
@@ -46,7 +46,7 @@ namespace webserver.Pages.Account {
                 
             };
 
-            var passwordHasher = new PasswordHasher<BZEmployee>();
+            //var passwordHasher = new PasswordHasher<BZEmployee>();
 
             //var salt = Guid.NewGuid().ToString();
             //var hashedPassword = passwordHasher.HashPassword(user, salt + RegisterInput.Password);
