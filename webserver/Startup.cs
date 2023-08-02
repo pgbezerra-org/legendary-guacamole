@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using System.Security.Claims;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Configuration;
@@ -6,6 +7,8 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using webserver.Data;
 using webserver.Models;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.Extensions.Options;
 
 namespace webserver {
 
@@ -31,8 +34,18 @@ namespace webserver {
             services.AddDbContext<WebserverContext>(options =>
                 options.UseMySQL(Configuration.GetConnectionString("MyConnection")));
 
-            services.AddAuthentication().AddCookie(Common.BZECookie, options => {
-                options.Cookie.Name = Common.BZECookie;
+            services.AddAuthentication(Common.BZECookie).AddCookie(options=>
+            {
+                options.Cookie.Name=Common.BZECookie;
+                options.LoginPath = "/Accounts/Login";
+            });
+
+            services.AddAuthorization(options=>
+            {
+                options.AddPolicy(Common.BZELevelPolicy, policy=>{
+                    policy.RequireAuthenticatedUser();
+                    policy.RequireClaim(ClaimTypes.Name,ClaimTypes.Email);
+                });
             });
 
             services.AddRazorPages();

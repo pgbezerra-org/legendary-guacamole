@@ -1,6 +1,6 @@
 # Exclude compiled binaries, build artifacts, and NuGet packages
-bin/
-obj/
+**bin/
+**obj/
 packages/
 node_modules/
 

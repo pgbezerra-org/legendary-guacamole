@@ -1,7 +1,9 @@
 ﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.EntityFrameworkCore;
 using webserver.Data;
 using webserver.Models;
+using Microsoft.AspNetCore.Authentication.Cookies;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -20,6 +22,11 @@ builder.Services.AddIdentity<BZEmployee, IdentityRole>()
         .AddDefaultTokenProviders();
 
 // Add authentication
+builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+    .AddCookie(options => {
+        options.LoginPath="/Accounts/Login";
+    });
+
 builder.Services.AddAuthentication(Common.BZECookie)
     .AddCookie(Common.BZECookie, options => {
         options.Cookie.Name = Common.BZECookie;
@@ -33,6 +40,15 @@ builder.Services.AddAuthentication(Common.BZECookie)
             return Task.CompletedTask;
         };
     });
+
+builder.Services.AddAuthorization();
+
+builder.Services.AddAuthorization(options=>{
+    options.AddPolicy(Common.BZELevelPolicy,policy=>{
+        policy.RequireAuthenticatedUser();
+        policy.RequireClaim("ClaimType","ClaimValue");
+    });
+});
 
 var app = builder.Build();
 
