@@ -1,3 +1,4 @@
+using System.Security.Claims;
 using System.ComponentModel.DataAnnotations;
 using System.Diagnostics;
 using Microsoft.AspNetCore.Identity;

@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using System.Security.Claims;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.EntityFrameworkCore;
 using webserver.Data;
@@ -25,6 +26,10 @@ builder.Services.AddIdentity<BZEmployee, IdentityRole>()
 builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
     .AddCookie(options => {
         options.LoginPath="/Accounts/Login";
+        options.AccessDeniedPath = "/Accounts/Login";
+        options.ExpireTimeSpan = TimeSpan.FromMinutes(30);
+        options.SlidingExpiration = true;
+        options.Cookie.Name = "MyCookie";
     });
 
 builder.Services.AddAuthentication(Common.BZECookie)
@@ -44,9 +49,9 @@ builder.Services.AddAuthentication(Common.BZECookie)
 builder.Services.AddAuthorization();
 
 builder.Services.AddAuthorization(options=>{
-    options.AddPolicy(Common.BZELevelPolicy,policy=>{
+    options.AddPolicy(Common.BZELevelPolicy, policy=>{
         policy.RequireAuthenticatedUser();
-        policy.RequireClaim("ClaimType","ClaimValue");
+        policy.RequireClaim(ClaimTypes.Name, ClaimTypes.Email);
     });
 });
 

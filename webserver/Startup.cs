@@ -28,6 +28,16 @@ namespace webserver {
 
             services.AddMvc();
 
+            services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+    .AddCookie(options => {
+        options.LoginPath="/Accounts/Login";
+        options.AccessDeniedPath = "/Accounts/Login";
+        options.ExpireTimeSpan = TimeSpan.FromMinutes(30);
+        options.SlidingExpiration = true;
+        options.Cookie.Name = "MyCookie";
+    });
+
+
             /*services.AddDbContext<webserverContext>(options =>
     options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));*/
 
@@ -37,7 +47,7 @@ namespace webserver {
             services.AddAuthentication(Common.BZECookie).AddCookie(options=>
             {
                 options.Cookie.Name=Common.BZECookie;
-                options.LoginPath = "/Accounts/Login";
+                //options.LoginPath = "/Accounts/Login";
             });
 
             services.AddAuthorization(options=>
