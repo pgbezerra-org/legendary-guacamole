@@ -2,6 +2,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Diagnostics;
 using System.Security.Claims;
 using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
@@ -73,14 +74,16 @@ namespace webserver.Pages.Account {
                     new Claim(ClaimTypes.Email, user.Email)
                 };
 
-            var claimsIdentity = new ClaimsIdentity(claims, Common.BZECookie);
+            var identity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
+            var principal = new ClaimsPrincipal(identity);
+
             var authProperties = new AuthenticationProperties {
                 ExpiresUtc = DateTimeOffset.UtcNow.AddMinutes(10),
                 IsPersistent = true,
                 IssuedUtc = DateTimeOffset.UtcNow
             };
 
-            await HttpContext.SignInAsync(Common.BZECookie, new ClaimsPrincipal(claimsIdentity), authProperties);
+            await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, principal, authProperties);
 
             // Redirect to the desired page after successful login
             return RedirectToPage("/Privacy");

@@ -8,11 +8,12 @@ using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Authorization;
 using webserver.Data;
+using Microsoft.Identity.Client;
 
 namespace webserver.Pages
 {
 
-    [Authorize(Common.BZELevelPolicy)]
+    [Authorize(Policy =Common.BZELevelPolicy)]
     public class Authorized : PageModel
     {
         private readonly ILogger<Authorized> _logger;
@@ -22,8 +23,15 @@ namespace webserver.Pages
             _logger = logger;
         }
 
-        public void OnGet()
+        public IActionResult OnGet()
         {
+            Console.Write("debug is on the table");
+            if(!User.Identity.IsAuthenticated){
+                return RedirectToPage("/Accounts/Login");
+            }
+
+            return Page();
+
         }
     }
 }

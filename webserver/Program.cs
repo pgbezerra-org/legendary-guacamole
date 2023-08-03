@@ -1,6 +1,6 @@
-﻿using System.Security.Claims;
+﻿using Microsoft.AspNetCore.Authorization;
+using System.Security.Claims;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.EntityFrameworkCore;
 using webserver.Data;
 using webserver.Models;
@@ -29,21 +29,17 @@ builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationSc
         options.AccessDeniedPath = "/Accounts/Login";
         options.ExpireTimeSpan = TimeSpan.FromMinutes(30);
         options.SlidingExpiration = true;
-        options.Cookie.Name = "MyCookie";
+        options.Cookie.Name = Common.BZECookie;
     });
 
 builder.Services.AddAuthentication(Common.BZECookie)
     .AddCookie(Common.BZECookie, options => {
-        options.Cookie.Name = Common.BZECookie;
-        options.Cookie.SameSite = SameSiteMode.Strict;
-        options.Events.OnRedirectToAccessDenied = context => {
-            context.Response.StatusCode = 403;
-            return Task.CompletedTask;
-        };
-        options.Events.OnRedirectToLogin = context => {
-            context.Response.StatusCode = 401;
-            return Task.CompletedTask;
-        };
+        options.Cookie.Name=Common.BZECookie;
+                options.LoginPath="/Accounts/Login";
+                options.AccessDeniedPath = "/Accounts/Login";
+                options.ExpireTimeSpan = TimeSpan.FromMinutes(30);
+                options.SlidingExpiration = true;
+                options.Cookie.Name = Common.BZECookie;
     });
 
 builder.Services.AddAuthorization();
@@ -54,6 +50,14 @@ builder.Services.AddAuthorization(options=>{
         policy.RequireClaim(ClaimTypes.Name, ClaimTypes.Email);
     });
 });
+
+builder.Services.ConfigureApplicationCookie(options=>{
+                options.Cookie.Name=Common.BZECookie;
+                options.LoginPath="/Accounts/Login";
+                options.AccessDeniedPath = "/Accounts/Login";
+                options.ExpireTimeSpan = TimeSpan.FromMinutes(30);
+                options.SlidingExpiration = true;
+            });
 
 var app = builder.Build();
 

@@ -34,9 +34,10 @@ namespace webserver {
         options.AccessDeniedPath = "/Accounts/Login";
         options.ExpireTimeSpan = TimeSpan.FromMinutes(30);
         options.SlidingExpiration = true;
-        options.Cookie.Name = "MyCookie";
+        options.Cookie.Name = Common.BZECookie;
     });
 
+            services.AddControllersWithViews();
 
             /*services.AddDbContext<webserverContext>(options =>
     options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));*/
@@ -47,7 +48,10 @@ namespace webserver {
             services.AddAuthentication(Common.BZECookie).AddCookie(options=>
             {
                 options.Cookie.Name=Common.BZECookie;
-                //options.LoginPath = "/Accounts/Login";
+                options.LoginPath="/Accounts/Login";
+                options.AccessDeniedPath = "/Accounts/Login";
+                options.ExpireTimeSpan = TimeSpan.FromMinutes(30);
+                options.SlidingExpiration = true;
             });
 
             services.AddAuthorization(options=>
@@ -58,6 +62,14 @@ namespace webserver {
                 });
             });
 
+            services.ConfigureApplicationCookie(options=>{
+                options.Cookie.Name=Common.BZECookie;
+                options.LoginPath="/Accounts/Login";
+                options.AccessDeniedPath = "/Accounts/Login";
+                options.ExpireTimeSpan = TimeSpan.FromMinutes(30);
+                options.SlidingExpiration = true;
+            });
+
             services.AddRazorPages();
         }
 
@@ -66,12 +78,10 @@ namespace webserver {
 
             if (!env.IsDevelopment()) {
                 app.UseDeveloperExceptionPage();
+            } else {
                 app.UseExceptionHandler("/Error");
                 app.UseHsts();
-            }/* else {
-                app.UseExceptionHandler("/Error");
-                app.UseHsts();
-            }*/
+            }
 
             app.UseHttpsRedirection();
             app.UseStaticFiles();
@@ -80,6 +90,8 @@ namespace webserver {
 
             app.UseAuthentication(); // Add this line to enable authentication
             app.UseAuthorization();
+
+            app.UseCookiePolicy();
 
             app.UseEndpoints(endpoints =>
             {
