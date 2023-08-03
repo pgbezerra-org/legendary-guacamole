@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Authorization;
 using webserver.Data;
 using Microsoft.Identity.Client;
+using System.Diagnostics;
 
 namespace webserver.Pages
 {
@@ -25,8 +26,11 @@ namespace webserver.Pages
 
         public IActionResult OnGet()
         {
-            Console.Write("debug is on the table");
-            if(!User.Identity.IsAuthenticated){
+
+            Console.WriteLine("debug is on the console");
+            Debug.WriteLine("debug is on de table");
+
+            if(User!=null && !User.Identity.IsAuthenticated){
                 return RedirectToPage("/Accounts/Login");
             }
 

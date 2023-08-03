@@ -7,6 +7,12 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using webserver.Data;
 using webserver.Models;
 
+
+
+
+
+
+
 namespace webserver.Pages.Account {
 
     public class RegisterModel : PageModel {
@@ -15,13 +21,13 @@ namespace webserver.Pages.Account {
         public RegisterInputModel RegisterInput { get; set; } = new RegisterInputModel();
 
         private readonly UserManager<BZEmployee> _userManager;
-        private readonly SignInManager<BZEmployee> _signInManager;
+        //private readonly SignInManager<BZEmployee> _signInManager;
         //private readonly ILogger<RegisterModel> _logger;
         //private readonly WebserverContext _context;
 
-        public RegisterModel(UserManager<BZEmployee> userManager, SignInManager<BZEmployee> signInManager) {
+        public RegisterModel(UserManager<BZEmployee> userManager) {
             _userManager = userManager;
-            _signInManager = signInManager;
+            //_signInManager = signInManager;
             //_logger = logger;
             //_context = context;
         }
