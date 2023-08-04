@@ -7,12 +7,6 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using webserver.Data;
 using webserver.Models;
 
-
-
-
-
-
-
 namespace webserver.Pages.Account {
 
     public class RegisterModel : PageModel {

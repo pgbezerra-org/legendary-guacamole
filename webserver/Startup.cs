@@ -58,7 +58,7 @@ namespace webserver {
             {
                 options.AddPolicy(Common.BZELevelPolicy, policy=>{
                     policy.RequireAuthenticatedUser();
-                    policy.RequireClaim(ClaimTypes.Name,ClaimTypes.Email);
+                    policy.RequireClaim(Common.BZECookie);
                 });
             });
 
