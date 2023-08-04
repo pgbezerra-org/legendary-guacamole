@@ -1,14 +1,8 @@
-﻿using System.Security.Claims;
-using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Configuration;
-using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Hosting;
 using webserver.Data;
 using webserver.Models;
 using Microsoft.AspNetCore.Authentication.Cookies;
-using Microsoft.Extensions.Options;
 
 namespace webserver {
 
@@ -38,9 +32,6 @@ namespace webserver {
     });
 
             services.AddControllersWithViews();
-
-            /*services.AddDbContext<webserverContext>(options =>
-    options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));*/
 
             services.AddDbContext<WebserverContext>(options =>
                 options.UseMySQL(Configuration.GetConnectionString("MyConnection")));

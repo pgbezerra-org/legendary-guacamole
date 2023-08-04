@@ -1,12 +1,10 @@
 using System.ComponentModel.DataAnnotations;
-using System.Diagnostics;
 using System.Security.Claims;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using webserver.Data;
 using webserver.Models;
 
 namespace webserver.Pages.Account {
@@ -50,18 +48,9 @@ namespace webserver.Pages.Account {
             //Just to stop with the compiler warnings
             // Ensure the user properties are not null before accessing them
             if (user.PasswordHash is null || user.UserName is null || user.Email is null) {
-                // Handle the case where one or more properties are null
                 return Page();
             }
-/*
-            var passwordHasher = new PasswordHasher<BZEmployee>();
-            var passwordResult = passwordHasher.VerifyHashedPassword(user, user.PasswordHash, Credential.Password);
-
-            if (passwordResult != PasswordVerificationResult.Success) {
-                ModelState.AddModelError(string.Empty, "Wrong Email or Password");
-                return Page();
-            }
-*/
+            
             var result = await _signInManager.PasswordSignInAsync(user, Credential.Password, isPersistent: true, lockoutOnFailure: false);
 
             if (!result.Succeeded) {
@@ -91,11 +80,11 @@ namespace webserver.Pages.Account {
 
         public class CredentialInput {
 
-            [System.ComponentModel.DataAnnotations.Required]
+            [Required]
             [EmailAddress]
             public string Email { get; set; } = string.Empty;
 
-            [System.ComponentModel.DataAnnotations.Required]
+            [Required]
             [DataType(DataType.Password)]
             public string Password { get; set; } = string.Empty;
 

@@ -1,10 +1,7 @@
-using System.Security.Claims;
 using System.ComponentModel.DataAnnotations;
-using System.Diagnostics;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using webserver.Data;
 using webserver.Models;
 
 namespace webserver.Pages.Account {
@@ -15,31 +12,20 @@ namespace webserver.Pages.Account {
         public RegisterInputModel RegisterInput { get; set; } = new RegisterInputModel();
 
         private readonly UserManager<BZEmployee> _userManager;
-        //private readonly SignInManager<BZEmployee> _signInManager;
-        //private readonly ILogger<RegisterModel> _logger;
-        //private readonly WebserverContext _context;
 
         public RegisterModel(UserManager<BZEmployee> userManager) {
             _userManager = userManager;
-            //_signInManager = signInManager;
-            //_logger = logger;
-            //_context = context;
         }
 
         public void OnGet() {
         }
 
         public async Task<IActionResult> OnPostAsync() {
+
             /*if (!ModelState.IsValid) {
                 return Page();
             }*/
-/*
-            if (RegisterInput.Password != RegisterInput.ConfirmPassword) {
-                ModelState.AddModelError(string.Empty, "The password and confirmation password do not match.");
-                return Page();
-            }*/
 
-            // Create a new user based on the registration input
             var user = new BZEmployee {
                 UserName = RegisterInput.Name,
                 Email = RegisterInput.Email,
@@ -47,21 +33,15 @@ namespace webserver.Pages.Account {
                 
             };
 
-            //var passwordHasher = new PasswordHasher<BZEmployee>();
-
-            //var salt = Guid.NewGuid().ToString();
-            //var hashedPassword = passwordHasher.HashPassword(user, salt + RegisterInput.Password);
-
             var result = await _userManager.CreateAsync(user, RegisterInput.Password);
 
             if (result.Succeeded) {
-                // Optionally, you can sign in the user after successful registration
+                
                 Console.Write("Implementa o automatic login aqui");
-                //await _signInManager.SignInAsync(user, isPersistent: false);
-
-                // Redirect to a success page or the desired destination
                 Console.WriteLine("User SignUp successfull");
+
                 return RedirectToPage("/Success");
+
             } else {
 
                 foreach (var error in result.Errors) {
