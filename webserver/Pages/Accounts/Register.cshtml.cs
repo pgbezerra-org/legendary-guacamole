@@ -26,6 +26,19 @@ namespace webserver.Pages.Account {
                 return Page();
             }*/
 
+            var auxUser = await _userManager.FindByEmailAsync(RegisterInput.Email);
+
+            if (_userManager == null) {
+                ModelState.AddModelError(string.Empty, "manager not registered!");
+                Console.Write("debug is on the table");
+                return Page();
+            }            
+
+            if(user!=null){
+                ModelState.AddModelError(string.Empty, "Email already registered!");
+                return Page();
+            }
+
             var user = new BZEmployee {
                 UserName = RegisterInput.Name,
                 Email = RegisterInput.Email,
