@@ -6,9 +6,7 @@ namespace webserver.Models;
 public class Company : IdentityUser {
 
     public Company() {
-
         RealEstates = new List<RealEstate> { new RealEstate() };
-
     }
 
     [StringLength(20, MinimumLength = 3)]

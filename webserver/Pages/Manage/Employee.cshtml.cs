@@ -22,29 +22,52 @@ namespace webserver.Pages.Manage {
         public class InputModel
         {
             [Required]
+            [Display(Name = "Name")]
+            public string Name { get; set; }=string.Empty;
+
+            [Required]
             [Display(Name = "Email")]
             public string Email { get; set; }=string.Empty;
+
+            [Required]
+            [Display(Name = "City")]
+            public string City { get; set; }=string.Empty;
+
+            [Required]
+            [Display(Name = "State")]
+            public string State { get; set; }=string.Empty;
+            
+            [Required]
+            [Display(Name = "Country")]
+            public string Country { get; set; }=string.Empty;
 
             [Required]
             [DataType(DataType.Password)]
             [Display(Name = "Password")]
             public string Password { get; set; }=string.Empty;
+
+            [Required]
+            [DataType(DataType.Password)]
+            [Display(Name = "ConfirmPassword")]
+            public string ConfirmPassword { get; set; }=string.Empty;
         }
 
         public async Task<IActionResult> OnPostAsync()
         {
-            if (ModelState.IsValid)
+            /*
+            if (ModelState.IsValid){
+                return;
+            }
+            */
+            var user = new BZEmployee { UserName = Input.Name, Email = Input.Email, City = Input.City, Country = Input.Country, State = Input.State };
+            var result = await _userManager.CreateAsync(user, Input.Password);
+            if (result.Succeeded)
             {
-                var user = new BZEmployee { UserName = Input.Email, Email = Input.Email };
-                var result = await _userManager.CreateAsync(user, Input.Password);
-                if (result.Succeeded)
-                {
-                    // User created successfully
-                }
-                else
-                {
-                    // Error creating user
-                }
+                // User created successfully
+            }
+            else
+            {
+                // Error creating user
             }
             return Page();
         }
