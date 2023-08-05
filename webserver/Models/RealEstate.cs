@@ -1,5 +1,7 @@
 ﻿using webserver.Models;
 
+namespace webserver.Models;
+
 public class RealEstate {
 
     public int Id { get; set; }

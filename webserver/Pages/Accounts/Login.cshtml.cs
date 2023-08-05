@@ -36,7 +36,6 @@ namespace webserver.Pages.Account {
 
             if (_userManager == null) {
                 ModelState.AddModelError(string.Empty, "manager not registered!");
-                Console.Write("debug is on the table");
                 return Page();
             }            
 

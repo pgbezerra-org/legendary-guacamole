@@ -12,9 +12,9 @@ namespace webserver.Pages.Manage {
         [BindProperty]
         public InputModel Input { get; set; } = new InputModel();
 
-        private readonly UserManager<BZEmployee> _userManager;
+        private readonly UserManager<Company> _userManager;
 
-        public Employee(UserManager<BZEmployee> userManager)
+        public Employee(UserManager<Company> userManager)
         {
             _userManager = userManager;
         }
@@ -59,17 +59,33 @@ namespace webserver.Pages.Manage {
                 return;
             }
             */
-            var user = new BZEmployee { UserName = Input.Name, Email = Input.Email, City = Input.City, Country = Input.Country, State = Input.State };
-            var result = await _userManager.CreateAsync(user, Input.Password);
-            if (result.Succeeded)
-            {
-                // User created successfully
+
+            var auxUser = await _userManager.FindByEmailAsync(Input.Email);
+
+            if (_userManager == null) {
+                ModelState.AddModelError(string.Empty, "manager not registered!");
+                return Page();
+            }            
+            if(auxUser!=null){
+                ModelState.AddModelError(string.Empty, "Email already registered!");
+                return Page();
             }
-            else
-            {
-                // Error creating user
+
+            var company = new Company { UserName = Input.Name, Email = Input.Email, City = Input.City, Country = Input.Country, State = Input.State };
+
+            var result = await _userManager.CreateAsync(company, Input.Password);
+
+            if (result.Succeeded) {
+                return RedirectToPage("/Success");
+            } else {
+
+                foreach (var error in result.Errors) {
+                    ModelState.AddModelError(string.Empty, error.Description);
+                }
+                Console.WriteLine("SignUp fail");
+
+                return Page();
             }
-            return Page();
         }
     }
 }

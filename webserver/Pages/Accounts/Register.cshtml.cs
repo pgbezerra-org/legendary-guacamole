@@ -30,11 +30,10 @@ namespace webserver.Pages.Account {
 
             if (_userManager == null) {
                 ModelState.AddModelError(string.Empty, "manager not registered!");
-                Console.Write("debug is on the table");
                 return Page();
             }            
 
-            if(user!=null){
+            if(auxUser!=null){
                 ModelState.AddModelError(string.Empty, "Email already registered!");
                 return Page();
             }
