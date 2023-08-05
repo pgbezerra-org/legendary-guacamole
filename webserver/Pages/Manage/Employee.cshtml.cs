@@ -2,6 +2,7 @@ using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Identity;
+using webserver.Models;
 
 namespace webserver.Pages.Manage {
 
@@ -11,9 +12,9 @@ namespace webserver.Pages.Manage {
         [BindProperty]
         public InputModel Input { get; set; } = new InputModel();
 
-        private readonly UserManager<IdentityUser> _userManager;
+        private readonly UserManager<BZEmployee> _userManager;
 
-        public Employee(UserManager<IdentityUser> userManager)
+        public Employee(UserManager<BZEmployee> userManager)
         {
             _userManager = userManager;
         }
@@ -34,7 +35,7 @@ namespace webserver.Pages.Manage {
         {
             if (ModelState.IsValid)
             {
-                var user = new IdentityUser { UserName = Input.Email, Email = Input.Email };
+                var user = new BZEmployee { UserName = Input.Email, Email = Input.Email };
                 var result = await _userManager.CreateAsync(user, Input.Password);
                 if (result.Succeeded)
                 {
