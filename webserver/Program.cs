@@ -3,7 +3,12 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using webserver.Data;
 using webserver.Models;
+using Microsoft.AspNetCore;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions;
+using Microsoft.AspNetCore.Identity.UI;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -12,10 +17,17 @@ builder.Services.AddRazorPages();
 
 builder.Services.AddDbContext<WebserverContext>(options =>
     options.UseMySQL(builder.Configuration.GetConnectionString("MyConnection") ?? throw new InvalidOperationException("Connection string 'Guacamole' not found.")));
+//builder.Services.AddDatabaseDeveloperPageExceptionFilter(); //useless but alright
 
-builder.Services.AddIdentity<BZEmployee, IdentityRole>()
+builder.Services.AddDefaultIdentity<BZEAccount>()
         .AddEntityFrameworkStores<WebserverContext>()
         .AddDefaultTokenProviders();
+
+//builder.Services.AddDefaultIdentity<BZEmployee>().AddEntityFrameworkStores<WebserverContext>();
+
+builder.Services.AddIdentityCore<BZEmployee>().AddEntityFrameworkStores<WebserverContext>();
+builder.Services.AddIdentityCore<Company>().AddEntityFrameworkStores<WebserverContext>();
+builder.Services.AddIdentityCore<Client>().AddEntityFrameworkStores<WebserverContext>();
 
 // Add authentication
 builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)

@@ -3,21 +3,21 @@ using System.ComponentModel.DataAnnotations;
 
 namespace webserver.Models;
 
-public class Company : IdentityUser {
+public class Company : BZEAccount {
 
     public Company() {
         RealEstates = new List<RealEstate> { new RealEstate() };
     }
 
-    [StringLength(20, MinimumLength = 3)]
+    [StringLength(30, MinimumLength = 3)]
     [Required]
     public string Country { get; set; } = string.Empty;
 
-    [StringLength(20, MinimumLength = 3)]
+    [StringLength(25, MinimumLength = 3)]
     [Required]
     public string State { get; set; } = string.Empty;
 
-    [StringLength(20, MinimumLength = 3)]
+    [StringLength(25, MinimumLength = 3)]
     [Required]
     public string City { get; set; } = string.Empty;
 

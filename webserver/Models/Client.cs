@@ -2,9 +2,8 @@
 
 namespace webserver.Models;
 
-public class Client : IdentityUser {
+public class Client : BZEAccount {
 
-    // Additional properties specific to Client
     public string Occupation { get; set; } = string.Empty;
 
 }
