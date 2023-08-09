@@ -14,10 +14,10 @@ namespace webserver.Pages.Account {
         [BindProperty]
         public CredentialInput Credential { get; set; } = new CredentialInput();
 
-        private readonly SignInManager<BZEmployee> _signInManager;
-        private readonly UserManager<BZEmployee> _userManager;
+        private readonly SignInManager<BZEAccount> _signInManager;
+        private readonly UserManager<BZEAccount> _userManager;
 
-        public LoginModel(SignInManager<BZEmployee> signInManager, UserManager<BZEmployee> userManager) {
+        public LoginModel(SignInManager<BZEAccount> signInManager, UserManager<BZEAccount> userManager) {
             _userManager = userManager;
             _signInManager = signInManager;
         }
