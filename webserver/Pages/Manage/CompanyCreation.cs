@@ -7,14 +7,14 @@ using webserver.Models;
 namespace webserver.Pages.Manage {
 
     //[Authorize(Policy =Common.BZELevelPolicy)]
-    public class Employee : PageModel {
+    public class CompanyCreation : PageModel {
 
         [BindProperty]
         public InputModel Input { get; set; } = new InputModel();
 
         private readonly UserManager<Company> _userManager;
 
-        public Employee(UserManager<Company> userManager)
+        public CompanyCreation(UserManager<Company> userManager)
         {
             _userManager = userManager;
         }
@@ -58,20 +58,21 @@ namespace webserver.Pages.Manage {
             if (ModelState.IsValid){
                 return;
             }
-            */
-
-            var auxUser = await _userManager.FindByEmailAsync(Input.Email);
+            */            
 
             if (_userManager == null) {
                 ModelState.AddModelError(string.Empty, "manager not registered!");
                 return Page();
             }            
-            if(auxUser!=null){
+
+            var auxUser = await _userManager.FindByEmailAsync(Input.Email);
+
+            if(auxUser == null){
                 ModelState.AddModelError(string.Empty, "Email already registered!");
                 return Page();
             }
 
-            var company = new Company { UserName = Input.Name, Email = Input.Email, City = Input.City, Country = Input.Country, State = Input.State };
+            var company = new Company { UserName = Input.Name, Email = Input.Email, Country = Input.Country, State = Input.State, City = Input.City };
 
             var result = await _userManager.CreateAsync(company, Input.Password);
 
