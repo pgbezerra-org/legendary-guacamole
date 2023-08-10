@@ -1,3 +1,5 @@
+using System.Linq;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using System.ComponentModel.DataAnnotations;
@@ -29,6 +31,10 @@ namespace webserver.Pages.Manage {
             public string Address { get; set; }=string.Empty;
 
             [Required]
+            [Display(Name = "Company")]
+            public string Company { get; set; }=string.Empty;
+
+            [Required]
             [Display(Name = "Price")]
             public decimal Price { get; set; } = 1;
             
@@ -37,16 +43,24 @@ namespace webserver.Pages.Manage {
         public async Task<IActionResult> OnPostAsync()
         {
 
+            var company = context.Company.FirstOrDefault(c => c.UserName == Input.Name);
+
+            if(company==null){
+                ModelState.AddModelError(string.Empty, "Company not found!");
+                return Page();
+            }
+
             var realEstate = new RealEstate
             {
                 Name = Input.Name,
                 Address = Input.Address,
-                Price = Input.Price
+                Price = Input.Price,
+                CompanyId=company.Id
             };
             
-            await context.RealEstate.AddAsync(realEstate);
+            await context.RealEstates.AddAsync(realEstate);
             await context.SaveChangesAsync();
-
+            
             return RedirectToPage("/Success");
         }
     }

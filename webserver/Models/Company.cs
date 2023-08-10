@@ -22,5 +22,5 @@ public class Company : BZEAccount {
     public string City { get; set; } = string.Empty;
 
     // Navigation property for the related real estates
-    public List<RealEstate> RealEstates { get; set; }
+    public ICollection<RealEstate> RealEstates { get; set; }
 }

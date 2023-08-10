@@ -1,4 +1,6 @@
-﻿namespace webserver.Models;
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace webserver.Models;
 
 public class RealEstate {
 
@@ -8,6 +10,7 @@ public class RealEstate {
     public decimal Price { get; set; }
 
     // Foreign key to associate the RealEstate with a Company
-    public int CompanyId { get; set; }
-    //public Company Company { get; set; }
+    public string CompanyId { get; set; }=string.Empty;
+    // Navigation property
+    public Company? OwnerCompany { get; set; }
 }
