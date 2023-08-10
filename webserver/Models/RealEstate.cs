@@ -1,6 +1,4 @@
-﻿using webserver.Models;
-
-namespace webserver.Models;
+﻿namespace webserver.Models;
 
 public class RealEstate {
 
