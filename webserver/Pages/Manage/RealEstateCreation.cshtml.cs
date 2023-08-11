@@ -43,7 +43,7 @@ namespace webserver.Pages.Manage {
         public async Task<IActionResult> OnPostAsync()
         {
 
-            var company = context.Company.FirstOrDefault(c => c.UserName == Input.Name);
+            var company = context.Company.FirstOrDefault(c => c.UserName == Input.Company);
 
             if(company==null){
                 ModelState.AddModelError(string.Empty, "Company not found!");
