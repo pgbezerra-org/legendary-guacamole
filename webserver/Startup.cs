@@ -23,19 +23,19 @@ namespace webserver {
         public void ConfigureServices(IServiceCollection services) {
 
             services.AddIdentity<BZEmployee, IdentityRole>()
-        .AddEntityFrameworkStores<WebserverContext>()
-        .AddDefaultTokenProviders();
+                .AddEntityFrameworkStores<WebserverContext>()
+                .AddDefaultTokenProviders();
 
             services.AddMvc();
 
             services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
-    .AddCookie(options => {
-        options.LoginPath="/Accounts/Login";
-        options.AccessDeniedPath = "/Accounts/Login";
-        options.ExpireTimeSpan = TimeSpan.FromMinutes(30);
-        options.SlidingExpiration = true;
-        options.Cookie.Name = Common.BZECookie;
-    });
+                .AddCookie(options => {
+                    options.LoginPath="/Accounts/Login";
+                    options.AccessDeniedPath = "/Accounts/Login";
+                    options.ExpireTimeSpan = TimeSpan.FromMinutes(30);
+                    options.SlidingExpiration = true;
+                    options.Cookie.Name = Common.BZECookie;
+                });
 
             services.AddControllersWithViews();
 
@@ -49,14 +49,6 @@ namespace webserver {
                 options.AccessDeniedPath = "/Accounts/Login";
                 options.ExpireTimeSpan = TimeSpan.FromMinutes(30);
                 options.SlidingExpiration = true;
-            });
-
-            services.AddAuthorization(options=>
-            {
-                options.AddPolicy(Common.BZELevelPolicy, policy=>{
-                    policy.RequireAuthenticatedUser();
-                    policy.RequireClaim(Common.BZECookie);
-                });
             });
 
             services.ConfigureApplicationCookie(options=>{
@@ -96,6 +88,5 @@ namespace webserver {
                 endpoints.MapControllers();
             });
         }
-
     }
 }

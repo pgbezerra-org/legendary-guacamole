@@ -45,7 +45,6 @@ namespace webserver.Pages.Account {
             }
 
             //Just to stop with the compiler warnings
-            // Ensure the user properties are not null before accessing them
             if (user.PasswordHash is null || user.UserName is null || user.Email is null) {
                 return Page();
             }
@@ -57,19 +56,27 @@ namespace webserver.Pages.Account {
                 return Page();
             }
 
-            var claims = new List<Claim> {
-                    new Claim(ClaimTypes.Name, user.UserName),
-                    new Claim(ClaimTypes.Email, user.Email)
-                };
+            if(user is BZEmployee){
 
-            var identity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
-            var principal = new ClaimsPrincipal(identity);
+            }else if(user is Company){
+
+            }else if(user is Client){
+                
+            }
 
             var authProperties = new AuthenticationProperties {
                 ExpiresUtc = DateTimeOffset.UtcNow.AddMinutes(10),
                 IsPersistent = true,
                 IssuedUtc = DateTimeOffset.UtcNow
             };
+
+            var claims = new List<Claim> {
+                    new Claim(ClaimTypes.Name, user.UserName),
+                    new Claim(ClaimTypes.Email, user.Email)
+            };
+            
+            var identity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
+            var principal = new ClaimsPrincipal(identity);
 
             await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, principal, authProperties);
 

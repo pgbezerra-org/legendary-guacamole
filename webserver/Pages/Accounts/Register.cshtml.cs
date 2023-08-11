@@ -1,8 +1,18 @@
 using System.ComponentModel.DataAnnotations;
+using System.Security.Claims;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using webserver.Models;
+using webserver.Data;
+
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.AspNetCore;
+using Microsoft.Extensions;
+using webserver;
 
 namespace webserver.Pages.Account {
 
@@ -12,9 +22,11 @@ namespace webserver.Pages.Account {
         public RegisterInputModel RegisterInput { get; set; } = new RegisterInputModel();
 
         private readonly UserManager<BZEmployee> _userManager;
+        private readonly RoleManager<IdentityRole> _roleManager;
 
-        public RegisterModel(UserManager<BZEmployee> userManager) {
+        public RegisterModel(UserManager<BZEmployee> userManager, RoleManager<IdentityRole> roleManager) {
             _userManager = userManager;
+            _roleManager=roleManager;
         }
 
         public void OnGet() {
@@ -41,15 +53,19 @@ namespace webserver.Pages.Account {
             var user = new BZEmployee {
                 UserName = RegisterInput.Name,
                 Email = RegisterInput.Email,
-                PhoneNumber = RegisterInput.Phone,
-                
+                PhoneNumber = RegisterInput.Phone                
             };
+
+            //var role1 = await roleManager.FindByNameAsync("Employee");
+            var role = new IdentityRole(Common.BZERole);
+            await _roleManager.CreateAsync(role);
+            await _roleManager.AddClaimAsync(role, new Claim(ClaimTypes.Role, Common.BZERole));
 
             var result = await _userManager.CreateAsync(user, RegisterInput.Password);
 
             if (result.Succeeded) {
                 
-                Console.Write("Implementa o automatic login aqui");
+                Console.WriteLine("Implementa o automatic login aqui");
                 Console.WriteLine("User SignUp successfull");
 
                 return RedirectToPage("/Success");

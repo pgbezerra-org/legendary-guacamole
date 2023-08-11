@@ -1,14 +1,8 @@
-﻿using System.Security.Claims;
-using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using webserver.Data;
 using webserver.Models;
-using Microsoft.AspNetCore;
-using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions;
-using Microsoft.AspNetCore.Identity.UI;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -24,7 +18,6 @@ builder.Services.AddDefaultIdentity<BZEAccount>()
         .AddDefaultTokenProviders();
 
 //builder.Services.AddDefaultIdentity<BZEmployee>().AddEntityFrameworkStores<WebserverContext>();
-
 builder.Services.AddIdentityCore<BZEmployee>().AddEntityFrameworkStores<WebserverContext>();
 builder.Services.AddIdentityCore<Company>().AddEntityFrameworkStores<WebserverContext>();
 builder.Services.AddIdentityCore<Client>().AddEntityFrameworkStores<WebserverContext>();
@@ -50,13 +43,6 @@ builder.Services.AddAuthentication(Common.BZECookie)
     });
 
 builder.Services.AddAuthorization();
-
-builder.Services.AddAuthorization(options=>{
-    options.AddPolicy(Common.BZELevelPolicy, policy=>{
-        policy.RequireAuthenticatedUser();
-        policy.RequireClaim(ClaimTypes.Name, ClaimTypes.Email);
-    });
-});
 
 builder.Services.ConfigureApplicationCookie(options=>{
                 options.Cookie.Name=Common.BZECookie;
