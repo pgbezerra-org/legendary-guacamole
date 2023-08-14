@@ -44,7 +44,7 @@ namespace webserver {
                     options.AccessDeniedPath = "/Accounts/Login";
                     options.ExpireTimeSpan = TimeSpan.FromMinutes(30);
                     options.SlidingExpiration = true;
-                    options.Cookie.Name = Common.BZE_Cookie;
+                    options.Cookie.Name = Common.BZECookie;
                 });
 
             services.AddAuthorization();
@@ -55,7 +55,7 @@ namespace webserver {
                 options.UseMySQL(Configuration.GetConnectionString("MyConnection")));
 
             services.ConfigureApplicationCookie(options => {
-                options.Cookie.Name = Common.BZE_Cookie;
+                options.Cookie.Name = Common.BZECookie;
                 options.LoginPath = "/Accounts/Login";
                 options.AccessDeniedPath = "/Accounts/Login";
                 options.ExpireTimeSpan = TimeSpan.FromMinutes(30);
