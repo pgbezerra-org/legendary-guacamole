@@ -60,10 +60,13 @@ namespace webserver.Pages.Account {
             var role = new IdentityRole(Common.BZERole);
             await _roleManager.CreateAsync(role);
             await _roleManager.AddClaimAsync(role, new Claim(ClaimTypes.Role, Common.BZERole));
-*/
+            */
             var result = await _userManager.CreateAsync(user, RegisterInput.Password);
 
             if (result.Succeeded) {
+
+                await _userManager.AddToRoleAsync(user,Common.BZERole);
+                _roleManager.add
                 
                 Console.WriteLine("Implementa o automatic login aqui");
                 Console.WriteLine("User SignUp successfull");
