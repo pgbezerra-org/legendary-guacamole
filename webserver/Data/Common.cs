@@ -1,13 +1,13 @@
 namespace webserver.Data {
     public static class Common {
 
-        public const string BZECookie = "BZE_Auth";
-        public const string CompanyCookie = "Company_Auth";
-        public const string ClientCookie = "Client_Auth";
+        public const string BZE_Cookie = "BZE_Auth";
+        public const string Company_Cookie = "Company_Auth";
+        public const string Client_Cookie = "Client_Auth";
         
-        public const string BZERole="BZE_Role";
-        public const string CompanyRole="Company_Role";
-        public const string ClientRole="Client_Role";
+        public const string BZE_Role="BZE_Role";
+        public const string Company_Role="Company_Role";
+        public const string Client_Role="Client_Role";
         
     }    
 }

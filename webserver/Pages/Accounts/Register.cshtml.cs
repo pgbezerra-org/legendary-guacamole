@@ -65,7 +65,7 @@ namespace webserver.Pages.Account {
 
             if (result.Succeeded) {
 
-                await _userManager.AddToRoleAsync(user,Common.BZERole);
+                await _userManager.AddToRoleAsync(user,Common.BZE_Role);
                 _roleManager.add
                 
                 Console.WriteLine("Implementa o automatic login aqui");
