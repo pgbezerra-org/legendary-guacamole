@@ -5,13 +5,12 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
-using webserver.Models;
-using webserver.Data;
-
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.AspNetCore;
 using Microsoft.Extensions;
+using webserver.Models;
+using webserver.Data;
 using webserver;
 
 namespace webserver.Pages.Account {
@@ -57,10 +56,11 @@ namespace webserver.Pages.Account {
             };
 
             //var role1 = await roleManager.FindByNameAsync("Employee");
+            /*
             var role = new IdentityRole(Common.BZERole);
             await _roleManager.CreateAsync(role);
             await _roleManager.AddClaimAsync(role, new Claim(ClaimTypes.Role, Common.BZERole));
-
+*/
             var result = await _userManager.CreateAsync(user, RegisterInput.Password);
 
             if (result.Succeeded) {

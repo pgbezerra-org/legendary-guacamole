@@ -22,45 +22,47 @@ namespace webserver {
 
         public void ConfigureServices(IServiceCollection services) {
 
-            services.AddIdentity<BZEmployee, IdentityRole>()
+            services.AddDefaultIdentity<BZEAccount>()
+                .AddRoles<IdentityRole>()
                 .AddEntityFrameworkStores<WebserverContext>()
                 .AddDefaultTokenProviders();
+
+            services.AddIdentityCore<BZEmployee>().AddRoles<IdentityRole>()
+                .AddEntityFrameworkStores<WebserverContext>();
+            services.AddIdentityCore<Company>().AddRoles<IdentityRole>()
+                .AddEntityFrameworkStores<WebserverContext>();
+            services.AddIdentityCore<Client>().AddRoles<IdentityRole>()
+                .AddEntityFrameworkStores<WebserverContext>();
+
+            services.AddRazorPages();
 
             services.AddMvc();
 
             services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
                 .AddCookie(options => {
-                    options.LoginPath="/Accounts/Login";
+                    options.LoginPath = "/Accounts/Login";
                     options.AccessDeniedPath = "/Accounts/Login";
                     options.ExpireTimeSpan = TimeSpan.FromMinutes(30);
                     options.SlidingExpiration = true;
                     options.Cookie.Name = Common.BZECookie;
                 });
 
+            services.AddAuthorization();
+
             services.AddControllersWithViews();
 
             services.AddDbContext<WebserverContext>(options =>
                 options.UseMySQL(Configuration.GetConnectionString("MyConnection")));
 
-            services.AddAuthentication(Common.BZECookie).AddCookie(options=>
-            {
-                options.Cookie.Name=Common.BZECookie;
-                options.LoginPath="/Accounts/Login";
+            services.ConfigureApplicationCookie(options => {
+                options.Cookie.Name = Common.BZECookie;
+                options.LoginPath = "/Accounts/Login";
                 options.AccessDeniedPath = "/Accounts/Login";
                 options.ExpireTimeSpan = TimeSpan.FromMinutes(30);
                 options.SlidingExpiration = true;
             });
-
-            services.ConfigureApplicationCookie(options=>{
-                options.Cookie.Name=Common.BZECookie;
-                options.LoginPath="/Accounts/Login";
-                options.AccessDeniedPath = "/Accounts/Login";
-                options.ExpireTimeSpan = TimeSpan.FromMinutes(30);
-                options.SlidingExpiration = true;
-            });
-
-            services.AddRazorPages();
         }
+
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env) {
             // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940

@@ -56,14 +56,6 @@ namespace webserver.Pages.Account {
                 return Page();
             }
 
-            if(user is BZEmployee){
-
-            }else if(user is Company){
-
-            }else if(user is Client){
-                
-            }
-
             var authProperties = new AuthenticationProperties {
                 ExpiresUtc = DateTimeOffset.UtcNow.AddMinutes(10),
                 IsPersistent = true,
@@ -74,6 +66,13 @@ namespace webserver.Pages.Account {
                     new Claim(ClaimTypes.Name, user.UserName),
                     new Claim(ClaimTypes.Email, user.Email)
             };
+            
+            //this block is generating the error: 
+            //NotSupportedException: Store does not implement IUserRoleStore<TUser>.
+            var roles=await _userManager.GetRolesAsync(user);
+            foreach(var role in roles){
+                claims.Add(new Claim(ClaimTypes.Role, role));
+            }
             
             var identity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
             var principal = new ClaimsPrincipal(identity);

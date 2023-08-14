@@ -13,14 +13,14 @@ builder.Services.AddDbContext<WebserverContext>(options =>
     options.UseMySQL(builder.Configuration.GetConnectionString("MyConnection") ?? throw new InvalidOperationException("Connection string 'Guacamole' not found.")));
 //builder.Services.AddDatabaseDeveloperPageExceptionFilter(); //useless but alright
 
-builder.Services.AddDefaultIdentity<BZEAccount>()
-        .AddEntityFrameworkStores<WebserverContext>()
+builder.Services.AddDefaultIdentity<BZEAccount>().AddRoles<IdentityRole>()
+                .AddEntityFrameworkStores<WebserverContext>()
         .AddDefaultTokenProviders();
 
 //builder.Services.AddDefaultIdentity<BZEmployee>().AddEntityFrameworkStores<WebserverContext>();
-builder.Services.AddIdentityCore<BZEmployee>().AddEntityFrameworkStores<WebserverContext>();
-builder.Services.AddIdentityCore<Company>().AddEntityFrameworkStores<WebserverContext>();
-builder.Services.AddIdentityCore<Client>().AddEntityFrameworkStores<WebserverContext>();
+builder.Services.AddIdentityCore<BZEmployee>().AddRoles<IdentityRole>().AddEntityFrameworkStores<WebserverContext>();
+builder.Services.AddIdentityCore<Company>().AddRoles<IdentityRole>().AddEntityFrameworkStores<WebserverContext>();
+builder.Services.AddIdentityCore<Client>().AddRoles<IdentityRole>().AddEntityFrameworkStores<WebserverContext>();
 
 // Add authentication
 builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
