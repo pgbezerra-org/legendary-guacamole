@@ -29,23 +29,23 @@ builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationSc
         options.AccessDeniedPath = "/Accounts/Login";
         options.ExpireTimeSpan = TimeSpan.FromMinutes(30);
         options.SlidingExpiration = true;
-        options.Cookie.Name = Common.BZECookie;
+        options.Cookie.Name = Common.BZE_Cookie;
     });
 
-builder.Services.AddAuthentication(Common.BZECookie)
-    .AddCookie(Common.BZECookie, options => {
-        options.Cookie.Name=Common.BZECookie;
+builder.Services.AddAuthentication(Common.BZE_Cookie)
+    .AddCookie(Common.BZE_Cookie, options => {
+        options.Cookie.Name=Common.BZE_Cookie;
                 options.LoginPath="/Accounts/Login";
                 options.AccessDeniedPath = "/Accounts/Login";
                 options.ExpireTimeSpan = TimeSpan.FromMinutes(30);
                 options.SlidingExpiration = true;
-                options.Cookie.Name = Common.BZECookie;
+                options.Cookie.Name = Common.BZE_Cookie;
     });
 
 builder.Services.AddAuthorization();
 
 builder.Services.ConfigureApplicationCookie(options=>{
-                options.Cookie.Name=Common.BZECookie;
+                options.Cookie.Name=Common.BZE_Cookie;
                 options.LoginPath="/Accounts/Login";
                 options.AccessDeniedPath = "/Accounts/Login";
                 options.ExpireTimeSpan = TimeSpan.FromMinutes(30);
