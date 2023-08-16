@@ -72,12 +72,7 @@ namespace webserver.Pages.Account {
             var roles=await _userManager.GetRolesAsync(user);
             foreach(var role in roles){
                 claims.Add(new Claim(ClaimTypes.Role, role));
-            }
-
-            foreach(var claim in claims){
-                Console.WriteLine(claim.Type.ToString()+" --- DDDdebug");
-                Console.WriteLine(claim.Value.ToString()+" --- DDDdebug");
-                Console.WriteLine(claim.ValueType.ToString()+" --- DDDdebug");
+                Console.WriteLine(role + " --- " + role.ToString());
             }
             
             var identity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);

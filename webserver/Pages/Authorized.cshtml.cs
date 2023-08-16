@@ -7,7 +7,7 @@ using System.Diagnostics;
 namespace webserver.Pages
 {
 
-    [Authorize(Roles = Common.BZE_Role)]
+    [Authorize]
     //[Authorize(AuthenticationSchemes = CookieAuthenticationDefaults.AuthenticationScheme, Roles = Common.BZE_Role)]
     public class Authorized : PageModel
     {
