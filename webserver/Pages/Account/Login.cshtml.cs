@@ -34,11 +34,14 @@ namespace webserver.Pages.Account {
 
             var user = await _userManager.FindByEmailAsync(Credential.Email);
 
+            if (_userManager == null) {
+                ModelState.AddModelError(string.Empty, "manager not registered!");
+                return Page();
+            }            
             if (user == null) {
                 ModelState.AddModelError(string.Empty, "User not registered!");
                 return Page();
             }
-
             //Just to stop with the compiler warnings
             // Ensure the user properties are not null before accessing them
             if (user.PasswordHash is null || user.UserName is null || user.Email is null) {
@@ -73,7 +76,20 @@ namespace webserver.Pages.Account {
                 IssuedUtc = DateTimeOffset.UtcNow
             };
 
-            await HttpContext.SignInAsync("MyCookieAuth", new ClaimsPrincipal(claimsIdentity), authProperties);
+            var claims = new List<Claim> {
+                    new Claim(ClaimTypes.Name, user.UserName),
+                    new Claim(ClaimTypes.Email, user.Email)
+            };
+            
+            var roles = await _userManager.GetRolesAsync(user);
+            foreach(var role in roles){
+                claims.Add(new Claim(ClaimTypes.Role, role));
+            }
+            
+            var identity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
+            var principal = new ClaimsPrincipal(identity);
+
+            await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, principal, authProperties);
 
             // Redirect to the desired page after successful login
             return RedirectToPage("/Privacy");
