@@ -1,6 +1,6 @@
+using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using webserver.Models;
@@ -8,15 +8,15 @@ using webserver.Data;
 
 namespace webserver.Pages.Manage {
 
-    [Authorize(Roles=Common.BZE_Role+","+Common.Company_Role)]
-    public class ClientCreation : PageModel {
+    [Authorize(Roles=Common.BZE_Role)]
+    public class CompanyCreation : PageModel {
 
         [BindProperty]
         public InputModel Input { get; set; } = new InputModel();
 
-        private readonly UserManager<Client> _userManager;
+        private readonly UserManager<Company> _userManager;
 
-        public ClientCreation(UserManager<Client> userManager)
+        public CompanyCreation(UserManager<Company> userManager)
         {
             _userManager = userManager;
         }
@@ -32,8 +32,16 @@ namespace webserver.Pages.Manage {
             public string Email { get; set; }=string.Empty;
 
             [Required]
-            [Display(Name = "Occupation")]
-            public string Occupation { get; set; }=string.Empty;
+            [Display(Name = "City")]
+            public string City { get; set; }=string.Empty;
+
+            [Required]
+            [Display(Name = "State")]
+            public string State { get; set; }=string.Empty;
+            
+            [Required]
+            [Display(Name = "Country")]
+            public string Country { get; set; }=string.Empty;
 
             [Required]
             [DataType(DataType.Password)]
@@ -60,14 +68,15 @@ namespace webserver.Pages.Manage {
             }            
 
             var auxUser = await _userManager.FindByEmailAsync(Input.Email);
+
             if(auxUser != null){
                 ModelState.AddModelError(string.Empty, "Email already registered!");
                 return Page();
             }
 
-            var client = new Client { UserName = Input.Name, Email = Input.Email, Occupation = Input.Occupation };
+            var company = new Company { UserName = Input.Name, Email = Input.Email, Country = Input.Country, State = Input.State, City = Input.City };
 
-            var result = await _userManager.CreateAsync(client, Input.Password);
+            var result = await _userManager.CreateAsync(company, Input.Password);
 
             if (result.Succeeded) {
                 return RedirectToPage("/Success");
