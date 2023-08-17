@@ -54,15 +54,7 @@ namespace webserver {
             services.AddDbContext<WebserverContext>(options =>
                 options.UseMySQL(Configuration.GetConnectionString("MyConnection")));
 
-            services.ConfigureApplicationCookie(options => {
-                options.Cookie.Name = Common.BZE_Cookie;
-                options.LoginPath = "/Accounts/Login";
-                options.AccessDeniedPath = "/Accounts/Login";
-                options.ExpireTimeSpan = TimeSpan.FromMinutes(30);
-                options.SlidingExpiration = true;
-            });
         }
-
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env) {
             // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
