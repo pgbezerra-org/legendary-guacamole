@@ -1,0 +1,38 @@
+@page
+@model webserver.Pages.Manage.RECRUD
+@{
+    ViewData["Title"] = "RECRUD";
+}
+
+<h1>@ViewData["Title"]</h1>
+
+<br>
+    <h2>Real Estates List</h2>
+    <a class="btn btn-primary btn-sm" href="/Pages/Manage/RealEstateCreation">Create</a>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Address</th>
+                <th>Price</th>
+                <th>Company</th>
+            </tr>
+        </thead>
+        <body>
+            <li class="item">
+                @foreach(var item in Model.listREINFOs){
+                    <tr>
+                        <td>@item.Name</td>
+                        <td>@item.Address</td>
+                        <td>@item.Price</td>
+                        <td>@item.CompanyName</td>
+                    </tr>
+                }
+            </li>
+        </body>
+    </table>
+</br>
+
+<div>
+    
+</div>
