@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using System.ComponentModel.DataAnnotations;
@@ -6,6 +7,7 @@ using webserver.Data;
 
 namespace webserver.Pages.Manage {
 
+    [Authorize(Roles =Common.BZE_Role+","+Common.Company_Role)]
     public class RealEstateCreation : PageModel {
 
         [BindProperty]
