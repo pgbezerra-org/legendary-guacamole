@@ -50,10 +50,10 @@ namespace webserver {
             services.AddAuthorization();
 
             services.AddControllersWithViews();
-
+            
+            string connectionString="MyConnection";
             services.AddDbContext<WebserverContext>(options =>
-                options.UseMySQL(Configuration.GetConnectionString("MyConnection")));
-
+                options.UseMySQL(connectionString));
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env) {
