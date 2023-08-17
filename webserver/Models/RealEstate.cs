@@ -1,6 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
-
-namespace webserver.Models;
+﻿namespace webserver.Models;
 
 public class RealEstate {
 

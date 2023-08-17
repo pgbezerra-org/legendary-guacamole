@@ -1,6 +1,4 @@
-﻿using Microsoft.AspNetCore.Identity;
-
-namespace webserver.Models;
+﻿namespace webserver.Models;
 
 public class BZEmployee : BZEAccount {
 

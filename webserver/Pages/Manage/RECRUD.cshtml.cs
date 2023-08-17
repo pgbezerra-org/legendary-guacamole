@@ -1,24 +1,18 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using Microsoft.Data.SqlClient;
-using Microsoft.Extensions.Logging;
-using webserver.Models;
 using MySqlConnector;
+using webserver.Data;
 
 namespace webserver.Pages.Manage
 {
+    [Authorize(Roles =Common.BZE_Role)]
+    
     public class RECRUD : PageModel
     {
         public List<RealEstateINFO> listREINFOs=new List<RealEstateINFO>();
-        private readonly ILogger<RECRUD> _logger;        
-
-        public RECRUD(ILogger<RECRUD> logger)
-        {
-            _logger = logger;
+        
+        public RECRUD() {
+            
         }
 
         public void OnGet()

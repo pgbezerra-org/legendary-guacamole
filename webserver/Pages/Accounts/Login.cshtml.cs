@@ -38,12 +38,10 @@ namespace webserver.Pages.Account {
                 ModelState.AddModelError(string.Empty, "manager not registered!");
                 return Page();
             }            
-
             if (user == null) {
                 ModelState.AddModelError(string.Empty, "Email not registered!");
                 return Page();
             }
-
             //Just to stop with the compiler warnings
             if (user.PasswordHash is null || user.UserName is null || user.Email is null) {
                 return Page();
@@ -67,15 +65,9 @@ namespace webserver.Pages.Account {
                     new Claim(ClaimTypes.Email, user.Email)
             };
             
-            //this block is generating the error: 
-            //NotSupportedException: Store does not implement IUserRoleStore<TUser>.
-            var roles=await _userManager.GetRolesAsync(user);
+            var roles = await _userManager.GetRolesAsync(user);
             foreach(var role in roles){
                 claims.Add(new Claim(ClaimTypes.Role, role));
-            }
-
-            foreach(Claim cla in claims){
-                Console.WriteLine(cla);
             }
             
             var identity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);

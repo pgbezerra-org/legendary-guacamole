@@ -58,7 +58,6 @@ namespace webserver.Pages.Manage {
             }            
 
             var auxUser = await _userManager.FindByEmailAsync(Input.Email);
-
             if(auxUser != null){
                 ModelState.AddModelError(string.Empty, "Email already registered!");
                 return Page();
