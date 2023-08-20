@@ -33,14 +33,14 @@ builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationSc
     });
 
 builder.Services.AddAuthorization();
-
+/*
 builder.Services.ConfigureApplicationCookie(options=>{
                 options.Cookie.Name=Common.BZE_Cookie;
                 options.LoginPath="/Accounts/Login";
                 options.AccessDeniedPath = "/Accounts/Login";
                 options.ExpireTimeSpan = TimeSpan.FromMinutes(30);
                 options.SlidingExpiration = true;
-            });
+            });*/
 
 var app = builder.Build();
 
