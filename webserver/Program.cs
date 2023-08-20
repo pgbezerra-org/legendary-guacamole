@@ -18,19 +18,24 @@ builder.Services.AddIdentity<Company, IdentityRole>()
     .AddDefaultTokenProviders();
 
 // Add authentication
-builder.Services.AddAuthentication("MyCookieAuth")
-    .AddCookie("MyCookieAuth", options => {
-        options.Cookie.Name = "MyCookieAuth";
-        options.Cookie.SameSite = SameSiteMode.Strict;
-        options.Events.OnRedirectToAccessDenied = context => {
-            context.Response.StatusCode = 403;
-            return Task.CompletedTask;
-        };
-        options.Events.OnRedirectToLogin = context => {
-            context.Response.StatusCode = 401;
-            return Task.CompletedTask;
-        };
+builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+    .AddCookie(options => {
+        options.LoginPath="/Accounts/Login";
+        options.AccessDeniedPath = "/Accounts/Login";
+        options.ExpireTimeSpan = TimeSpan.FromMinutes(30);
+        options.SlidingExpiration = true;
+        options.Cookie.Name = Common.BZE_Cookie;
     });
+
+builder.Services.AddAuthorization();
+/*
+builder.Services.ConfigureApplicationCookie(options=>{
+                options.Cookie.Name=Common.BZE_Cookie;
+                options.LoginPath="/Accounts/Login";
+                options.AccessDeniedPath = "/Accounts/Login";
+                options.ExpireTimeSpan = TimeSpan.FromMinutes(30);
+                options.SlidingExpiration = true;
+            });*/
 
 var app = builder.Build();
 
