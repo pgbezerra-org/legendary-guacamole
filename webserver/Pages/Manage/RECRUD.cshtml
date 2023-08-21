@@ -8,7 +8,9 @@
 
 <br>
     <h2>Real Estates List</h2>
-    <a class="btn btn-primary btn-sm" href="/Pages/Manage/RealEstateCreation">Create</a>
+    @if(User.IsInRole("Client")==false){
+        <a class="btn btn-primary btn-sm" href="/Pages/Manage/RealEstateCreation">Create</a>
+    }
     <table class="table">
         <thead>
             <tr>

@@ -4,7 +4,7 @@ using MySqlConnector;
 
 namespace webserver.Pages.Manage 
 {
-    [Authorize]    
+    [Authorize(Roles=Common.BZE_Role)]
     public class EmployeesLIST : PageModel {
         public List<EmployeeINFO> listEmpls=new List<EmployeeINFO>();
         

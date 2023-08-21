@@ -11,7 +11,7 @@ using webserver.Data;
 
 namespace webserver.Pages.Manage 
 {
-    [Authorize]    
+    [Authorize(Roles=Common.BZE_Role)]
     public class CompanyLIST : PageModel {
         public List<CompanyINFO> listComps=new List<CompanyINFO>();
         
