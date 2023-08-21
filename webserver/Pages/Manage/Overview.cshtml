@@ -1,0 +1,22 @@
+@page
+@model webserver.Pages.Manage.Overview
+@{
+    ViewData["Title"] = "Overview";
+}
+
+<h1>@ViewData["Title"]</h1>
+
+<div>
+    <ul>
+        <li>
+            <a class="btn btn-primary btn-sm" href="/Manage/CompanyCreation">Company Register</a>
+            <a class="btn btn-primary btn-sm" href="/Manage/ClientCreation">Client Register</a>
+            <a class="btn btn-primary btn-sm" href="/Manage/RealEstateCreation">Real Estate Creation</a>
+        </li>
+        <p></p>
+        <li>
+            <a class="btn btn-primary btn-sm" href="/Manage/RECRUD">Real Estate CRUD</a>
+            <a class="btn btn-primary btn-sm" href="/Manage/CompanyLIST">Companies CRUD</a>
+        </li>
+    </ul>
+</div>
