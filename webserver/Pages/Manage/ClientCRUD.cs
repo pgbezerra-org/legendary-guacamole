@@ -4,7 +4,7 @@ using MySqlConnector;
 
 namespace webserver.Pages.Manage 
 {
-    [Authorize]    
+    [Authorize(Roles=Common.BZE_Role+","+Common.Company_Role)]
     public class ClientCRUD : PageModel {
         public List<ClientINFO> listClients=new List<ClientINFO>();
         

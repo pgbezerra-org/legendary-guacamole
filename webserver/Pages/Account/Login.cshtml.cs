@@ -73,7 +73,29 @@ namespace webserver.Pages.Account {
                 IssuedUtc = DateTimeOffset.UtcNow
             };
 
+<<<<<<< HEAD:webserver/Pages/Account/Login.cshtml.cs
             await HttpContext.SignInAsync("MyCookieAuth", new ClaimsPrincipal(claimsIdentity), authProperties);
+=======
+            var claims = new List<Claim> {
+                    new Claim(ClaimTypes.Name, user.UserName),
+                    new Claim(ClaimTypes.Email, user.Email)
+            };
+            
+            var roles = await _userManager.GetRolesAsync(user);
+            foreach(var role in roles){
+                claims.Add(new Claim(ClaimTypes.Role, role));
+            }
+            
+            var identity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
+            var principal = new ClaimsPrincipal(identity);
+
+            
+
+
+            
+
+            await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, principal, authProperties);
+>>>>>>> df4c939 (Pages Authorizations Arranged):webserver/Pages/Accounts/Login.cshtml.cs
 
             // Redirect to the desired page after successful login
             return RedirectToPage("/Privacy");
