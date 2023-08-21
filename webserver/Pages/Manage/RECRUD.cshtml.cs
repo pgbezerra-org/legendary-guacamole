@@ -5,7 +5,7 @@ using webserver.Data;
 
 namespace webserver.Pages.Manage
 {
-    [Authorize(Roles =Common.BZE_Role)]
+    [Authorize]
     
     public class RECRUD : PageModel
     {
@@ -21,7 +21,7 @@ namespace webserver.Pages.Manage
 
             using (MySqlConnection connection=new MySqlConnection(MyConnection)){
                 connection.Open();
-                string allREs="SELECT * FROM RealEstates"; //limit search at a later date...
+                string allREs = "SELECT RealEstates.*, AspNetUsers.* FROM RealEstates INNER JOIN AspNetUsers ON RealEstates.CompanyId = AspNetUsers.Id"; //limit search at a later date...
                 using (MySqlCommand command = new MySqlCommand(allREs, connection)){
                     using (MySqlDataReader reader=command.ExecuteReader()){
                         while(reader.Read()){
@@ -31,13 +31,16 @@ namespace webserver.Pages.Manage
                             REINFO.Address=reader.GetString(2);
                             REINFO.Price=(decimal)reader.GetFloat(3);
                             REINFO.CompanyId=reader.GetString(4);
-    
+                            REINFO.CompanyName = reader.GetString(reader.GetOrdinal("UserName"));
+                            //Console.WriteLine(reader.GetString());
                             listREINFOs.Add(REINFO);
                         }
                     }
                 }
             }
         }
+
+        
     }
 }
 
