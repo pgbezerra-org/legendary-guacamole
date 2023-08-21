@@ -1,0 +1,38 @@
+@page
+@model webserver.Pages.Manage.CompanyLIST
+@{
+    ViewData["Title"] = "CompanyLIST";
+}
+
+<h1>@ViewData["Title"]</h1>
+
+<br>
+    <h2>Companies List</h2>
+    <a class="btn btn-primary btn-sm" href="/Pages/Manage/CompanyLIST">Create</a>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>City</th>
+                <th>State</th>
+                <th>Country</th>
+            </tr>
+        </thead>
+        <body>
+            <li class="item">
+                @foreach(var item in Model.listComps){
+                    <tr>
+                        <td>@item.UserName</td>
+                        <td>@item.City</td>
+                        <td>@item.State</td>
+                        <td>@item.Country</td>
+                    </tr>
+                }
+            </li>
+        </body>
+    </table>
+</br>
+
+<div>
+    
+</div>
