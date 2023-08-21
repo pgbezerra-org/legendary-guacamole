@@ -1,0 +1,31 @@
+@page
+@model webserver.Pages.Manage.ClientCRUD
+@{
+    ViewData["Title"] = "ClientCRUD";
+}
+
+<h1>@ViewData["Title"]</h1>
+
+<br>
+    <h2>Client LIST</h2>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Name</th>
+            </tr>
+        </thead>
+        <body>
+            <li class="item">
+                @foreach(var item in Model.listClients){
+                    <tr>
+                        <td>@item.UserName</td>
+                    </tr>
+                }
+            </li>
+        </body>
+    </table>
+</br>
+
+<div>
+    
+</div>
