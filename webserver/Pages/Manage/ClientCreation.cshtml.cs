@@ -15,10 +15,12 @@ namespace webserver.Pages.Manage {
         public InputModel Input { get; set; } = new InputModel();
 
         private readonly UserManager<Client> _userManager;
+        private readonly RoleManager<IdentityRole> _roleManager;
 
-        public ClientCreation(UserManager<Client> userManager)
+        public ClientCreation(UserManager<Client> userManager, RoleManager<IdentityRole> roleManager)
         {
             _userManager = userManager;
+            _roleManager = roleManager;
         }
 
         public class InputModel
@@ -70,6 +72,13 @@ namespace webserver.Pages.Manage {
             var result = await _userManager.CreateAsync(client, Input.Password);
 
             if (result.Succeeded) {
+
+                var roleExist = await _roleManager.RoleExistsAsync(Common.Company_Role);
+                if (!roleExist){
+                    await _roleManager.CreateAsync(new IdentityRole(Common.Company_Role));
+                }
+
+                await _userManager.AddToRoleAsync(client, Common.Client_Role);
                 return RedirectToPage("/Success");
             } else {
 

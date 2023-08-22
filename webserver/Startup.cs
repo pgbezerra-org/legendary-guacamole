@@ -50,8 +50,17 @@ namespace webserver {
                 options.UseMySQL(connectionString));
         }
 
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env) {
+        public async void Configure(IApplicationBuilder app, IWebHostEnvironment env, IServiceProvider serviceProvider) {
             // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
+            
+            var roleManager = serviceProvider.GetRequiredService<RoleManager<IdentityRole>>();
+            string[] roleNames = { Common.BZE_Role, Common.Company_Role, Common.Client_Role };
+            foreach (var roleName in roleNames) {
+                var roleExist = await roleManager.RoleExistsAsync(roleName);
+                if (!roleExist){
+                    await roleManager.CreateAsync(new IdentityRole(roleName));
+                }
+            }
 
             if (!env.IsDevelopment()) {
                 app.UseDeveloperExceptionPage();
