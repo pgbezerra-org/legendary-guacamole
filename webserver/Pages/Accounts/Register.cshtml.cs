@@ -34,8 +34,7 @@ namespace webserver.Pages.Account {
             if (_userManager == null) {
                 ModelState.AddModelError(string.Empty, "manager not registered!");
                 return Page();
-            }            
-
+            }
             if(auxUser!=null){
                 ModelState.AddModelError(string.Empty, "Email already registered!");
                 return Page();
@@ -58,9 +57,7 @@ namespace webserver.Pages.Account {
             if (result.Succeeded) {
 
                 await _userManager.AddToRoleAsync(user,Common.BZE_Role);
-                
                 Console.WriteLine("Implementa o automatic login aqui");
-                Console.WriteLine("User SignUp successfull");
 
                 return RedirectToPage("/Success");
 

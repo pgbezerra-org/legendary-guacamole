@@ -62,13 +62,11 @@ namespace webserver.Pages.Manage {
             }
             */            
 
+            var auxUser = await _userManager.FindByEmailAsync(Input.Email);
             if (_userManager == null) {
                 ModelState.AddModelError(string.Empty, "manager not registered!");
                 return Page();
-            }            
-
-            var auxUser = await _userManager.FindByEmailAsync(Input.Email);
-
+            }
             if(auxUser != null){
                 ModelState.AddModelError(string.Empty, "Email already registered!");
                 return Page();
@@ -79,6 +77,7 @@ namespace webserver.Pages.Manage {
             var result = await _userManager.CreateAsync(company, Input.Password);
 
             if (result.Succeeded) {
+                await _userManager.AddToRoleAsync(company, Common.Company_Role);
                 return RedirectToPage("/Success");
             } else {
 
