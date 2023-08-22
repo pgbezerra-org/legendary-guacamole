@@ -32,8 +32,18 @@ namespace webserver.Pages.Account {
                 return Page();
             }*/
 
-            // Create a new user based on the registration input
-            var company = new Company {
+            var auxUser = await _userManager.FindByEmailAsync(RegisterInput.Email);
+
+            if (_userManager == null) {
+                ModelState.AddModelError(string.Empty, "manager not registered!");
+                return Page();
+            }
+            if(auxUser!=null){
+                ModelState.AddModelError(string.Empty, "Email already registered!");
+                return Page();
+            }
+
+            var user = new BZEmployee {
                 UserName = RegisterInput.Name,
                 Email = RegisterInput.Email,
                 PhoneNumber=RegisterInput.PhoneNumber,
@@ -45,11 +55,12 @@ namespace webserver.Pages.Account {
             var result = await _userManager.CreateAsync(company, RegisterInput.Password);
 
             if (result.Succeeded) {
-                // Optionally, you can sign in the user after successful registration
-                await _signInManager.SignInAsync(company, isPersistent: false);
 
-                // Redirect to a success page or the desired destination
-                return RedirectToPage("/Privacy");
+                await _userManager.AddToRoleAsync(user,Common.BZE_Role);
+                Console.WriteLine("Implementa o automatic login aqui");
+
+                return RedirectToPage("/Success");
+
             } else {
                 foreach (var error in result.Errors) {
                     ModelState.AddModelError(string.Empty, error.Description);

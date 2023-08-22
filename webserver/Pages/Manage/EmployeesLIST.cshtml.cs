@@ -1,7 +1,7 @@
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Authorization;
 using MySqlConnector;
-using webserver.Data;
+using webserver.Models;
 
 namespace webserver.Pages.Manage 
 {
