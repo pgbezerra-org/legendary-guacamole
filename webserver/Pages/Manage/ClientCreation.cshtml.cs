@@ -1,6 +1,6 @@
-using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using webserver.Models;
@@ -8,16 +8,16 @@ using webserver.Data;
 
 namespace webserver.Pages.Manage {
 
-    [Authorize(Roles=Common.BZE_Role)]
-    public class CompanyCreation : PageModel {
+    [Authorize(Roles=Common.BZE_Role+","+Common.Company_Role)]
+    public class ClientCreation : PageModel {
 
         [BindProperty]
         public InputModel Input { get; set; } = new InputModel();
 
-        private readonly UserManager<Company> _userManager;
+        private readonly UserManager<Client> _userManager;
         private readonly RoleManager<IdentityRole> _roleManager;
 
-        public CompanyCreation(UserManager<Company> userManager, RoleManager<IdentityRole> roleManager)
+        public ClientCreation(UserManager<Client> userManager, RoleManager<IdentityRole> roleManager)
         {
             _userManager = userManager;
             _roleManager = roleManager;
@@ -34,16 +34,8 @@ namespace webserver.Pages.Manage {
             public string Email { get; set; }=string.Empty;
 
             [Required]
-            [Display(Name = "City")]
-            public string City { get; set; }=string.Empty;
-
-            [Required]
-            [Display(Name = "State")]
-            public string State { get; set; }=string.Empty;
-            
-            [Required]
-            [Display(Name = "Country")]
-            public string Country { get; set; }=string.Empty;
+            [Display(Name = "Occupation")]
+            public string Occupation { get; set; }=string.Empty;
 
             [Required]
             [DataType(DataType.Password)]
@@ -64,19 +56,20 @@ namespace webserver.Pages.Manage {
             }
             */            
 
-            var auxUser = await _userManager.FindByEmailAsync(Input.Email);
             if (_userManager == null) {
                 ModelState.AddModelError(string.Empty, "manager not registered!");
                 return Page();
-            }
+            }            
+
+            var auxUser = await _userManager.FindByEmailAsync(Input.Email);
             if(auxUser != null){
                 ModelState.AddModelError(string.Empty, "Email already registered!");
                 return Page();
             }
 
-            var company = new Company { UserName = Input.Name, Email = Input.Email, Country = Input.Country, State = Input.State, City = Input.City };
+            var client = new Client { UserName = Input.Name, Email = Input.Email, Occupation = Input.Occupation };
 
-            var result = await _userManager.CreateAsync(company, Input.Password);
+            var result = await _userManager.CreateAsync(client, Input.Password);
 
             if (result.Succeeded) {
 
@@ -85,7 +78,7 @@ namespace webserver.Pages.Manage {
                     await _roleManager.CreateAsync(new IdentityRole(Common.Company_Role));
                 }
 
-                await _userManager.AddToRoleAsync(company, Common.Company_Role);
+                await _userManager.AddToRoleAsync(client, Common.Client_Role);
                 return RedirectToPage("/Success");
             } else {
 
