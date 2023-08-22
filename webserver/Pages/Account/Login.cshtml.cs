@@ -89,11 +89,6 @@ namespace webserver.Pages.Account {
             var identity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
             var principal = new ClaimsPrincipal(identity);
 
-            
-
-
-            
-
             await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, principal, authProperties);
 >>>>>>> df4c939 (Pages Authorizations Arranged):webserver/Pages/Accounts/Login.cshtml.cs
 
