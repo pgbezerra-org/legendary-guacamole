@@ -56,6 +56,13 @@
                         <td>@item.Address</td>
                         <td>@item.Price</td>
                         <td>@item.CompanyName</td>
+                        <td>
+                            <form asp-page-handler="deleteItem" method="post">
+                                <input type="hidden" name="handler" value="DeleteItem" />
+                                <input type="hidden" name="id" value=@item.Id />
+                                <input type="submit" value="Del" class="btn btn-danger" onclick="return confirm('Are you sure?')" />
+                            </form>
+                        </td>
                     </tr>
                 }
             </li>
