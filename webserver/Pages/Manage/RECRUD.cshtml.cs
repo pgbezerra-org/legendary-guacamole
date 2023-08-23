@@ -18,7 +18,7 @@ namespace webserver.Pages.Manage {
             
         }
 
-        public void OnGet(int pageIndex =1, int pageSize=5, string orderby="Address") {
+        public void OnGet(int pageIndex =1, int pageSize=5, string orderby="Price") {
             string MyConnection= "server=localhost;port=3306;database=Guacamole;user=root;password=xpvista7810";
 
             using (MySqlConnection connection=new MySqlConnection(MyConnection)){
@@ -35,6 +35,7 @@ namespace webserver.Pages.Manage {
             using (MySqlConnection connection=new MySqlConnection(MyConnection)){
                 connection.Open();
                 int offset=(pageIndex-1)*pageSize;
+
                 string allREs = $"SELECT RealEstates.*, AspNetUsers.* FROM RealEstates INNER JOIN AspNetUsers ON RealEstates.CompanyId = AspNetUsers.Id ORDER BY {orderby} LIMIT {pageSize} OFFSET {offset}";
                 //Console.WriteLine(allREs+"   AQUIII MERMAAAAAO ----------- --------\n\n");
                 using (MySqlCommand command = new MySqlCommand(allREs, connection)){
