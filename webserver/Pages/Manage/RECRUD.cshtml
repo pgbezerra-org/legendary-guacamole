@@ -35,6 +35,21 @@
     </table>
 </br>
 
-<div>
-    
+@{
+    int num = (int)Math.Ceiling((float)(Model.rowCount / Model.size)) + 1;
+}
+<div class="btn-group">
+    @for (int i = 1; i <= num && i<10; i++)
+    {
+        <form method="get" style="margin-right: 2%;">
+            <input type="hidden" name="pageIndex" value="@i" />
+            <input type="hidden" name="pageSize" value="5" />
+            
+            @if(Model.index==i){
+                <button type="submit" class="btn btn-success">@i</button>
+            }else{
+                <button type="submit" class="btn btn-primary">@i</button>
+            }
+        </form>
+    }
 </div>
