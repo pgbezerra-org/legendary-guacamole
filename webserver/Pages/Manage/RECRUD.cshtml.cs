@@ -10,13 +10,15 @@ namespace webserver.Pages.Manage {
 
         public List<RealEstateINFO> listREINFOs=new List<RealEstateINFO>();
 
-        public int rowCount, index, size;
+        public int rowCount;
+        public int index {get;set;}
+        public int size {get;set;}
         
         public RECRUD() {
             
         }
 
-        public void OnGet(int pageIndex =1, int pageSize=5) {
+        public void OnGet(int pageIndex =1, int pageSize=5, string orderby="Address") {
             string MyConnection= "server=localhost;port=3306;database=Guacamole;user=root;password=xpvista7810";
 
             using (MySqlConnection connection=new MySqlConnection(MyConnection)){
@@ -33,7 +35,8 @@ namespace webserver.Pages.Manage {
             using (MySqlConnection connection=new MySqlConnection(MyConnection)){
                 connection.Open();
                 int offset=(pageIndex-1)*pageSize;
-                string allREs = $"SELECT RealEstates.*, AspNetUsers.* FROM RealEstates INNER JOIN AspNetUsers ON RealEstates.CompanyId = AspNetUsers.Id LIMIT {pageSize} OFFSET {offset}"; //limit search at a later date...
+                string allREs = $"SELECT RealEstates.*, AspNetUsers.* FROM RealEstates INNER JOIN AspNetUsers ON RealEstates.CompanyId = AspNetUsers.Id ORDER BY {orderby} LIMIT {pageSize} OFFSET {offset}";
+                //Console.WriteLine(allREs+"   AQUIII MERMAAAAAO ----------- --------\n\n");
                 using (MySqlCommand command = new MySqlCommand(allREs, connection)){
                     using (MySqlDataReader reader=command.ExecuteReader()){
                         while(reader.Read()){
@@ -51,8 +54,12 @@ namespace webserver.Pages.Manage {
                 }
             }
         }
-
         
+        public IActionResult DeleteItem(int id) {
+            Console.WriteLine("\nDEBUG IS ON THE TABLE \n");
+
+            return RedirectToPage("Overview");
+        }
     }
 }
 
