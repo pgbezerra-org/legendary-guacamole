@@ -13,18 +13,31 @@ namespace webserver.Pages.Manage
 {
     [Authorize(Roles=Common.BZE_Role)]
     public class CompanyLIST : PageModel {
+
         public List<CompanyINFO> listComps=new List<CompanyINFO>();
+
+        public int rowCount, index, size;
         
         public CompanyLIST() {
             
         }
         
-        public void OnGet(int page =1, int pageSize=5) {
+        public void OnGet(int pageIndex =1, int pageSize=5) {
             string MyConnection= "server=localhost;port=3306;database=Guacamole;user=root;password=xpvista7810";
+
+            using (MySqlConnection connection = new MySqlConnection(MyConnection)) {
+                connection.Open();
+                string countQuery = "SELECT COUNT(*) FROM (SELECT c.*, u.UserName FROM Company c JOIN AspNetUsers u ON c.Id = u.Id) AS subquery";
+                using (MySqlCommand command = new MySqlCommand(countQuery, connection)) {
+                    rowCount = Convert.ToInt32(command.ExecuteScalar());
+                    index=pageIndex;
+                    size=pageSize;
+                }
+            }
 
             using (MySqlConnection connection=new MySqlConnection(MyConnection)){
                 connection.Open();
-                int offset=(page-1)*pageSize;
+                int offset=(pageIndex-1)*pageSize;
                 string allComps = $"SELECT c.*, u.UserName FROM Company c JOIN AspNetUsers u ON c.Id = u.Id LIMIT {pageSize} OFFSET {offset}";
                 using (MySqlCommand command = new MySqlCommand(allComps, connection)){
                     using (MySqlDataReader reader=command.ExecuteReader()){
