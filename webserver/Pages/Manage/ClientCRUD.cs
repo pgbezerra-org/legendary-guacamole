@@ -39,7 +39,8 @@ namespace webserver.Pages.Manage
                         while(reader.Read()){
                             ClientINFO clientINFO = new ClientINFO();
                             clientINFO.Id=reader.GetString(0);
-                            clientINFO.UserName=reader.GetString(1);
+                            clientINFO.Occupation=reader.GetString(1);
+                            clientINFO.UserName=reader.GetString(2);
                             listClients.Add(clientINFO);
                         }
                     }
@@ -52,4 +53,5 @@ namespace webserver.Pages.Manage
 public class ClientINFO{
     public string Id { get; set; } = string.Empty;
     public string UserName { get; set; } = string.Empty;
+    public string Occupation{get; set; } = string.Empty;
 }
