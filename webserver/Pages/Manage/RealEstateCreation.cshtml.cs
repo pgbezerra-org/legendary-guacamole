@@ -15,13 +15,34 @@ namespace webserver.Pages.Manage {
         
         private readonly WebserverContext context;
 
-        public RealEstateCreation(WebserverContext _context)
-        {
+        public RealEstateCreation(WebserverContext _context) {
             context=_context;
         }
 
-        public class InputModel
-        {
+        public async Task<IActionResult> OnPostAsync() {
+
+            var company = context.Company.FirstOrDefault(c => c.UserName == Input.Company);
+
+            if(company==null){
+                ModelState.AddModelError(string.Empty, "Company not found!");
+                return Page();
+            }
+
+            var realEstate = new RealEstate {
+                Name = Input.Name,
+                Address = Input.Address,
+                Price = Input.Price,
+                CompanyId=company.Id
+            };
+            
+            await context.RealEstates.AddAsync(realEstate);
+            await context.SaveChangesAsync();
+            
+            return RedirectToPage("/Success");
+        }
+
+        public class InputModel {
+
             [Required]
             [Display(Name = "Name")]
             public string Name { get; set; }=string.Empty;
@@ -38,30 +59,6 @@ namespace webserver.Pages.Manage {
             [Display(Name = "Price")]
             public decimal Price { get; set; } = 1;
             
-        }
-
-        public async Task<IActionResult> OnPostAsync()
-        {
-
-            var company = context.Company.FirstOrDefault(c => c.UserName == Input.Company);
-
-            if(company==null){
-                ModelState.AddModelError(string.Empty, "Company not found!");
-                return Page();
-            }
-
-            var realEstate = new RealEstate
-            {
-                Name = Input.Name,
-                Address = Input.Address,
-                Price = Input.Price,
-                CompanyId=company.Id
-            };
-            
-            await context.RealEstates.AddAsync(realEstate);
-            await context.SaveChangesAsync();
-            
-            return RedirectToPage("/Success");
         }
     }
 }

@@ -2,6 +2,8 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using MySqlConnector;
+using webserver.Models;
+using webserver.Data;
 
 namespace webserver.Pages.Manage {
     [Authorize]
@@ -11,14 +13,17 @@ namespace webserver.Pages.Manage {
         public List<RealEstateINFO> listREINFOs=new List<RealEstateINFO>();
 
         public int rowCount;
-        public int index {get;set;}
-        public int size {get;set;}
+        public int index {get;set;}=1;
+        public int size {get;set;}=5;
+
+        private readonly WebserverContext context;
         
-        public RECRUD() {
-            
+        public RECRUD(WebserverContext _context) {
+            context=_context;
         }
 
         public void OnGet(int pageIndex =1, int pageSize=5, string orderby="Price") {
+            
             string MyConnection= "server=localhost;port=3306;database=Guacamole;user=root;password=xpvista7810";
 
             using (MySqlConnection connection=new MySqlConnection(MyConnection)){
@@ -55,11 +60,17 @@ namespace webserver.Pages.Manage {
                 }
             }
         }
-        
-        public IActionResult DeleteItem(int id) {
-            Console.WriteLine("\nDEBUG IS ON THE TABLE \n");
 
-            return RedirectToPage("Overview");
+        public async Task<IActionResult> OnPostDeleteItem(int id) {
+            var realEstateToRemove = await context.RealEstates.FindAsync(id);
+            if (realEstateToRemove != null)
+            {
+                context.RealEstates.Remove(realEstateToRemove);
+                await context.SaveChangesAsync();
+            }
+            
+            OnGet(index, size, "Price");
+            return Page();
         }
     }
 }
