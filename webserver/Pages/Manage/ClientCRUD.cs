@@ -9,13 +9,26 @@ namespace webserver.Pages.Manage
     public class ClientCRUD : PageModel {
         
         public List<ClientINFO> listClients=new List<ClientINFO>();
+
+        public int rowCount, index, size;
         
         public ClientCRUD() {
             
         }
         
-        public void OnGet() {
+        public void OnGet(int pageIndex =1, int pageSize=5) {
             string MyConnection= "server=localhost;port=3306;database=Guacamole;user=root;password=xpvista7810";
+
+            using (MySqlConnection connection=new MySqlConnection(MyConnection)){
+                connection.Open();
+
+                string countQuery = "SELECT COUNT(*) FROM (SELECT b.*, u.UserName FROM Clients b JOIN AspNetUsers u ON b.Id = u.Id) AS subquery";
+                using (MySqlCommand command = new MySqlCommand(countQuery, connection)){
+                    rowCount = Convert.ToInt32(command.ExecuteScalar());
+                    index=pageIndex;
+                    size=pageSize;
+                }
+            }
 
             using (MySqlConnection connection=new MySqlConnection(MyConnection)){
                 connection.Open();
