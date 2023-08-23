@@ -26,7 +26,13 @@
                             <a class="nav-link text-dark" asp-area="" asp-page="/Privacy">Privacy</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-page="/Accounts/Login">Login</a>
+
+                            @if (Context.Request.Cookies["BZE_Auth"] != null){
+                                <a id="logout" class="nav-link text-dark" asp-area="" asp-page="/Accounts/Login">Logout</a>
+                            }else{
+                                <a class="nav-link text-dark" asp-area="" asp-page="/Accounts/Login">Login</a>
+                            }
+
                         </li>
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-page="/Manage/Overview">Manage</a>

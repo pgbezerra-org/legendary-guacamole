@@ -1,0 +1,17 @@
+@page
+@model webserver.Pages.Accounts.LogOut
+@{
+    ViewData["Title"] = "LogOut";
+}
+
+<h1>@ViewData["Title"]</h1>
+
+<div>
+    <h1>Are you sure you want to log out?</h1>
+
+    <form method="post">
+        <input type="submit" name="logout" value="Yes" />
+        <input type="submit" name="logout" value="No" />
+    </form>
+    
+</div>
