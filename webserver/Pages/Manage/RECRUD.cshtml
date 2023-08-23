@@ -14,7 +14,14 @@
     <table class="table">
         <thead>
             <tr>
-                <th>Name</th>
+                <th>
+                    <form method="get">
+                        <input type="hidden" name="pageIndex" value=@Model.index />
+                        <input type="hidden" name="pageSize" value=@Model.size />
+                        <input type="hidden" name="orderby" value="Name ASC" />
+                        <button type="submit" class="btn btn-secondary">Name</button>
+                    </form>
+                </th>
                 <th>Address</th>
                 <th>Price</th>
                 <th>Company</th>
