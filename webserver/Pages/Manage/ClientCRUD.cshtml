@@ -12,7 +12,22 @@
     <table class="table">
         <thead>
             <tr>
-                <th>Name</th>
+                <th>
+                    <form method="get">
+                        <input type="hidden" name="pageIndex" value=@Model.index />
+                        <input type="hidden" name="pageSize" value=@Model.size />
+                        <input type="hidden" name="orderby" value="UserName" />
+                        <button type="submit" class="btn btn-secondary">Name</button>
+                    </form>
+                </th>
+                <th>
+                    <form method="get">
+                        <input type="hidden" name="pageIndex" value=@Model.index />
+                        <input type="hidden" name="pageSize" value=@Model.size />
+                        <input type="hidden" name="orderby" value="Occupation" />
+                        <button type="submit" class="btn btn-secondary">Occupation</button>
+                    </form>
+                </th>
             </tr>
         </thead>
         <body>
@@ -20,6 +35,7 @@
                 @foreach(var item in Model.listClients){
                     <tr>
                         <td>@item.UserName</td>
+                        <td>@item.Occupation</td>
                     </tr>
                 }
             </li>
