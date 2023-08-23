@@ -1,0 +1,43 @@
+@page
+@model webserver.Pages.About
+@{
+    ViewData["Title"] = "About";
+}
+
+<h3>@ViewData["Title"]</h3>
+
+<div>
+
+    <p></p>
+    <h1>Legendary Guacamole</h1>
+    <p></p>
+    <p>Guacamole is multi-tenant royal-state web service</p>
+    <p>
+        A .NET Core web app project, written mostly in C#. It uses MySQL as it's database management system. Both the Database and the Webserver project
+        are dockerized, and this website is being hosted in Azure cloud service
+    </p>
+    <p>
+        This enterprise was developed and deployed in Linux systems. We used Git/GitHub for descentralized backup and collaboration.
+        You can access the project's full source code <a href="https://github.com/pgbezerra-org/legendary-guacamole">here</a>
+    </p>
+    <hr></hr>
+    <body>
+        <p><b>- Technologies used:</b></p>
+
+        <ul>
+            <li>Asp .NET Core: a popular framework for multi-tenant web services</li>
+            <p></p>
+            <li>C#: a good mix for .NET, permiting a fine control with .NET and Database utilization</li>
+            <p></p>
+            <li>MySQL: our project required a reliable and performant Database Management</li>
+            <p></p>
+            <li>Azure: Microsofts tools and services often mix well together, such as the case with Azure, one of the most used Cloud Services Systems</li>
+            <p></p>
+            <li>Docker: the tool for packaging the project and the database within a single file, allowing for quick development</li>
+            <p></p>
+            <li>Linux: hard not to think of Linux systems when deploying Docker containers in Cloud services</li>
+            <p></p>
+            <li>Git: the main tool for version control and descentralized development</li>
+        </ul>
+    </body>
+</div>
