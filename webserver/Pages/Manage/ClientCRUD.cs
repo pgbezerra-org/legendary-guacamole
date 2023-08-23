@@ -16,7 +16,7 @@ namespace webserver.Pages.Manage
             
         }
         
-        public void OnGet(int pageIndex =1, int pageSize=5) {
+        public void OnGet(int pageIndex =1, int pageSize=5, string orderby="UserName") {
             string MyConnection= "server=localhost;port=3306;database=Guacamole;user=root;password=xpvista7810";
 
             using (MySqlConnection connection=new MySqlConnection(MyConnection)){
@@ -32,8 +32,8 @@ namespace webserver.Pages.Manage
 
             using (MySqlConnection connection=new MySqlConnection(MyConnection)){
                 connection.Open();
-
-                string allComps = "SELECT b.*, u.UserName FROM Clients b JOIN AspNetUsers u ON b.Id = u.Id";
+                int offset=(pageIndex-1)*pageSize;
+                string allComps = $"SELECT b.*, u.UserName FROM Clients b JOIN AspNetUsers u ON b.Id = u.Id ORDER BY {orderby} LIMIT {pageSize} OFFSET {offset}";
                 using (MySqlCommand command = new MySqlCommand(allComps, connection)){
                     using (MySqlDataReader reader=command.ExecuteReader()){
                         while(reader.Read()){
