@@ -73,9 +73,9 @@ namespace webserver.Pages.Manage {
 
             if (result.Succeeded) {
 
-                var roleExist = await _roleManager.RoleExistsAsync(Common.Company_Role);
+                var roleExist = await _roleManager.RoleExistsAsync(Common.Client_Role);
                 if (!roleExist){
-                    await _roleManager.CreateAsync(new IdentityRole(Common.Company_Role));
+                    await _roleManager.CreateAsync(new IdentityRole(Common.Client_Role));
                 }
 
                 await _userManager.AddToRoleAsync(client, Common.Client_Role);
