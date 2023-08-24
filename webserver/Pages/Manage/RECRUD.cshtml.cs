@@ -2,12 +2,11 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using MySqlConnector;
-using webserver.Models;
 using webserver.Data;
 
 namespace webserver.Pages.Manage {
-    [Authorize]
-    
+
+    [Authorize]    
     public class RECRUD : PageModel {
 
         public List<RealEstateINFO> listREINFOs=new List<RealEstateINFO>();
@@ -62,9 +61,9 @@ namespace webserver.Pages.Manage {
         }
 
         public async Task<IActionResult> OnPostDeleteItem(int id) {
+            
             var realEstateToRemove = await context.RealEstates.FindAsync(id);
-            if (realEstateToRemove != null)
-            {
+            if (realEstateToRemove != null) {
                 context.RealEstates.Remove(realEstateToRemove);
                 await context.SaveChangesAsync();
             }
@@ -78,7 +77,7 @@ namespace webserver.Pages.Manage {
         public int Id { get; set; }
         public string Name { get; set; } = string.Empty;
         public string Address { get; set; } = string.Empty;
-        public decimal Price { get; set; }
+        public decimal Price { get; set; } = 1;
 
         // Foreign key to associate the RealEstate with a Company
         public string CompanyId { get; set; }=string.Empty;

@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
 using webserver.Models;
+using MySqlConnector;
 
 namespace webserver.Pages.Account {
 
@@ -91,6 +92,18 @@ namespace webserver.Pages.Account {
 
             await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, principal, authProperties);
 >>>>>>> df4c939 (Pages Authorizations Arranged):webserver/Pages/Accounts/Login.cshtml.cs
+
+            string MyConnection= "server=localhost;port=3306;database=Guacamole;user=root;password=xpvista7810";
+            string query = "UPDATE BZEAccounts SET LastLogin = @LastLogin WHERE Id = @Id";
+
+            using (MySqlConnection connection = new MySqlConnection(MyConnection)) {
+                MySqlCommand command = new MySqlCommand(query, connection);
+                command.Parameters.AddWithValue("@LastLogin", DateTime.UtcNow);
+                command.Parameters.AddWithValue("@Id", user.Id);
+
+                connection.Open();
+                command.ExecuteNonQuery();
+            }
 
             // Redirect to the desired page after successful login
             return RedirectToPage("/Privacy");

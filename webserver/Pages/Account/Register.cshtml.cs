@@ -57,10 +57,8 @@ namespace webserver.Pages.Account {
             if (result.Succeeded) {
 
                 await _userManager.AddToRoleAsync(user,Common.BZE_Role);
-                Console.WriteLine("Implementa o automatic login aqui");
-
+                //Console.WriteLine("Implementa o automatic login aqui");
                 return RedirectToPage("/Success");
-
             } else {
                 foreach (var error in result.Errors) {
                     ModelState.AddModelError(string.Empty, error.Description);
