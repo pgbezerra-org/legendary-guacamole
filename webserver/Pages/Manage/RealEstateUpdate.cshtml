@@ -1,0 +1,26 @@
+@page
+@model webserver.Pages.Manage.RealEstateUpdate
+@{
+    ViewData["Title"] = "RealEstateUpdate";
+}
+
+<h1>@ViewData["Title"]</h1>
+
+<div>
+    <div class="col-md-6">
+        <form method="post">
+            <label for="Name">Name:</label><br>
+            <input type="text" id="Name" name="Name" value=@Model.Input.Name><br>
+
+            <label for="Address">Address:</label><br>
+            <input type="text" id="Address" name="Address" value=@Model.Input.Address><br>
+
+            <label for="Price">Price:</label><br>
+            <input type="number" id="Price" name="Price" value="John Doe"><br><br>
+
+            <p>Company: @Model.Input.Id</p>
+
+            <input type="submit" value="Submit">
+        </form>
+    </div>
+</div>

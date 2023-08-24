@@ -57,6 +57,9 @@
                         <td>@item.Price</td>
                         <td>@item.CompanyName</td>
                         <td>
+                            <a asp-page="/Manage/RealEstateUpdate" asp-route-id=@item.Id class="btn btn-success">Up</a>
+                        </td>
+                        <td>
                             <form asp-page-handler="deleteItem" method="post">
                                 <input type="hidden" name="handler" value="DeleteItem" />
                                 <input type="hidden" name="id" value=@item.Id />
