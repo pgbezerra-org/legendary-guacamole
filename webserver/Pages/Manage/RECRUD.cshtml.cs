@@ -73,15 +73,15 @@ namespace webserver.Pages.Manage {
             return Page();
         }
     }
-}
 
-public class RealEstateINFO{
-    public int Id { get; set; }
-    public string Name { get; set; } = string.Empty;
-    public string Address { get; set; } = string.Empty;
-    public decimal Price { get; set; }
+    public class RealEstateINFO{
+        public int Id { get; set; }
+        public string Name { get; set; } = string.Empty;
+        public string Address { get; set; } = string.Empty;
+        public decimal Price { get; set; }
 
-    // Foreign key to associate the RealEstate with a Company
-    public string CompanyId { get; set; }=string.Empty;
-    public string CompanyName { get; set; }=string.Empty;
+        // Foreign key to associate the RealEstate with a Company
+        public string CompanyId { get; set; }=string.Empty;
+        public string CompanyName { get; set; }=string.Empty;
+    }
 }

@@ -9,6 +9,74 @@
     <p>Your Real-Estates Company platform!</p>
 </div>
 
+<style>
+  .card-container {
+    display: flex;
+  }
+  .card {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    margin: 2%;
+    padding: 2.9%;
+    border: 1px solid #ccc;
+    text-align: center;
+  }
+
+  .recard-container {
+    display: flex;
+  }
+  .recard {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    margin: 4%;
+    padding: 1.8%;
+    border: 1px solid #ccc;
+    text-align: left;
+  }
+</style>
+
+<div class="card-container">
+  <div class="card">
+    <h2>Great for Companies</h2>
+    <br>
+    <p>Real-Estate companies can quickly put and manage their sales</p>
+  </div>
+  <div class="card">
+    <h2>Great for Users</h2>
+    <br>
+    <p>Clients can quickly and easily find their dream Real-Estates</p>
+  </div>
+  <div class="card">
+    <h2>Quick and secure</h2>
+    <br>
+    <p>Plenty of options, all safely stored and ready for access!</p>
+  </div>
+</div>
+
+<br>
+<h2>Latest Real-Estates Available:</h2>
+
+<div class="recard-container">
+  <div class="recard">
+    <h2>@Model.states[0].Name</h2>
+    <p>@Model.states[0].Address</p>
+    <p>@Model.states[0].Price</p>
+  </div>
+  <div class="recard">
+    <h2>@Model.states[1].Name</h2>
+    <p>@Model.states[1].Address</p>
+    <p>@Model.states[1].Price</p>
+  </div>
+  <div class="recard">
+    <h2>@Model.states[1].Name</h2>
+    <p>@Model.states[1].Address</p>
+    <p>@Model.states[1].Price</p>
+  </div>
+</div>
+
 <footer class="border-top footer text-muted">
     <p></p>    
     <div class="container">
