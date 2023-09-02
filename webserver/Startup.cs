@@ -21,7 +21,7 @@ namespace webserver {
 
             services.AddMvc();
 
-            services.AddDbContext<WebserverContext>(options =>
+            services.AddDbContext<webserverContext>(options =>
     options.UseMySQL(Configuration.GetConnectionString("MyConnection")));
 
             services.AddAuthentication().AddCookie("MyCookieAuth", options => {
