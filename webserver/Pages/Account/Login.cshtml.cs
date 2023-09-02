@@ -12,7 +12,7 @@ namespace webserver.Pages.Account {
     public class LoginModel : PageModel {
 
         [BindProperty]
-        public Credential Credential { get; set; } = new Credential();
+        public Credential credential { get; set; } = new Credential();
 
         private readonly SignInManager<Company> _signInManager;
         private readonly UserManager<Company> _userManager;
@@ -32,7 +32,7 @@ namespace webserver.Pages.Account {
                 return Page();
             }*/
 
-            var user = await _userManager.FindByEmailAsync(Credential.Email);
+            var user = await _userManager.FindByEmailAsync(credential.Email);
 
             if (user == null) {
                 ModelState.AddModelError(string.Empty, "User not registered!");
@@ -45,16 +45,16 @@ namespace webserver.Pages.Account {
                 // Handle the case where one or more properties are null
                 return Page();
             }
-
+            
             var passwordHasher = new PasswordHasher<Company>();
-            var passwordResult = passwordHasher.VerifyHashedPassword(user, user.PasswordHash, Credential.Password);
+            var passwordResult = passwordHasher.VerifyHashedPassword(user, user.PasswordHash, credential.Password);
 
             if (passwordResult != PasswordVerificationResult.Success) {
                 ModelState.AddModelError(string.Empty, "Wrong Email or Password");
                 return Page();
             }
 
-            var result = await _signInManager.PasswordSignInAsync(user, Credential.Password, isPersistent: true, lockoutOnFailure: false);
+            var result = await _signInManager.PasswordSignInAsync(user, credential.Password, isPersistent: true, lockoutOnFailure: false);
 
             if (!result.Succeeded) {
                 ModelState.AddModelError(string.Empty, "Invalid login attempt. "+result.ToString());
