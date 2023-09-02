@@ -13,9 +13,9 @@ namespace webserver.Pages.Manage {
         [BindProperty]
         public InputModel Input { get; set; } = new InputModel();
         
-        private readonly WebserverContext context;
+        private readonly webserverContext context;
 
-        public RealEstateCreation(WebserverContext _context)
+        public RealEstateCreation(webserverContext _context)
         {
             context=_context;
         }

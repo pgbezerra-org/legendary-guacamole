@@ -11,7 +11,7 @@ namespace webserver.Pages.Account {
     public class RegisterModel : PageModel {
 
         [BindProperty]
-        public RegisterInputModel RegisterInput { get; set; } = new RegisterInputModel();
+        public RegisterInputModel registerInput { get; set; } = new RegisterInputModel();
 
         private readonly UserManager<Company> _userManager;
         private readonly SignInManager<Company> _signInManager;
@@ -34,15 +34,15 @@ namespace webserver.Pages.Account {
 
             // Create a new user based on the registration input
             var company = new Company {
-                UserName = RegisterInput.Name,
-                Email = RegisterInput.Email,
-                PhoneNumber=RegisterInput.PhoneNumber,
-                City = RegisterInput.City,
-                State = RegisterInput.State,
-                Country = RegisterInput.Country
+                UserName = registerInput.Name,
+                Email = registerInput.Email,
+                PhoneNumber=registerInput.PhoneNumber,
+                City = registerInput.City,
+                State = registerInput.State,
+                Country = registerInput.Country
             };
 
-            var result = await _userManager.CreateAsync(company, RegisterInput.Password);
+            var result = await _userManager.CreateAsync(company, registerInput.Password);
 
             if (result.Succeeded) {
                 // Optionally, you can sign in the user after successful registration

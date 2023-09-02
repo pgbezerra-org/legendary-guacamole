@@ -6,11 +6,12 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Authorization;
+using webserver.Models;
 
 namespace webserver.Pages
 {
 
-    [Authorize (Roles =Common.BZE_Role)]
+    [Authorize (Roles=Common.BZE_Role)]
     public class Authorized : PageModel
     {
 

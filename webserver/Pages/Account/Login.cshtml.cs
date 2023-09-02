@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
 using webserver.Models;
+using Microsoft.AspNetCore.Authentication.Cookies;
 
 namespace webserver.Pages.Account {
 
@@ -74,11 +75,6 @@ namespace webserver.Pages.Account {
                 ExpiresUtc = DateTimeOffset.UtcNow.AddMinutes(10),
                 IsPersistent = true,
                 IssuedUtc = DateTimeOffset.UtcNow
-            };
-
-            var claims = new List<Claim> {
-                    new Claim(ClaimTypes.Name, user.UserName),
-                    new Claim(ClaimTypes.Email, user.Email)
             };
             
             var roles = await _userManager.GetRolesAsync(user);
