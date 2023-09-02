@@ -10,7 +10,7 @@ using webserver.Data;
 
 namespace webserver.Migrations
 {
-    [DbContext(typeof(WebserverContext))]
+    [DbContext(typeof(webserverContext))]
     [Migration("20230808221807_IdentityCore")]
     partial class IdentityCore
     {
