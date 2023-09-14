@@ -15,14 +15,10 @@ public class RealEstate {
 
     public int numBedrooms = 1;
 
-    public HouseType houseType;
+    public string houseType = string.Empty;
 
     // Foreign key to associate the RealEstate with a Company
     public string CompanyId { get; set; }=string.Empty;
     // Navigation property
     public Company? OwnerCompany { get; set; }
-}
-
-public enum HouseType {
-    house = 1, condominium, apartment
 }
