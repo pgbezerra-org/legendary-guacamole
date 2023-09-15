@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
 using webserver.Models;
+using Microsoft.AspNetCore.Authentication.Cookies;
 
 namespace RazorPagesMovie.Pages.Account {
 
@@ -127,11 +128,14 @@ namespace webserver.Pages.Account {
 
             var user = await _userManager.FindByEmailAsync(Credential.Email);
 
+            if (_userManager == null) {
+                ModelState.AddModelError(string.Empty, "manager not registered!");
+                return Page();
+            }            
             if (user == null) {
                 ModelState.AddModelError(string.Empty, "User not registered!");
                 return Page();
             }
-
             //Just to stop with the compiler warnings
             // Ensure the user properties are not null before accessing them
             if (user.PasswordHash is null || user.UserName is null || user.Email is null) {
@@ -165,8 +169,16 @@ namespace webserver.Pages.Account {
                 IsPersistent = true,
                 IssuedUtc = DateTimeOffset.UtcNow
             };
+            
+            var roles = await _userManager.GetRolesAsync(user);
+            foreach(var role in roles){
+                claims.Add(new Claim(ClaimTypes.Role, role));
+            }
+            
+            var identity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
+            var principal = new ClaimsPrincipal(identity);
 
-            await HttpContext.SignInAsync("MyCookieAuth", new ClaimsPrincipal(claimsIdentity), authProperties);
+            await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, principal, authProperties);
 
             // Redirect to the desired page after successful login
             return RedirectToPage("/Privacy");

@@ -11,7 +11,7 @@ namespace webserver.Pages.Account {
     public class RegisterModel : PageModel {
 
         [BindProperty]
-        public RegisterInputModel RegisterInput { get; set; } = new RegisterInputModel();
+        public RegisterInputModel registerInput { get; set; } = new RegisterInputModel();
 
         private readonly UserManager<BZEmployee> _userManager;
         private readonly SignInManager<BZEmployee> _signInManager;
