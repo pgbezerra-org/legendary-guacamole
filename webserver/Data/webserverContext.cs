@@ -1,19 +1,13 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity;
 using webserver.Models;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 
-namespace webserver.Data
-{
-    public class webserverContext : IdentityDbContext<Company> {
+namespace webserver.Data {
+    public class webserverContext : IdentityDbContext<Company, IdentityRole, string>    {
 
         public webserverContext (DbContextOptions<webserverContext> options)
-            : base(options)
-        {
+            : base(options) {
 
         }
 

@@ -7,8 +7,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
 using webserver.Models;
 
-namespace RazorPagesMovie.Pages.Account {
-
+namespace webserver.Pages.Account {
     public class LoginModel : PageModel {
 
         [BindProperty]

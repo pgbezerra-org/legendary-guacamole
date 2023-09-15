@@ -5,6 +5,8 @@ using System.ComponentModel.DataAnnotations;
 using webserver.Data;
 using webserver.Models;
 
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+
 namespace webserver.Pages.Account {
 
     public class RegisterModel : PageModel {
