@@ -1,4 +1,4 @@
-﻿namespace webserver.Models;
+namespace webserver.Models;
 
 public class BZEmployee : BZEAccount {
 

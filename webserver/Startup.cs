@@ -1,7 +1,11 @@
-﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Configuration;
+using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Hosting;
 using webserver.Data;
 using webserver.Models;
-using Microsoft.EntityFrameworkCore;
 
 namespace webserver {
 
@@ -14,6 +18,15 @@ namespace webserver {
         }
 
         public void ConfigureServices(IServiceCollection services) {
+
+            services.AddIdentity<BZEmployee, IdentityRole>()
+        .AddEntityFrameworkStores<webserverContext>()
+        .AddDefaultTokenProviders();
+
+            services.AddMvc();
+
+            services.AddDbContext<webserverContext>(options =>
+    options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
 
             services.AddIdentity<Company, IdentityRole>()
     .AddEntityFrameworkStores<webserverContext>()
