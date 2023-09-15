@@ -12,8 +12,7 @@ namespace webserver.Data
     public class webserverContext : IdentityDbContext<Company> {
 
         public webserverContext (DbContextOptions<webserverContext> options)
-            : base(options)
-        {
+            : base(options) {
 
         }
 

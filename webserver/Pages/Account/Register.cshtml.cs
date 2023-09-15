@@ -39,7 +39,7 @@ namespace webserver.Pages.Account {
 
             if (result.Succeeded) {
                 // Optionally, you can sign in the user after successful registration
-                await _signInManager.SignInAsync(company, isPersistent: false);
+                await _signInManager.SignInAsync(user, isPersistent: false);
 
                 // Redirect to a success page or the desired destination
                 return RedirectToPage("/Privacy");
