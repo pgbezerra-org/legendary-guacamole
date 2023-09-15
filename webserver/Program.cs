@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using MySql.Data.MySqlClient;
 using webserver.Data;
@@ -19,6 +20,10 @@ builder.Services.AddDbContext<webserverContext>(options =>
 builder.Services.AddIdentity<BZEmployee, IdentityRole>()
         .AddEntityFrameworkStores<webserverContext>()
         .AddDefaultTokenProviders();
+
+builder.Services.AddIdentity<Company, IdentityRole>()
+    .AddEntityFrameworkStores<webserverContext>()
+    .AddDefaultTokenProviders();
 
 // Add authentication
 builder.Services.AddAuthentication("MyCookieAuth")

@@ -6,6 +6,7 @@ using webserver.Data;
 using webserver.Models;
 
 namespace webserver.Pages.Account {
+namespace webserver.Pages.Account {
 
     public class RegisterModel : PageModel {
 
@@ -23,11 +24,12 @@ namespace webserver.Pages.Account {
         //public IActionResult OnPost() {
         public async Task<IActionResult> OnPostAsync() {
 
+
             /*if (!ModelState.IsValid) {
                 return Page();
             }*/
 
-            var user = new BZEmployee {
+            var company = new BZEmployee {
                 UserName = RegisterInput.Name,
                 Email = RegisterInput.Email,
                 PhoneNumber=RegisterInput.PhoneNumber
@@ -37,7 +39,7 @@ namespace webserver.Pages.Account {
 
             if (result.Succeeded) {
                 // Optionally, you can sign in the user after successful registration
-                await _signInManager.SignInAsync(user, isPersistent: false);
+                await _signInManager.SignInAsync(company, isPersistent: false);
 
                 // Redirect to a success page or the desired destination
                 return RedirectToPage("/Privacy");
@@ -67,6 +69,10 @@ namespace webserver.Pages.Account {
             [DataType(DataType.Password)]
             [Compare("Password", ErrorMessage = "The password and confirmation password do not match.")]
             public string ConfirmPassword { get; set; } = string.Empty;
+
+            [Required]
+            [Phone]
+            public string PhoneNumber { get; set; } = string.Empty;
 
             [Required]
             [Phone]
