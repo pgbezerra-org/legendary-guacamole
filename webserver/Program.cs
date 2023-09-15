@@ -1,5 +1,11 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using webserver.Data;
+using Microsoft.Extensions.DependencyInjection;
+using MySql.Data.MySqlClient;
+using RazorPagesMovie.Data;
+using RazorPagesMovie.Models;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.Extensions.Hosting;
+using System.Threading;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -7,8 +13,8 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddRazorPages();
 
 // Add database context
-builder.Services.AddDbContext<webserverContext>(options =>
-    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection") ?? throw new InvalidOperationException("Connection string 'Guacamole' not found.")));
+builder.Services.AddDbContext<RazorPagesMovieContext>(options =>
+    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection") ?? throw new InvalidOperationException("Connection string 'RazorPagesMovieContext' not found.")));
 
 // Add authentication
 builder.Services.AddAuthentication("MyCookieAuth")
