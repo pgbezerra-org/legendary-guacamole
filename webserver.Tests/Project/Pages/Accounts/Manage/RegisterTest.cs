@@ -6,9 +6,9 @@ using Xunit;
 
 namespace webserver.Tests.Project.Pages.Accounts.Manage {
     public class RegisterTest {
-        [Fact]
+        /*[Fact]
         public void Test1() {
             Assert.True(true);
-        }
+        }*/
     }
 }
