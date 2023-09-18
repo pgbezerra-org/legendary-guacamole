@@ -1,14 +1,7 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Xunit;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
 using Moq;
-using webserver.Pages.Account; // Adjust the namespace as needed
-using webserver.Models; // Adjust the namespace as needed
+using webserver.Pages.Account;
+using webserver.Models;
 
 namespace webserver.Tests.Project.Pages.Accounts.Manage {
 
