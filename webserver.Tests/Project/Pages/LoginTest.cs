@@ -51,11 +51,10 @@ namespace webserver.Tests.Project.Pages{
         }
 
         [Theory]
-        [InlineData("something@gmail.com","@Something123")]
-        [InlineData("anything@hotmail.com","#Anything1234")]
-        [InlineData("whatsoever@outlook.com","@WhAtSoEvEr5678")]
-        public async Task SignIn_Fail(string email, string password) {
-
+        [InlineData("invalid@outlook.com", "InvalidPassword1")]
+        [InlineData("failtest@hotmail.com", "FailTestPassword2")]
+        [InlineData("success@gmail.com", "WrongPassword3")]
+        public async Task SignIn_Failure(string email, string password) {
             // Arrange
             var userManagerMock = new Mock<UserManager<BZEAccount>>(
                 Mock.Of<IUserStore<BZEAccount>>(),
@@ -69,14 +68,15 @@ namespace webserver.Tests.Project.Pages{
 
             var loginModel = new LoginModel(signInManagerMock.Object, userManagerMock.Object);
 
-            var credential = new LoginModel.CredentialInput {
+            var credential = new LoginModel.CredentialInput
+            {
                 Email = email,
                 Password = password
             };
 
             loginModel.Credential = credential;
 
-            userManagerMock.Setup(m => m.FindByEmailAsync(It.IsAny<string>()))
+            userManagerMock.Setup(m => m.FindByEmailAsync(email))
                 .ReturnsAsync(new BZEAccount
                 {
                     Id = "5c6cbccc-b325-415d-9cb6-9287d582ee46", // Replace with a valid user ID
@@ -85,7 +85,7 @@ namespace webserver.Tests.Project.Pages{
                 });
 
             signInManagerMock.Setup(m => m.PasswordSignInAsync(It.IsAny<BZEAccount>(), It.IsAny<string>(), true, false))
-                .ReturnsAsync(Microsoft.AspNetCore.Identity.SignInResult.Success); // Specify the Identity SignInResult
+                .ReturnsAsync(Microsoft.AspNetCore.Identity.SignInResult.Failed); // Specify a failed SignInResult
 
             // Act
             var result = await loginModel.OnPostAsync();
@@ -94,6 +94,5 @@ namespace webserver.Tests.Project.Pages{
             var signInResult = await signInManagerMock.Object.PasswordSignInAsync(It.IsAny<BZEAccount>(), It.IsAny<string>(), true, false);
             Assert.False(signInResult.Succeeded);
         }
-
     }
 }
