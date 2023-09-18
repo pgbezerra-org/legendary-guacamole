@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using webserver.Data;
 using webserver.Models;
 
@@ -14,39 +15,51 @@ public class RealEstatesController : ControllerBase {
         _context = context;
     }
 
-    [HttpGet("{id:int}")]
-    public IActionResult ReadRealEstate(int id){
-
-        var result = _context.RealEstates.Find(id);
-
-        if(result == null){
-            return NotFound();
-        }else{
-            return Ok(result);
-        }
-    }
-
     [HttpGet]
-    public IActionResult ReadAllRealEstates(){
+    public async Task<IActionResult> ReadRealEstate(int? minPrice, int? maxPrice, int? offset, int? limit, string sort = "Id") {
 
-        var result = _context.RealEstates.ToList();
+        var realEstates = _context.RealEstates.AsQueryable();
 
-        if(result!=null){
-            return Ok(result);
-        }else{
-            return NotFound();
+        // Filter by price
+        if (minPrice.HasValue) {
+            realEstates = realEstates.Where(re => re.Price >= minPrice);
         }
-    }
+        if (maxPrice.HasValue) {
+            realEstates = realEstates.Where(re => re.Price <= maxPrice);
+        }
 
-    [HttpGet("{id}")]
-    public IActionResult ReadRealEstatesByCompanyId(string id) {
+        sort = sort.ToLower();
 
-        var result = _context.RealEstates.Where(r => r.CompanyId.Contains(id)).ToList();
+        // Sort
+        switch (sort) {
+            case "name":
+                realEstates = realEstates.OrderBy(re => re.Name);
+                break;
+            case "price":
+                realEstates = realEstates.OrderBy(re => re.Price);
+                break;
+            case "companyid":
+                realEstates = realEstates.OrderBy(re => re.CompanyId);
+                break;
+            default:
+                realEstates = realEstates.OrderBy(re => re.Id);
+                break;
+        }
 
-        if(result == null || !result.Any()){
+        // Pagination
+        if(offset.HasValue){
+            realEstates=realEstates.Skip(offset.Value);
+        }
+        if(limit.HasValue){
+            realEstates=realEstates.Take(limit.Value);
+        }
+
+        var result = await realEstates.ToListAsync();
+
+        if (result == null) {
             return NotFound();
-        }else{
-            return Ok(result);
+        }else {
+            return Ok(realEstates);
         }
     }
 
