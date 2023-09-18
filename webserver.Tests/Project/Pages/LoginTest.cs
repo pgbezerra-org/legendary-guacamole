@@ -3,6 +3,9 @@ using Microsoft.AspNetCore.Identity;
 using Moq;
 using webserver.Models;
 using webserver.Pages.Account;
+using Microsoft.AspNetCore.HttpLogging;
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 
 namespace webserver.Tests.Project.Pages{
     public class LoginModelTests {
@@ -13,7 +16,14 @@ namespace webserver.Tests.Project.Pages{
             // Arrange
             var userManagerMock = new Mock<UserManager<BZEAccount>>(
                 Mock.Of<IUserStore<BZEAccount>>(),
-                null, null, null, null, null, null, null, null);
+                Mock.Of<IOptions<IdentityOptions>>(),
+                Mock.Of<IPasswordHasher<BZEAccount>>(),
+                new IUserValidator<BZEAccount>[0],
+                new IPasswordValidator<BZEAccount>[0],
+                Mock.Of<ILookupNormalizer>(),
+                Mock.Of<IdentityErrorDescriber>(),
+                Mock.Of<IServiceProvider>(),
+                Mock.Of<ILogger<UserManager<BZEAccount>>>());
 
             var signInManagerMock = new Mock<SignInManager<BZEAccount>>(
                 userManagerMock.Object,
@@ -58,7 +68,14 @@ namespace webserver.Tests.Project.Pages{
             // Arrange
             var userManagerMock = new Mock<UserManager<BZEAccount>>(
                 Mock.Of<IUserStore<BZEAccount>>(),
-                null, null, null, null, null, null, null, null);
+                Mock.Of<IOptions<IdentityOptions>>(),
+                Mock.Of<IPasswordHasher<BZEAccount>>(),
+                new IUserValidator<BZEAccount>[0],
+                new IPasswordValidator<BZEAccount>[0],
+                Mock.Of<ILookupNormalizer>(),
+                Mock.Of<IdentityErrorDescriber>(),
+                Mock.Of<IServiceProvider>(),
+                Mock.Of<ILogger<UserManager<BZEAccount>>>());
 
             var signInManagerMock = new Mock<SignInManager<BZEAccount>>(
                 userManagerMock.Object,
