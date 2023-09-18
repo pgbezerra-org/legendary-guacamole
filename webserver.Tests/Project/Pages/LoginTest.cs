@@ -3,7 +3,6 @@ using Microsoft.AspNetCore.Identity;
 using Moq;
 using webserver.Models;
 using webserver.Pages.Account;
-using Microsoft.AspNetCore.HttpLogging;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 

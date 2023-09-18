@@ -3,7 +3,6 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using webserver.Models;
-using webserver.Data;
 
 namespace webserver.Pages.Account {
 
@@ -13,11 +12,9 @@ namespace webserver.Pages.Account {
         public RegisterInputModel RegisterInput { get; set; } = new RegisterInputModel();
 
         private readonly UserManager<BZEmployee> _userManager;
-        private readonly RoleManager<IdentityRole> _roleManager;
 
-        public RegisterModel(UserManager<BZEmployee> userManager, RoleManager<IdentityRole> roleManager) {
+        public RegisterModel(UserManager<BZEmployee> userManager) {
             _userManager = userManager;
-            _roleManager=roleManager;
         }
 
         public void OnGet() {
@@ -45,19 +42,12 @@ namespace webserver.Pages.Account {
                 Email = RegisterInput.Email,
                 PhoneNumber = RegisterInput.Phone                
             };
-
-            //var role1 = await roleManager.FindByNameAsync("Employee");
-            /*
-            var role = new IdentityRole(Common.BZERole);
-            await _roleManager.CreateAsync(role);
-            await _roleManager.AddClaimAsync(role, new Claim(ClaimTypes.Role, Common.BZERole));
-            */
+            
             var result = await _userManager.CreateAsync(user, RegisterInput.Password);
 
             if (result.Succeeded) {
 
                 await _userManager.AddToRoleAsync(user,Common.BZE_Role);
-                //Console.WriteLine("Implementa o automatic login aqui");
                 return RedirectToPage("/Success");
             } else {
 
