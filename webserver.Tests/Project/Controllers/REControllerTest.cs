@@ -44,5 +44,56 @@ namespace webserver.Tests.Project.Controllers {
                 Assert.Equal("Property4", realEstates[0].Name);
             }
         }
+
+        [Fact]
+        public void CreateRealEstate_ReturnsOkResult_WhenRealEstateDoesNotExist() {
+            // Arrange
+            var options = new DbContextOptionsBuilder<WebserverContext>()
+                .UseInMemoryDatabase(databaseName: "InMemoryDatabase")
+                .Options;
+
+            using (var context = new WebserverContext(options)) {
+                var controller = new RealEstatesController(context);
+                var newRealEstate = new RealEstate { Id = 11, Name = "NewProperty", Price = 300 };
+
+                // Act
+                var result = controller.CreateRealEstate(newRealEstate) as OkObjectResult;
+
+                // Assert
+                Assert.NotNull(result);
+                Assert.Equal(200, result.StatusCode);
+
+                var createdRealEstate = result.Value as RealEstate;
+                Assert.NotNull(createdRealEstate);
+                Assert.Equal(newRealEstate.Id, createdRealEstate.Id);
+                Assert.Equal(newRealEstate.Name, createdRealEstate.Name);
+                Assert.Equal(newRealEstate.Price, createdRealEstate.Price);
+            }
+        }
+
+        [Fact]
+        public void CreateRealEstate_ReturnsBadRequest_WhenRealEstateAlreadyExists() {
+            // Arrange
+            var options = new DbContextOptionsBuilder<WebserverContext>()
+                .UseInMemoryDatabase(databaseName: "InMemoryDatabase")
+                .Options;
+
+            using (var context = new WebserverContext(options)) {
+                // Adding a real estate with the same Id
+                context.RealEstates.Add(new RealEstate { Id = 1, Name = "ExistingProperty", Price = 200 });
+                context.SaveChanges();
+
+                var controller = new RealEstatesController(context);
+                var existingRealEstate = new RealEstate { Id = 1, Name = "NewProperty", Price = 300 };
+
+                // Act
+                var result = controller.CreateRealEstate(existingRealEstate) as BadRequestObjectResult;
+
+                // Assert
+                Assert.NotNull(result);
+                Assert.Equal(400, result.StatusCode);
+                Assert.Equal("Real Estate Already Exists!", result.Value);
+            }
+        }
     }
 }
