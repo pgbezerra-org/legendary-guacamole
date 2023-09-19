@@ -95,5 +95,61 @@ namespace webserver.Tests.Project.Controllers {
                 Assert.Equal("Real Estate Already Exists!", result.Value);
             }
         }
+        
+        [Fact]
+        public void UpdateRealEstate_ReturnsOkResult_WhenRealEstateExists() {
+            // Arrange
+            var options = new DbContextOptionsBuilder<WebserverContext>()
+                .UseInMemoryDatabase(databaseName: "InMemoryDatabase")
+                .Options;
+
+            int upId=13;
+
+            using (var context = new WebserverContext(options)) {
+                // Adding a real estate with an initial data
+                var initialRealEstate = new RealEstate { Id = upId, Name = "Property13", Price = 100, Address = "Address13" };
+                context.RealEstates.Add(initialRealEstate);
+                context.SaveChanges();
+
+                var controller = new RealEstatesController(context);
+                var updatedRealEstate = new RealEstate { Id = upId, Name = "UpdatedProperty", Price = 200, Address = "UpdatedAddress" };
+
+                // Act
+                var result = controller.UpdateRealEstate(upId, updatedRealEstate) as OkResult;
+
+                // Assert
+                Assert.NotNull(result);
+                Assert.Equal(200, result.StatusCode);
+
+                // Verify that the real estate data was updated
+                var updatedData = context.RealEstates.Find(upId);
+                Assert.NotNull(updatedData);
+                Assert.Equal(updatedRealEstate.Name, updatedData.Name);
+                Assert.Equal(updatedRealEstate.Price, updatedData.Price);
+                Assert.Equal(updatedRealEstate.Address, updatedData.Address);
+            }
+        }
+
+        [Fact]
+        public void UpdateRealEstate_ReturnsNotFound_WhenRealEstateDoesNotExist() {
+            // Arrange
+            var options = new DbContextOptionsBuilder<WebserverContext>()
+                .UseInMemoryDatabase(databaseName: "InMemoryDatabase")
+                .Options;
+
+            int nonId=999;
+
+            using (var context = new WebserverContext(options)) {
+                var controller = new RealEstatesController(context);
+                var updatedRealEstate = new RealEstate { Id = nonId, Name = "UpdatedProperty", Price = 200, Address = "UpdatedAddress" };
+
+                // Act
+                var result = controller.UpdateRealEstate(nonId, updatedRealEstate) as NotFoundResult;
+
+                // Assert
+                Assert.NotNull(result);
+                Assert.Equal(404, result.StatusCode);
+            }
+        }
     }
 }

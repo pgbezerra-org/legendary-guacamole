@@ -77,7 +77,7 @@ public class RealEstatesController : ControllerBase {
     }
 
     [HttpPatch("{id}")]
-    public IActionResult UpdateClient(int id, RealEstate upRE){
+    public IActionResult UpdateRealEstate(int id, RealEstate upRE){
         var realEstate=_context.RealEstates.Find(id);
         if(realEstate==null){
             return NotFound();
