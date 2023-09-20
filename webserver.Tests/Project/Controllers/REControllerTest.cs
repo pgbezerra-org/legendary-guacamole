@@ -104,7 +104,7 @@ namespace webserver.Tests.Project.Controllers {
                 .Options;
 
             int upId=13;
-
+            
             using (var context = new WebserverContext(options)) {
                 // Adding a real estate with an initial data
                 var initialRealEstate = new RealEstate { Id = upId, Name = "Property13", Price = 100, Address = "Address13" };
@@ -115,18 +115,18 @@ namespace webserver.Tests.Project.Controllers {
                 var updatedRealEstate = new RealEstate { Id = upId, Name = "UpdatedProperty", Price = 200, Address = "UpdatedAddress" };
 
                 // Act
-                var result = controller.UpdateRealEstate(upId, updatedRealEstate) as OkResult;
+                var result = controller.UpdateRealEstate(upId, updatedRealEstate) as OkObjectResult;
 
                 // Assert
                 Assert.NotNull(result);
                 Assert.Equal(200, result.StatusCode);
 
                 // Verify that the real estate data was updated
-                var updatedData = context.RealEstates.Find(upId);
-                Assert.NotNull(updatedData);
-                Assert.Equal(updatedRealEstate.Name, updatedData.Name);
-                Assert.Equal(updatedRealEstate.Price, updatedData.Price);
-                Assert.Equal(updatedRealEstate.Address, updatedData.Address);
+                var updatedResult = context.RealEstates.Find(upId);
+                Assert.NotNull(updatedResult);
+                Assert.Equal(updatedRealEstate.Name, updatedResult.Name);
+                Assert.Equal(updatedRealEstate.Price, updatedResult.Price);
+                Assert.Equal(updatedRealEstate.Address, updatedResult.Address);
             }
         }
 
@@ -145,6 +145,54 @@ namespace webserver.Tests.Project.Controllers {
 
                 // Act
                 var result = controller.UpdateRealEstate(nonId, updatedRealEstate) as NotFoundResult;
+
+                // Assert
+                Assert.NotNull(result);
+                Assert.Equal(404, result.StatusCode);
+            }
+        }
+
+        [Fact]
+        public void DeleteRealEstate_ReturnsNoContent_WhenRealEstateExists() {
+
+            int testId=1;
+
+            // Arrange
+            var options = new DbContextOptionsBuilder<WebserverContext>()
+                .UseInMemoryDatabase(databaseName: "InMemoryDatabase")
+                .Options;
+
+            using (var context = new WebserverContext(options)) {
+
+                var controller = new RealEstatesController(context);
+
+                // Act
+                var result = controller.DeleteRealEstate(testId) as NoContentResult;
+
+                // Assert
+                Assert.NotNull(result);
+                Assert.Equal(204, result.StatusCode);
+
+                // Verify that the real estate was deleted
+                var deletedRealEstate = context.RealEstates.Find(testId);
+                Assert.Null(deletedRealEstate);
+            }
+        }
+
+        [Fact]
+        public void DeleteRealEstate_ReturnsNotFound_WhenRealEstateDoesNotExist() {
+
+            // Arrange
+            int NotExistId=404;
+            var options = new DbContextOptionsBuilder<WebserverContext>()
+                .UseInMemoryDatabase(databaseName: "InMemoryDatabase")
+                .Options;
+
+            using (var context = new WebserverContext(options)) {
+                var controller = new RealEstatesController(context);
+
+                // Act
+                var result = controller.DeleteRealEstate(NotExistId) as NotFoundResult;
 
                 // Assert
                 Assert.NotNull(result);
