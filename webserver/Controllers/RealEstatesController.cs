@@ -5,7 +5,7 @@ using webserver.Models;
 
 namespace webserver.Controllers;
 
-[Route("realestates")]
+[Route("api/v1/realestates")]
 [ApiController]
 public class RealEstatesController : ControllerBase {
     
@@ -59,7 +59,24 @@ public class RealEstatesController : ControllerBase {
         if (result == null) {
             return NotFound();
         }else {
-            return Ok(realEstates);
+
+            var response = new {
+                data = result.Select(re => new {
+                    
+                    type = "realestates",
+                    id = re.Id,
+                    attributes = new
+                    {
+                        name = re.Name,
+                        price = re.Price,
+                        //companyId = re.CompanyId,
+                        companyId = _context.Company.Find(re.CompanyId)
+                        // Add other attributes as needed
+                    }
+                })
+            };
+
+            return Ok(response);
         }
     }
 
@@ -73,11 +90,25 @@ public class RealEstatesController : ControllerBase {
         _context.RealEstates.Add(request);
         _context.SaveChanges();
 
-        return Ok(request);
+        var response = new {
+            data = new {
+                type = "realestates",
+                id = request.Id,
+                attributes = new {
+                    name = request.Name,
+                    price = request.Price,
+                    companyId = request.CompanyId,
+                    // Add other attributes as needed
+                }
+            }
+        };
+
+        return CreatedAtAction(nameof(CreateRealEstate), new { id = request.Id }, response);
     }
 
     [HttpPatch("{id}")]
-    public IActionResult UpdateRealEstate(int id, RealEstate upRE){
+    public IActionResult UpdateRealEstate(int id, RealEstate upRE) {
+
         var realEstate=_context.RealEstates.Find(id);
         if(realEstate==null){
             return NotFound();
@@ -88,20 +119,34 @@ public class RealEstatesController : ControllerBase {
         realEstate.Name=upRE.Name;
 
         _context.SaveChanges();
-        return Ok();
+        
+        var response = new {
+            data = new {
+                type = "realestates",
+                id = realEstate.Id,
+                attributes = new {
+                    name = realEstate.Name,
+                    price = realEstate.Price,
+                    companyId = realEstate.CompanyId,
+                    // Add other attributes as needed
+                }
+            }
+        };
+
+        return Ok(response);
     }
 
     [HttpDelete("{id}")]
     public IActionResult DeleteRealEstate(int id){
+
         var RE=_context.RealEstates.Find(id);
         if(RE==null){
             return NotFound();
         }
-        var result=_context.RealEstates.Remove(RE);
-        if(result == null){
-            return NotFound();
-        }
+
+        _context.RealEstates.Remove(RE);
         _context.SaveChanges();
-        return Ok();
+        
+        return NoContent();
     }
 }

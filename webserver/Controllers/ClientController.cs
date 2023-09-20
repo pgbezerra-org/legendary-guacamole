@@ -4,7 +4,7 @@ using webserver.Models;
 
 namespace webserver.Controllers;
 
-[Route("clients")]
+[Route("api/v1/clients")]
 [ApiController]
 public class ClientController : ControllerBase {
     
@@ -57,15 +57,15 @@ public class ClientController : ControllerBase {
 
     [HttpDelete("{id}")]
     public IActionResult DeleteClient(int id){
+
         var client=_context.Clients.Find(id);
         if(client==null){
             return NotFound();
         }
-        var result=_context.Clients.Remove(client);
-        if(result == null){
-            return NotFound();
-        }
+
+        _context.Clients.Remove(client);
         _context.SaveChanges();
-        return Ok();
+
+        return NoContent();
     }
 }

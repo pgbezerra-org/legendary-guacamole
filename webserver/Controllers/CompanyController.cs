@@ -4,7 +4,7 @@ using webserver.Models;
 
 namespace webserver.Controllers;
 
-[Route("company")]
+[Route("api/v1/company")]
 [ApiController]
 public class CompanyController : ControllerBase {
     
@@ -24,7 +24,7 @@ public class CompanyController : ControllerBase {
     }
 
     [HttpGet("{id}")]
-    public IActionResult ReadCompanyById(int id){
+    public IActionResult ReadCompanyById(int id) {
 
         var company = _context.Company.Find(id);
 
@@ -66,7 +66,8 @@ public class CompanyController : ControllerBase {
     }
 
     [HttpPatch("{id}")]
-    public IActionResult UpdateCompany(int id, Company company){
+    public IActionResult UpdateCompany(int id, Company company) {
+
         var comp=_context.Company.Find(id);
         if(comp==null){
             return NotFound();
@@ -80,16 +81,15 @@ public class CompanyController : ControllerBase {
     }
 
     [HttpDelete("{id}")]
-    public IActionResult DeleteCompany(int id){
+    public IActionResult DeleteCompany(int id) {
         var comp=_context.Company.Find(id);
         if(comp==null){
             return NotFound();
         }
-        var result=_context.Company.Remove(comp);
-        if(result == null){
-            return NotFound();
-        }
+
+        _context.Company.Remove(comp);
         _context.SaveChanges();
-        return Ok();
+
+        return NoContent();
     }
 }
