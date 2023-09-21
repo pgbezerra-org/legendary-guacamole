@@ -16,12 +16,12 @@ public class CompanyController : ControllerBase {
 
     class CompanySummary {
         public string Id { get; set; } = string.Empty;
-        public string Country { get; set; } = string.Empty;
-        public string State { get; set; } = string.Empty;
-        public string City { get; set; } = string.Empty;
         public string UserName { get; set; } = string.Empty;
         public string Email { get; set; } = string.Empty;
         public string PhoneNumber { get; set; } = string.Empty;
+        public string Country { get; set; } = string.Empty;
+        public string State { get; set; } = string.Empty;
+        public string City { get; set; } = string.Empty;
     }
 
     [HttpGet("{string:id}")]
@@ -29,18 +29,19 @@ public class CompanyController : ControllerBase {
         var company = _context.Company.Find(id);
 
         if (company != null) {
+
             var response = new {
                 data = new {
                     type = "Company[]",
                     id = company.Id,
                     attributes = new CompanySummary {
-                        Country = company.Country,
-                        State = company.State,
-                        City = company.City,
+                        Id = company.Id,
                         UserName = company.UserName!,
                         Email = company.Email!,
                         PhoneNumber = company.PhoneNumber!,
-                        Id = company.Id
+                        Country = company.Country,
+                        State = company.State,
+                        City = company.City
                     }
                 }
             };
@@ -52,16 +53,19 @@ public class CompanyController : ControllerBase {
     }
 
     [HttpPatch("{string:id}")]
-    public IActionResult UpdateCompany(string id, [FromBody] Company company) {
+    public IActionResult UpdateCompany(string id, [FromBody] Company newCompany) {
 
         var existingCompany = _context.Company.Find(id);
         if (existingCompany == null) {
             return NotFound();
         }
 
-        existingCompany.Email = company.Country;
-        existingCompany.PhoneNumber = company.State;
-        existingCompany.PhoneNumber = company.City;
+        existingCompany.UserName = newCompany.UserName;
+        existingCompany.Email = newCompany.Email;
+        existingCompany.PhoneNumber = newCompany.PhoneNumber;
+        existingCompany.Country = newCompany.Country;
+        existingCompany.State = newCompany.State;
+        existingCompany.City = newCompany.City;
 
         _context.SaveChanges();
 
