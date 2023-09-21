@@ -23,8 +23,8 @@ public class CompanyController : ControllerBase {
         public string PhoneNumber { get; set; } = string.Empty;
     }
 
-    [HttpGet("{id}")]
-    public IActionResult ReadCompanys(int id) {
+    [HttpGet("{string:id}")]
+    public IActionResult ReadCompanys(string id) {
 
         var company = _context.Company.Find(id);
 
