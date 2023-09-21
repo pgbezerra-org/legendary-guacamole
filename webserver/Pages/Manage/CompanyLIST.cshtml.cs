@@ -9,10 +9,18 @@ using Microsoft.AspNetCore.Authorization;
 using MySqlConnector;
 using webserver.Models;
 
-namespace webserver.Pages.Manage 
-{
+namespace webserver.Pages.Manage  {
     [Authorize(Roles=Common.BZE_Role)]
     public class CompanyLIST : PageModel {
+
+        public class CompanyINFO{
+        public string Id { get; set; } = string.Empty;
+        public string City { get; set; } = string.Empty;
+        public string State { get; set; } = string.Empty;
+        public string Country { get; set; } = string.Empty;
+        public string UserName { get; set; } = string.Empty;
+
+    }
 
         public List<CompanyINFO> listComps=new List<CompanyINFO>();
 
@@ -55,13 +63,4 @@ namespace webserver.Pages.Manage
             }
         }
     }
-}
-
-public class CompanyINFO{
-    public string Id { get; set; } = string.Empty;
-    public string City { get; set; } = string.Empty;
-    public string State { get; set; } = string.Empty;
-    public string Country { get; set; } = string.Empty;
-    public string UserName { get; set; } = string.Empty;
-
 }

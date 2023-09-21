@@ -15,6 +15,7 @@ public class CompanyController : ControllerBase {
     }
 
     class CompanySummary {
+        public string Id { get; set; } = string.Empty;
         public string Country { get; set; } = string.Empty;
         public string State { get; set; } = string.Empty;
         public string City { get; set; } = string.Empty;
@@ -24,41 +25,61 @@ public class CompanyController : ControllerBase {
     }
 
     [HttpGet("{string:id}")]
-    public IActionResult ReadCompanys(string id) {
-
+    public IActionResult ReadCompany(string id) {
         var company = _context.Company.Find(id);
 
-        if(company != null){
-
-            var result=new CompanySummary {
-                Country = company.Country,
-                State = company.State,
-                City = company.City,
-                UserName = company.UserName!,
-                Email = company.Email!,
-                PhoneNumber = company.PhoneNumber!
+        if (company != null) {
+            var response = new {
+                data = new {
+                    type = "Company[]",
+                    id = company.Id,
+                    attributes = new CompanySummary {
+                        Country = company.Country,
+                        State = company.State,
+                        City = company.City,
+                        UserName = company.UserName!,
+                        Email = company.Email!,
+                        PhoneNumber = company.PhoneNumber!,
+                        Id = company.Id
+                    }
+                }
             };
 
-            return Ok(result);
+            return Ok(response);
         }else{
             return NotFound();
         }
     }
 
     [HttpPatch("{string:id}")]
-    public IActionResult UpdateCompany(string id, Company company) {
+    public IActionResult UpdateCompany(string id, [FromBody] Company company) {
 
-        var comp=_context.Company.Find(id);
-        if(comp==null){
+        var existingCompany = _context.Company.Find(id);
+        if (existingCompany == null) {
             return NotFound();
         }
-        
-        comp.Email=company.Email;
-        comp.PhoneNumber=company.PhoneNumber;
+
+        existingCompany.Email = company.Country;
+        existingCompany.PhoneNumber = company.State;
+        existingCompany.PhoneNumber = company.City;
 
         _context.SaveChanges();
-        return Ok();
+
+        var response = new {
+            data = new {
+                type = "Company",
+                id = existingCompany.Id,
+                attributes = new CompanySummary {
+                    Country = existingCompany.Country,
+                    State = existingCompany.State,
+                    City = existingCompany.City
+                }
+            }
+        };
+
+        return Ok(response);
     }
+
 
     [HttpDelete("{string:id}")]
     public IActionResult DeleteCompany(string id) {
@@ -67,7 +88,11 @@ public class CompanyController : ControllerBase {
             return NotFound();
         }
 
+        var relatedRealEstates = _context.RealEstates.Where(re => re.CompanyId == comp.Id);
+
+        _context.RealEstates.RemoveRange(relatedRealEstates);
         _context.Company.Remove(comp);
+
         _context.SaveChanges();
 
         return NoContent();

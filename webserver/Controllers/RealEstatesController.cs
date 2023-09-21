@@ -62,10 +62,9 @@ public class RealEstatesController : ControllerBase {
             var response = new {
                 data = result.Select(re => new {
                     
-                    type = "realestates",
+                    type = "RealEstates[]",
                     id = re.Id,
-                    attributes = new RealEstate
-                    {
+                    attributes = new RealEstate {
                         Name = re.Name,
                         Price = re.Price,
                         Address = re.Address,
@@ -94,7 +93,7 @@ public class RealEstatesController : ControllerBase {
 
         var response = new {
             data = new {
-                type = "realestates",
+                type = "RealEstate",
                 id = request.Id,
                 attributes = new {
                     name = request.Name,
@@ -124,7 +123,7 @@ public class RealEstatesController : ControllerBase {
         
         var response = new {
             data = new {
-                type = "realestates",
+                type = "RealEstate",
                 id = realEstate.Id,
                 attributes = new {
                     name = realEstate.Name,
