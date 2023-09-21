@@ -114,7 +114,7 @@ public class RealEstatesController : ControllerBase {
             return NotFound();
         }
         
-        realEstate.Address=upRE.Name;
+        realEstate.Address=upRE.Address;
         realEstate.Price=upRE.Price;
         realEstate.Name=upRE.Name;
 
