@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using webserver.Data;
+using webserver.Migrations;
 using webserver.Models;
 
 namespace webserver.Controllers;
@@ -32,6 +33,32 @@ public class RealEstatesController : ControllerBase {
 
     public RealEstatesController(WebserverContext context) {
         _context = context;
+    }
+
+    [HttpGet("{int:id}")]
+    public IActionResult ReadRealEstate(int id){
+
+        var realEstate = _context.RealEstates.Find(id);
+
+        if(realEstate!=null) {
+
+            var response = new {
+                data = new {
+                    type = "RealEstate",
+                    attributes = new RealEstateSummary {
+                        Id = id,
+                        Name = realEstate.Name,
+                        Price = realEstate.Price,
+                        Address = realEstate.Address,
+                        CompanyId = realEstate.CompanyId
+                    }
+                }
+            };
+
+            return Ok(response);
+        }else{
+            return NotFound();
+        }
     }
 
     [HttpGet]

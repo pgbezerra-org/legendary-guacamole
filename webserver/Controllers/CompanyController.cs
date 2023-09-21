@@ -84,7 +84,6 @@ public class CompanyController : ControllerBase {
         return Ok(response);
     }
 
-
     [HttpDelete("{string:id}")]
     public IActionResult DeleteCompany(string id) {
         var comp=_context.Company.Find(id);

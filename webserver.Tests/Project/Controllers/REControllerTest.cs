@@ -8,14 +8,14 @@ namespace webserver.Tests.Project.Controllers {
     public class REControllerTest {
 
         [Fact]
-        public async Task ReadRealEstate_ReturnsOkResult_WithValidParameters() {
+        public async Task ReadRealEstates_ReturnsOkResult_WithValidParameters() {
             // Arrange
             var options = new DbContextOptionsBuilder<WebserverContext>()
                 .UseInMemoryDatabase(databaseName: "InMemoryDatabase")
                 .Options;
-
+            
             using (var context = new WebserverContext(options)) {
-                context.Company.Add(new Company { Id = "a1b1c1d1", UserName = "ExampleCompany", Email = "exempComp@gmail.com" });
+                //context.Company.Add(new Company { Id = "a1b1c1d1", UserName = "ExampleCompany", Email = "exempComp@gmail.com" });
                 context.RealEstates.Add(new RealEstate { Id = 1, Address="Sesame Street", Name = "Property1", Price = 40, CompanyId="a1b1c1d1" });
                 context.RealEstates.Add(new RealEstate { Id = 2, Address="Hollywood Boulevard", Name = "Property2", Price = 200, CompanyId = "a1b1c1d1" });
                 context.RealEstates.Add(new RealEstate { Id = 3, Address="Sunset Boulevard", Name = "Property3", Price = 99, CompanyId = "a1b1c1d1" });
@@ -29,16 +29,83 @@ namespace webserver.Tests.Project.Controllers {
 
                 // Act
                 var result = await controller.ReadRealEstates(minPrice: 50, maxPrice: 150, offset: 1, limit: 3, sort: "price") as OkObjectResult;
-                var realEstates = (RealEstate[])result.Value;
+                var realEstates = result.Value  as RealEstate[];
                 //var realEstates = JsonConvert.DeserializeObject<RealEstate[]>(result.Value.ToJToken().ToArray());
 
                 // Assert
                 Assert.NotNull(result);
-                Assert.Equal(200, result.StatusCode);
-                
                 Assert.NotNull(realEstates);
-                Assert.True(realEstates.Length == 3);//Assert.Equal(1, realEstates.Count);
+
+                Assert.Equal(200, result.StatusCode);
                 Assert.Equal("Property4", realEstates[0].Name);
+                Assert.True(realEstates.Length == 3);//Assert.Equal(1, realEstates.Count);                
+            }
+        }
+
+        [Fact]
+        public void ReadRealEstate_ReturnsOkResult_WhenRealEstateExists() {
+            // Arrange
+            var options = new DbContextOptionsBuilder<WebserverContext>()
+                .UseInMemoryDatabase(databaseName: "InMemoryDatabase")
+                .Options;
+
+            using (var context = new WebserverContext(options)) {
+                context.RealEstates.Add(new RealEstate { Id = 1, Address="Sesame Street", Name = "Property1", Price = 40, CompanyId="a1b1c1d1" });
+                context.SaveChanges();
+                var controller = new RealEstatesController(context);
+
+                // Act
+                var result = controller.ReadRealEstate(1) as OkObjectResult;
+                var realEstate = result.Value as RealEstate;
+
+                // Assert
+                Assert.NotNull(result);
+                Assert.NotNull(realEstate);
+                Assert.Equal(200, result.StatusCode);
+            }
+        }
+
+        [Fact]
+        public void ReadRealEstate_ReturnsNotFound_WhenRealEstateDoesNotExist() {
+            // Arrange
+            var options = new DbContextOptionsBuilder<WebserverContext>()
+                .UseInMemoryDatabase(databaseName: "InMemoryDatabase")
+                .Options;
+
+            int nonExist = 404;
+
+            using (var context = new WebserverContext(options)) {
+                context.RealEstates.Add(new RealEstate { Id = nonExist, Address="Sesame Street", Name = "Property1", Price = 40, CompanyId="a1b1c1d1" });
+                context.SaveChanges();
+                var controller = new RealEstatesController(context);
+
+                // Act
+                var result = controller.ReadRealEstate(nonExist) as NotFoundResult;
+
+                // Assert
+                Assert.NotNull(result);
+                Assert.Equal(404, result.StatusCode);
+            }
+        }
+
+        [Fact]
+        public void ReadRealEstate_ReturnsNotFound_WhenOwnerCompanyDoesNotExist() {
+            // Arrange
+            var options = new DbContextOptionsBuilder<WebserverContext>()
+                .UseInMemoryDatabase(databaseName: "InMemoryDatabase")
+                .Options;
+
+            using (var context = new WebserverContext(options)) {
+                context.RealEstates.Add(new RealEstate { Id = 1, Address="Sesame Street", Name = "Property1", Price = 40, CompanyId="DefinellyNotExist" });
+                context.SaveChanges();
+                var controller = new RealEstatesController(context);
+
+                // Act
+                var result = controller.ReadRealEstate(1) as NotFoundResult;
+
+                // Assert
+                Assert.NotNull(result);
+                Assert.Equal(404, result.StatusCode);
             }
         }
 
@@ -60,9 +127,8 @@ namespace webserver.Tests.Project.Controllers {
 
                 // Assert
                 Assert.NotNull(actionResult);
-                Assert.Equal(201, actionResult.StatusCode);
-
                 Assert.NotNull(createdRealEstate);
+                Assert.Equal(201, actionResult.StatusCode);
                 Assert.Equal(newRealEstate.Id, createdRealEstate.Id);
                 Assert.Equal(newRealEstate.Name, createdRealEstate.Name);
                 Assert.Equal(newRealEstate.Price, createdRealEstate.Price);
@@ -137,14 +203,12 @@ namespace webserver.Tests.Project.Controllers {
 
                 // Act
                 var result = controller.UpdateRealEstate(upId, updatedRealEstate) as OkObjectResult;
+                var updatedResult = context.RealEstates.Find(upId);
 
                 // Assert
                 Assert.NotNull(result);
-                Assert.Equal(200, result.StatusCode);
-
-                // Verify that the real estate data was updated
-                var updatedResult = context.RealEstates.Find(upId);
                 Assert.NotNull(updatedResult);
+                Assert.Equal(200, result.StatusCode);
                 Assert.Equal(updatedRealEstate.Name, updatedResult.Name);
                 Assert.Equal(updatedRealEstate.Price, updatedResult.Price);
                 Assert.Equal(updatedRealEstate.Address, updatedResult.Address);
@@ -194,8 +258,8 @@ namespace webserver.Tests.Project.Controllers {
 
                 // Assert
                 Assert.NotNull(result);
-                Assert.Equal(204, result.StatusCode);
                 Assert.Null(deletedRealEstate);
+                Assert.Equal(204, result.StatusCode);                
             }
         }
 

@@ -6,10 +6,8 @@ using Xunit;
 
 namespace webserver.Tests.Project.Controllers {
     public class CompanyControllerTest {
+
         
-        [Fact]
-        public void Test1() {
-            Assert.True(true);
-        }
+
     }
 }

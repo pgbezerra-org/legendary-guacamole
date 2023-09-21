@@ -14,7 +14,7 @@ public class ClientController : ControllerBase {
         _context = context;
     }
 
-    class ClientSummary{
+    class ClientSummary {
         public string Occupation { get; set; } = string.Empty;
         public string lastLogin { get; set; } = string.Empty;
         public string UserName { get; set; } = string.Empty;
@@ -41,7 +41,7 @@ public class ClientController : ControllerBase {
     }
 
     [HttpPatch("{string:id}")]
-    public IActionResult UpdateClient(string id, Client upClient){
+    public IActionResult UpdateClient(string id, [FromBody]Client upClient){
         var client=_context.Clients.Find(id);
         if(client==null){
             return NotFound();
