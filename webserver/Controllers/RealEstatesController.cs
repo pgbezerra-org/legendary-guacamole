@@ -97,7 +97,7 @@ public class RealEstatesController : ControllerBase {
     }
 
     [HttpPost]
-    public IActionResult CreateRealEstate(RealEstate request ) {
+    public IActionResult CreateRealEstate([FromBody]RealEstate request ) {
 
         if(_context.RealEstates.Find(request.Id)!=null){
             return BadRequest("Real Estate Already Exists!");
@@ -127,7 +127,7 @@ public class RealEstatesController : ControllerBase {
     }
 
     [HttpPatch("{int:id}")]
-    public IActionResult UpdateRealEstate(int id, RealEstate upRE) {
+    public IActionResult UpdateRealEstate(int id, [FromBody]RealEstate upRE) {
 
         var realEstate=_context.RealEstates.Find(id);
         if(realEstate==null){
@@ -148,8 +148,7 @@ public class RealEstatesController : ControllerBase {
                     Name = realEstate.Name,
                     Price = realEstate.Price,
                     Address = realEstate.Address,
-                    CompanyId = realEstate.CompanyId,
-                    // Add other attributes as needed
+                    CompanyId = realEstate.CompanyId
                 }
             }
         };
