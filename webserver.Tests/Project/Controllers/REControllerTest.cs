@@ -29,7 +29,7 @@ namespace webserver.Tests.Project.Controllers {
 
                 // Act
                 var result = await controller.ReadRealEstates(minPrice: 50, maxPrice: 150, offset: 1, limit: 3, sort: "price") as OkObjectResult;
-                var realEstates = result.Value as List<RealEstate>;
+                var realEstates = (RealEstate[])result.Value;
                 //var realEstates = JsonConvert.DeserializeObject<RealEstate[]>(result.Value.ToJToken().ToArray());
 
                 // Assert
@@ -37,7 +37,7 @@ namespace webserver.Tests.Project.Controllers {
                 Assert.Equal(200, result.StatusCode);
                 
                 Assert.NotNull(realEstates);
-                Assert.True(realEstates.Count == 3);//Assert.Equal(1, realEstates.Count);
+                Assert.True(realEstates.Length == 3);//Assert.Equal(1, realEstates.Count);
                 Assert.Equal("Property4", realEstates[0].Name);
             }
         }
@@ -56,7 +56,7 @@ namespace webserver.Tests.Project.Controllers {
 
                 // Act
                 var actionResult = controller.CreateRealEstate(newRealEstate) as CreatedAtActionResult;
-                var createdRealEstate = actionResult.Value as RealEstate;
+                var createdRealEstate = (RealEstate)actionResult.Value;
 
                 // Assert
                 Assert.NotNull(actionResult);
@@ -148,6 +148,7 @@ namespace webserver.Tests.Project.Controllers {
                 Assert.Equal(updatedRealEstate.Name, updatedResult.Name);
                 Assert.Equal(updatedRealEstate.Price, updatedResult.Price);
                 Assert.Equal(updatedRealEstate.Address, updatedResult.Address);
+                Assert.Equal(updatedRealEstate.CompanyId, updatedResult.CompanyId);
             }
         }
 

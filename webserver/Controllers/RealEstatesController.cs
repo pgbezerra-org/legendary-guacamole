@@ -8,6 +8,25 @@ namespace webserver.Controllers;
 [Route("api/v1/realestates")]
 [ApiController]
 public class RealEstatesController : ControllerBase {
+
+    public class RealEstateSummary {
+
+        public int Id { get; set; }
+        public string Name { get; set; } = string.Empty;
+        public string Address { get; set; } = string.Empty;
+        public decimal Price { get; set; }
+        public string CompanyId { get; set; } = string.Empty;
+
+
+        public static explicit operator RealEstate(RealEstateSummary summary) {
+            return new RealEstate {
+                Name = summary.Name,
+                Address = summary.Address,
+                Price = summary.Price,
+                CompanyId = summary.CompanyId
+            };
+        }
+    }
     
     private readonly WebserverContext _context;
 
@@ -64,7 +83,7 @@ public class RealEstatesController : ControllerBase {
                     
                     type = "RealEstates[]",
                     id = re.Id,
-                    attributes = new RealEstate {
+                    attributes = new RealEstateSummary {
                         Name = re.Name,
                         Price = re.Price,
                         Address = re.Address,
@@ -95,11 +114,11 @@ public class RealEstatesController : ControllerBase {
             data = new {
                 type = "RealEstate",
                 id = request.Id,
-                attributes = new {
-                    name = request.Name,
-                    price = request.Price,
-                    address = request.Address,
-                    companyId = request.CompanyId
+                attributes = new RealEstateSummary {
+                    Name = request.Name,
+                    Price = request.Price,
+                    Address = request.Address,
+                    CompanyId = request.CompanyId
                 }
             }
         };
@@ -125,16 +144,17 @@ public class RealEstatesController : ControllerBase {
             data = new {
                 type = "RealEstate",
                 id = realEstate.Id,
-                attributes = new {
-                    name = realEstate.Name,
-                    price = realEstate.Price,
-                    companyId = realEstate.CompanyId,
+                attributes = new RealEstateSummary {
+                    Name = realEstate.Name,
+                    Price = realEstate.Price,
+                    Address = realEstate.Address,
+                    CompanyId = realEstate.CompanyId,
                     // Add other attributes as needed
                 }
             }
         };
 
-        return Ok(response);
+        return Ok(response);    
     }
 
     [HttpDelete("{int:id}")]

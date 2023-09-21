@@ -8,7 +8,7 @@ public class RealEstate {
     public decimal Price { get; set; }
 
     // Foreign key to associate the RealEstate with a Company
-    public string CompanyId { get; set; }=string.Empty;
+    public string CompanyId { get; set; } = string.Empty;
     // Navigation property
     public Company? OwnerCompany { get; set; }
 }
