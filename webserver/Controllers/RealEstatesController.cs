@@ -20,7 +20,6 @@ public class RealEstatesController : ControllerBase {
 
         var realEstates = _context.RealEstates.AsQueryable();
 
-        // Filter by price
         if (minPrice.HasValue) {
             realEstates = realEstates.Where(re => re.Price >= minPrice);
         }
@@ -29,8 +28,6 @@ public class RealEstatesController : ControllerBase {
         }
 
         sort = sort.ToLower();
-
-        // Sort
         switch (sort) {
             case "name":
                 realEstates = realEstates.OrderBy(re => re.Name);
@@ -41,12 +38,14 @@ public class RealEstatesController : ControllerBase {
             case "companyid":
                 realEstates = realEstates.OrderBy(re => re.CompanyId);
                 break;
+            case "address":
+                realEstates = realEstates.OrderBy(re => re.Address);
+                break;
             default:
                 realEstates = realEstates.OrderBy(re => re.Id);
                 break;
         }
 
-        // Pagination
         if(offset.HasValue){
             realEstates=realEstates.Skip(offset.Value);
         }
@@ -65,13 +64,12 @@ public class RealEstatesController : ControllerBase {
                     
                     type = "realestates",
                     id = re.Id,
-                    attributes = new
+                    attributes = new RealEstate
                     {
-                        name = re.Name,
-                        price = re.Price,
-                        //companyId = re.CompanyId,
-                        companyId = _context.Company.Find(re.CompanyId)
-                        // Add other attributes as needed
+                        Name = re.Name,
+                        Price = re.Price,
+                        Address = re.Address,
+                        CompanyId = re.CompanyId,
                     }
                 })
             };
@@ -86,7 +84,11 @@ public class RealEstatesController : ControllerBase {
         if(_context.RealEstates.Find(request.Id)!=null){
             return BadRequest("Real Estate Already Exists!");
         }
-
+        /*
+        if (_context.Company.Find(request.CompanyId) == null) {
+            return BadRequest("Owner Company does Not Exist!");
+        }
+        */
         _context.RealEstates.Add(request);
         _context.SaveChanges();
 
@@ -97,8 +99,8 @@ public class RealEstatesController : ControllerBase {
                 attributes = new {
                     name = request.Name,
                     price = request.Price,
-                    companyId = request.CompanyId,
-                    // Add other attributes as needed
+                    address = request.Address,
+                    companyId = request.CompanyId
                 }
             }
         };
