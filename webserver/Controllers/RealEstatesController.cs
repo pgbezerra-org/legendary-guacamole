@@ -84,11 +84,11 @@ public class RealEstatesController : ControllerBase {
         if(_context.RealEstates.Find(request.Id)!=null){
             return BadRequest("Real Estate Already Exists!");
         }
-        /*
+        
         if (_context.Company.Find(request.CompanyId) == null) {
             return BadRequest("Owner Company does Not Exist!");
         }
-        */
+        
         _context.RealEstates.Add(request);
         _context.SaveChanges();
 

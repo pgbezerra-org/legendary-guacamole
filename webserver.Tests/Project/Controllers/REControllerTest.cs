@@ -15,13 +15,14 @@ namespace webserver.Tests.Project.Controllers {
                 .Options;
 
             using (var context = new WebserverContext(options)) {
-                context.RealEstates.Add(new RealEstate { Id = 1, Address="Sesame Street", Name = "Property1", Price = 40 });
-                context.RealEstates.Add(new RealEstate { Id = 2, Address="Hollywood Boulevard", Name = "Property2", Price = 200 });
-                context.RealEstates.Add(new RealEstate { Id = 3, Address="Sunset Boulevard", Name = "Property3", Price = 99 });
-                context.RealEstates.Add(new RealEstate { Id = 4, Address="The Bar", Name = "Property4", Price = 100 });
-                context.RealEstates.Add(new RealEstate { Id = 5, Address="Something", Name = "Property5", Price = 101 });
-                context.RealEstates.Add(new RealEstate { Id = 6, Address="Anything", Name = "Property6", Price = 102 });
-                context.RealEstates.Add(new RealEstate { Id = 7, Address="Whatsoever", Name = "Property7", Price = 103 });
+                context.Company.Add(new Company { Id = "a1b1c1d1", UserName = "ExampleCompany", Email = "exempComp@gmail.com" });
+                context.RealEstates.Add(new RealEstate { Id = 1, Address="Sesame Street", Name = "Property1", Price = 40, CompanyId="a1b1c1d1" });
+                context.RealEstates.Add(new RealEstate { Id = 2, Address="Hollywood Boulevard", Name = "Property2", Price = 200, CompanyId = "a1b1c1d1" });
+                context.RealEstates.Add(new RealEstate { Id = 3, Address="Sunset Boulevard", Name = "Property3", Price = 99, CompanyId = "a1b1c1d1" });
+                context.RealEstates.Add(new RealEstate { Id = 4, Address="The Bar", Name = "Property4", Price = 100, CompanyId = "a1b1c1d1" });
+                context.RealEstates.Add(new RealEstate { Id = 5, Address="Something", Name = "Property5", Price = 101, CompanyId = "a1b1c1d1" });
+                context.RealEstates.Add(new RealEstate { Id = 6, Address="Anything", Name = "Property6", Price = 102, CompanyId = "a1b1c1d1" });
+                context.RealEstates.Add(new RealEstate { Id = 7, Address="Whatsoever", Name = "Property7", Price = 103, CompanyId = "a1b1c1d1" });
                 context.SaveChanges();
                 
                 var controller = new RealEstatesController(context);
@@ -51,7 +52,7 @@ namespace webserver.Tests.Project.Controllers {
 
             using (var context = new WebserverContext(options)) {
                 var controller = new RealEstatesController(context);
-                var newRealEstate = new RealEstate { Id = 11, Name = "NewProperty", Price = 300 };
+                var newRealEstate = new RealEstate { Id = 11, Name = "NewProperty", Price = 300, CompanyId = "a1b1c1d1" };
 
                 // Act
                 var actionResult = controller.CreateRealEstate(newRealEstate) as CreatedAtActionResult;
@@ -79,11 +80,11 @@ namespace webserver.Tests.Project.Controllers {
 
             using (var context = new WebserverContext(options)) {
                 // Adding a real estate with the same Id
-                context.RealEstates.Add(new RealEstate { Id = 1, Name = "ExistingProperty", Price = 200 });
+                context.RealEstates.Add(new RealEstate { Id = 1, Name = "ExistingProperty", Price = 200, CompanyId = "a1b1c1d1" });
                 context.SaveChanges();
 
                 var controller = new RealEstatesController(context);
-                var existingRealEstate = new RealEstate { Id = 1, Name = "NewProperty", Price = 300 };
+                var existingRealEstate = new RealEstate { Id = 1, Name = "NewProperty", Price = 300, CompanyId = "a1b1c1d1" };
 
                 // Act
                 var result = controller.CreateRealEstate(existingRealEstate) as BadRequestObjectResult;
@@ -94,7 +95,28 @@ namespace webserver.Tests.Project.Controllers {
                 Assert.Equal("Real Estate Already Exists!", result.Value);
             }
         }
-        
+
+        [Fact]
+        public void CreateRealEstate_ReturnsBadRequest_WhenOwnerCompanyNotExists() {
+            // Arrange
+            var options = new DbContextOptionsBuilder<WebserverContext>()
+                .UseInMemoryDatabase(databaseName: "InMemoryDatabase")
+                .Options;
+
+            using (var context = new WebserverContext(options)) {
+                var controller = new RealEstatesController(context);
+                var newRealEstate = new RealEstate { Id = 14, Name = "NewProperty", Price = 300, CompanyId="DefinellyNotExists" };
+
+                // Act
+                var result = controller.CreateRealEstate(newRealEstate) as BadRequestObjectResult;
+
+                // Assert
+                Assert.NotNull(result);
+                Assert.Equal(400, result.StatusCode);
+                Assert.Equal("Owner Company does Not Exist!", result.Value);
+            }
+        }
+
         [Fact]
         public void UpdateRealEstate_ReturnsOkResult_WhenRealEstateExists() {
             // Arrange
