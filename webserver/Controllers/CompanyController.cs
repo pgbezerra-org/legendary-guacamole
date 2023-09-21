@@ -24,14 +24,13 @@ public class CompanyController : ControllerBase {
     }
 
     [HttpGet("{id}")]
-    public IActionResult ReadCompanyById(int id) {
+    public IActionResult ReadCompanys(int id) {
 
         var company = _context.Company.Find(id);
 
         if(company != null){
 
-            var result=new CompanySummary
-            {
+            var result=new CompanySummary {
                 Country = company.Country,
                 State = company.State,
                 City = company.City,
@@ -46,27 +45,8 @@ public class CompanyController : ControllerBase {
         }
     }
 
-    [HttpGet]
-    public IActionResult ReadAllCompany() {
-
-        var summaries = _context.Company.Select(comp => new CompanySummary {
-            Country = comp.Country,
-            State = comp.State,
-            City = comp.City,
-            UserName = comp.UserName!,
-            Email = comp.Email!,
-            PhoneNumber = comp.PhoneNumber!
-        }).ToList();
-
-        if(summaries!=null){
-            return Ok(summaries);
-        }else{
-            return NotFound();
-        }
-    }
-
-    [HttpPatch("{id}")]
-    public IActionResult UpdateCompany(int id, Company company) {
+    [HttpPatch("{string:id}")]
+    public IActionResult UpdateCompany(string id, Company company) {
 
         var comp=_context.Company.Find(id);
         if(comp==null){
@@ -80,8 +60,8 @@ public class CompanyController : ControllerBase {
         return Ok();
     }
 
-    [HttpDelete("{id}")]
-    public IActionResult DeleteCompany(int id) {
+    [HttpDelete("{string:id}")]
+    public IActionResult DeleteCompany(string id) {
         var comp=_context.Company.Find(id);
         if(comp==null){
             return NotFound();

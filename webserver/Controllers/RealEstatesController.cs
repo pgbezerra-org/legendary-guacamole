@@ -16,7 +16,7 @@ public class RealEstatesController : ControllerBase {
     }
 
     [HttpGet]
-    public async Task<IActionResult> ReadRealEstate(int? minPrice, int? maxPrice, int? offset, int? limit, string sort = "Id") {
+    public async Task<IActionResult> ReadRealEstates(int? minPrice, int? maxPrice, int? offset, int? limit, string sort = "Id") {
 
         var realEstates = _context.RealEstates.AsQueryable();
 
@@ -108,7 +108,7 @@ public class RealEstatesController : ControllerBase {
         return CreatedAtAction(nameof(CreateRealEstate), new { id = request.Id }, response);
     }
 
-    [HttpPatch("{id}")]
+    [HttpPatch("{int:id}")]
     public IActionResult UpdateRealEstate(int id, RealEstate upRE) {
 
         var realEstate=_context.RealEstates.Find(id);
@@ -138,7 +138,7 @@ public class RealEstatesController : ControllerBase {
         return Ok(response);
     }
 
-    [HttpDelete("{id}")]
+    [HttpDelete("{int:id}")]
     public IActionResult DeleteRealEstate(int id){
 
         var RE=_context.RealEstates.Find(id);

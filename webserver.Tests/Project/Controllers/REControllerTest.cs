@@ -28,7 +28,7 @@ namespace webserver.Tests.Project.Controllers {
                 var controller = new RealEstatesController(context);
 
                 // Act
-                var result = await controller.ReadRealEstate(minPrice: 50, maxPrice: 150, offset: 1, limit: 3, sort: "price") as OkObjectResult;
+                var result = await controller.ReadRealEstates(minPrice: 50, maxPrice: 150, offset: 1, limit: 3, sort: "price") as OkObjectResult;
                 var realEstates = result.Value as List<RealEstate>;
                 //var realEstates = JsonConvert.DeserializeObject<RealEstate[]>(result.Value.ToJToken().ToArray());
 
