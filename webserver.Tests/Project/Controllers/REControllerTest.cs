@@ -14,7 +14,6 @@ namespace webserver.Tests.Project.Controllers {
                 .UseInMemoryDatabase(databaseName: "InMemoryDatabase")
                 .Options;
 
-            // Create some sample data
             using (var context = new WebserverContext(options)) {
                 context.RealEstates.Add(new RealEstate { Id = 1, Address="Sesame Street", Name = "Property1", Price = 40 });
                 context.RealEstates.Add(new RealEstate { Id = 2, Address="Hollywood Boulevard", Name = "Property2", Price = 200 });
@@ -29,7 +28,6 @@ namespace webserver.Tests.Project.Controllers {
 
                 // Act
                 var result = await controller.ReadRealEstate(minPrice: 50, maxPrice: 150, offset: 1, limit: 3, sort: "price") as OkObjectResult;
-
                 var realEstates = result.Value as List<RealEstate>;
                 //var realEstates = JsonConvert.DeserializeObject<RealEstate[]>(result.Value.ToJToken().ToArray());
 
@@ -59,11 +57,9 @@ namespace webserver.Tests.Project.Controllers {
                 var actionResult = controller.CreateRealEstate(newRealEstate) as CreatedAtActionResult;
                 var createdRealEstate = actionResult.Value as RealEstate;
 
-                Console.WriteLine("\n" + actionResult != null + "\n");
-
                 // Assert
                 Assert.NotNull(actionResult);
-                Assert.Equal(200, actionResult.StatusCode);
+                Assert.Equal(201, actionResult.StatusCode);
 
                 Assert.NotNull(createdRealEstate);
                 Assert.Equal(newRealEstate.Id, createdRealEstate.Id);
@@ -109,7 +105,7 @@ namespace webserver.Tests.Project.Controllers {
             int upId=13;
             
             using (var context = new WebserverContext(options)) {
-                // Adding a real estate with an initial data
+
                 var initialRealEstate = new RealEstate { Id = upId, Name = "Property13", Price = 100, Address = "Address13" };
                 context.RealEstates.Add(initialRealEstate);
                 context.SaveChanges();
@@ -171,13 +167,11 @@ namespace webserver.Tests.Project.Controllers {
 
                 // Act
                 var result = controller.DeleteRealEstate(testId) as NoContentResult;
+                var deletedRealEstate = context.RealEstates.Find(testId);
 
                 // Assert
                 Assert.NotNull(result);
                 Assert.Equal(204, result.StatusCode);
-
-                // Verify that the real estate was deleted
-                var deletedRealEstate = context.RealEstates.Find(testId);
                 Assert.Null(deletedRealEstate);
             }
         }
