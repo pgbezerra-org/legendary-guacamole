@@ -9,13 +9,12 @@ using Microsoft.AspNetCore.Mvc;
 using webserver.Models;
 using webserver.Data;
 using webserver.Controllers;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 
 namespace webserver.Tests.Project.Controllers {
     public class CompanyControllerTest {
-
-        [Fact]
-        public void CreateCompany_ReturnsOKResult_WhenCompanyExists() {
-            
-        }
+        
     }
 }

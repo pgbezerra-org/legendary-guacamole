@@ -58,7 +58,7 @@ namespace webserver.Tests.Project.Pages.Accounts.Manage {
             };
 
             userManagerMock.Setup(m => m.FindByEmailAsync(It.IsAny<string>()))
-                .ReturnsAsync((BZEmployee)null);
+                .ReturnsAsync(new BZEmployee());
 
             userManagerMock.Setup(m => m.CreateAsync(It.IsAny<BZEmployee>(), It.IsAny<string>()))
                 .ReturnsAsync(IdentityResult.Success);

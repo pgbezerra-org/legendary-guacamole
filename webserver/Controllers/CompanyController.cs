@@ -58,58 +58,6 @@ public class CompanyController : ControllerBase {
         }
     }
 
-    [HttpPost]
-    public async Task<IActionResult> CreateCompany([FromBody] Company model, string nwordpass) {
-        
-            var auxUser = await _userManager.FindByEmailAsync(model.Email!);
-
-            if(auxUser!=null){
-                return BadRequest("Email already registered!");
-            }
-            
-                var company = new Company {
-                    UserName = model.UserName,
-                    Email = model.Email,
-                    PhoneNumber = model.PhoneNumber,
-                    Country = model.Country,
-                    State = model.State,
-                    City = model.City
-                };
-
-                var result = await _userManager.CreateAsync(company, nwordpass);
-
-                if (result.Succeeded) {
-
-                    var roleExist = await _roleManager.RoleExistsAsync(Common.Company_Role);
-                    if (!roleExist) {
-                        await _roleManager.CreateAsync(new IdentityRole(Common.Company_Role));
-                    }
-
-                    await _userManager.AddToRoleAsync(company, Common.Company_Role);
-
-                    var response = new {
-                        data = new {
-                            type = "Company",
-                            id = model.Id,
-                            attributes = new CompanySummary {
-                                UserName = model.UserName!,
-                                Email = model.Email!,
-                                PhoneNumber = model.PhoneNumber!,
-                                Country = model.Country,
-                                State = model.State,
-                                City = model.City
-                            }
-                        }
-                    };
-
-                    return Ok(response);
-                }else{
-                    return BadRequest("Failed to create company. Check your input data.");
-                }
-            
-        
-    }
-
     [HttpPatch("{string:id}")]
     public IActionResult UpdateCompany(string id, [FromBody] Company newCompany) {
 

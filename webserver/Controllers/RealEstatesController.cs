@@ -45,7 +45,7 @@ public class RealEstatesController : ControllerBase {
             var response = new {
                 data = new {
                     type = "RealEstate",
-                    attributes = new RealEstateSummary {
+                    attribute = new RealEstateSummary {
                         Id = id,
                         Name = realEstate.Name,
                         Price = realEstate.Price,
@@ -141,7 +141,7 @@ public class RealEstatesController : ControllerBase {
             data = new {
                 type = "RealEstate",
                 id = request.Id,
-                attributes = new RealEstateSummary {
+                attribute = new RealEstateSummary {
                     Name = request.Name,
                     Price = request.Price,
                     Address = request.Address,
@@ -171,7 +171,7 @@ public class RealEstatesController : ControllerBase {
             data = new {
                 type = "RealEstate",
                 id = realEstate.Id,
-                attributes = new RealEstateSummary {
+                attribute = new RealEstateSummary {
                     Name = realEstate.Name,
                     Price = realEstate.Price,
                     Address = realEstate.Address,
