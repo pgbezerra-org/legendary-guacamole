@@ -1,8 +1,8 @@
-using Microsoft.AspNetCore.Identity;
 using Moq;
 using webserver.Pages.Account;
 using webserver.Models;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 
@@ -27,8 +27,17 @@ namespace webserver.Tests.Project.Pages.Accounts.Manage {
             return new Mock<SignInManager<BZEmployee>>(
                 userManagerMock.Object,
                 Mock.Of<IHttpContextAccessor>(),
-                Mock.Of<IUserClaimsPrincipalFactory<BZEmployee>>(),
-                null, null, null, null); // Add null for the remaining constructor parameters
+                Mock.Of<IUserClaimsPrincipalFactory<BZEmployee>>());
+                //,null, null, null, null); // Add null for the remaining constructor parameters
+        }
+
+        public Mock<RoleManager<IdentityRole>> GetRoleManagerMock(){
+            return new Mock<RoleManager<IdentityRole>>(
+                new Mock<IRoleStore<IdentityRole>>().Object,
+                new List<IRoleValidator<IdentityRole>>(),
+                new UpperInvariantLookupNormalizer(),
+                new IdentityErrorDescriber(),
+                null);
         }
         
         [Fact]
@@ -36,8 +45,9 @@ namespace webserver.Tests.Project.Pages.Accounts.Manage {
 
             // Arrange
             var userManagerMock = GetUserManagerMock();
+            var roleManagerMock = GetRoleManagerMock();
 
-            var registerModel = new RegisterModel(userManagerMock.Object) {
+            var registerModel = new RegisterModel(userManagerMock.Object, roleManagerMock.Object) {
                 RegisterInput = new RegisterModel.RegisterInputModel {
                     Name = "Test User",
                     Email = "test@example.com",
