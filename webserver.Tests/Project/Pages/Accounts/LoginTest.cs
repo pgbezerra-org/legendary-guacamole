@@ -5,6 +5,7 @@ using webserver.Models;
 using webserver.Pages.Account;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using Microsoft.AspNetCore.Authentication;
 
 namespace webserver.Tests.Project.Pages{
     public class LoginModelTests {
@@ -22,13 +23,25 @@ namespace webserver.Tests.Project.Pages{
                 Mock.Of<ILogger<UserManager<BZEAccount>>>());
         }
 
-        public Mock<SignInManager<BZEAccount>> GetSignInManagerMock(Mock<UserManager<BZEAccount>> userManagerMock){
+        public Mock<SignInManager<BZEAccount>> GetSignInManagerMock(Mock<UserManager<BZEAccount>> userManagerMock) {
+            var contextAccessor = new Mock<IHttpContextAccessor>();
+            var userPrincipalFactory = new Mock<IUserClaimsPrincipalFactory<BZEAccount>>();
+            var claimsFactory = new Mock<IUserClaimsPrincipalFactory<BZEAccount>>();
+            var options = new Mock<IOptions<IdentityOptions>>();
+            var logger = new Mock<ILogger<SignInManager<BZEAccount>>>();
+            var schemes = new Mock<IAuthenticationSchemeProvider>();
+            var confirmation = new Mock<IUserConfirmation<BZEAccount>>();
+
             return new Mock<SignInManager<BZEAccount>>(
                 userManagerMock.Object,
-                Mock.Of<IHttpContextAccessor>(),
-                Mock.Of<IUserClaimsPrincipalFactory<BZEAccount>>(),
-                null, null, null, null); // Add null for the remaining constructor parameters
+                contextAccessor.Object,
+                userPrincipalFactory.Object,
+                options.Object,
+                logger.Object,
+                schemes.Object,
+                confirmation.Object);
         }
+
 
         [Fact]
         public async Task SignIn_Successful() {

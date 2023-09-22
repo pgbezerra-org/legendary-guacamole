@@ -123,7 +123,7 @@ namespace webserver.Tests.Project.Controllers {
 
                 // Act
                 var actionResult = controller.CreateRealEstate(newRealEstate) as CreatedAtActionResult;
-                var createdRealEstate = (RealEstate)actionResult.Value;
+                var createdRealEstate = actionResult.Value as RealEstate;
 
                 // Assert
                 Assert.NotNull(actionResult);
