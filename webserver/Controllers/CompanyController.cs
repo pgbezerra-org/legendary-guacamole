@@ -1,6 +1,8 @@
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using webserver.Data;
 using webserver.Models;
+using System.Net;
 
 namespace webserver.Controllers;
 
@@ -9,9 +11,13 @@ namespace webserver.Controllers;
 public class CompanyController : ControllerBase {
     
     private readonly WebserverContext _context;
+    private readonly UserManager<Company> _userManager;
+    private readonly RoleManager<IdentityRole> _roleManager;
 
-    public CompanyController(WebserverContext context) {
+    public CompanyController(WebserverContext context, UserManager<Company> userManager, RoleManager<IdentityRole> roleManager) {
         _context = context;
+        _userManager = userManager;
+        _roleManager = roleManager;
     }
 
     class CompanySummary {
@@ -50,6 +56,58 @@ public class CompanyController : ControllerBase {
         }else{
             return NotFound();
         }
+    }
+
+    [HttpPost]
+    public async Task<IActionResult> CreateCompany([FromBody] Company model, string nwordpass) {
+        
+            var auxUser = await _userManager.FindByEmailAsync(model.Email!);
+
+            if(auxUser!=null){
+                return BadRequest("Email already registered!");
+            }
+            
+                var company = new Company {
+                    UserName = model.UserName,
+                    Email = model.Email,
+                    PhoneNumber = model.PhoneNumber,
+                    Country = model.Country,
+                    State = model.State,
+                    City = model.City
+                };
+
+                var result = await _userManager.CreateAsync(company, nwordpass);
+
+                if (result.Succeeded) {
+
+                    var roleExist = await _roleManager.RoleExistsAsync(Common.Company_Role);
+                    if (!roleExist) {
+                        await _roleManager.CreateAsync(new IdentityRole(Common.Company_Role));
+                    }
+
+                    await _userManager.AddToRoleAsync(company, Common.Company_Role);
+
+                    var response = new {
+                        data = new {
+                            type = "Company",
+                            id = model.Id,
+                            attributes = new CompanySummary {
+                                UserName = model.UserName!,
+                                Email = model.Email!,
+                                PhoneNumber = model.PhoneNumber!,
+                                Country = model.Country,
+                                State = model.State,
+                                City = model.City
+                            }
+                        }
+                    };
+
+                    return Ok(response);
+                }else{
+                    return BadRequest("Failed to create company. Check your input data.");
+                }
+            
+        
     }
 
     [HttpPatch("{string:id}")]

@@ -3,8 +3,7 @@ using Microsoft.AspNetCore.Authorization;
 using MySqlConnector;
 using webserver.Models;
 
-namespace webserver.Pages.Manage 
-{
+namespace webserver.Pages.Manage  {
     [Authorize(Roles=Common.BZE_Role)]
     public class EmployeesLIST : PageModel {
         public List<EmployeeINFO> listEmpls=new List<EmployeeINFO>();

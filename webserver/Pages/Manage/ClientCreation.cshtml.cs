@@ -4,7 +4,6 @@ using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using webserver.Models;
-using webserver.Data;
 
 namespace webserver.Pages.Manage {
 

@@ -1,11 +1,13 @@
-using Microsoft.AspNetCore.Authorization;
 using System.ComponentModel.DataAnnotations;
 using webserver.Models;
 using webserver.Data;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.AspNetCore.Authorization;
 
 namespace webserver.Pages.Manage {
+
+    [Authorize(Roles=Common.BZE_Role+","+Common.Company_Role)]
     public class RealEstateUpdate : PageModel {
 
         public InputModel Input { get; set; } = new InputModel();

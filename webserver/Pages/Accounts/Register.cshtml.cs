@@ -12,9 +12,11 @@ namespace webserver.Pages.Account {
         public RegisterInputModel RegisterInput { get; set; } = new RegisterInputModel();
 
         private readonly UserManager<BZEmployee> _userManager;
+        private readonly RoleManager<IdentityRole> _roleManager;
 
-        public RegisterModel(UserManager<BZEmployee> userManager) {
+        public RegisterModel(UserManager<BZEmployee> userManager, RoleManager<IdentityRole> roleManager) {
             _userManager = userManager;
+            _roleManager = roleManager;
         }
 
         public void OnGet() {
@@ -46,6 +48,11 @@ namespace webserver.Pages.Account {
             var result = await _userManager.CreateAsync(user, RegisterInput.Password);
 
             if (result.Succeeded) {
+
+                var roleExist = await _roleManager.RoleExistsAsync(Common.BZE_Role);
+                if (!roleExist){
+                    await _roleManager.CreateAsync(new IdentityRole(Common.BZE_Role));
+                }
 
                 await _userManager.AddToRoleAsync(user,Common.BZE_Role);
                 return RedirectToPage("/Success");
