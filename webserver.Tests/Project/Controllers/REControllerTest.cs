@@ -239,6 +239,26 @@ namespace webserver.Tests.Project.Controllers {
         }
 
         [Fact]
+        public void UpdateRealEstate_ReturnsNotFound_WhenOwnerCompanyDoesNotExist() {
+            // Arrange
+            var options = new DbContextOptionsBuilder<WebserverContext>()
+                .UseInMemoryDatabase(databaseName: "InMemoryDatabase")
+                .Options;
+
+            using (var context = new WebserverContext(options)) {
+                var controller = new RealEstatesController(context);
+                var updatedRealEstate = new RealEstate { Id = 1, Name = "UpdatedProperty", Price = 200, Address = "UpdatedAddress", CompanyId="DoesNotExist" };
+
+                // Act
+                var result = controller.UpdateRealEstate(1, updatedRealEstate) as NotFoundResult;
+
+                // Assert
+                Assert.NotNull(result);
+                Assert.Equal(404, result.StatusCode);
+            }
+        }
+
+        [Fact]
         public void DeleteRealEstate_ReturnsNoContent_WhenRealEstateExists() {
 
             int testId=1;
