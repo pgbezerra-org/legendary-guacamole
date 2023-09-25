@@ -38,7 +38,7 @@ public class CompanyController : ControllerBase {
 
             var response = new {
                 data = new {
-                    type = "Company[]",
+                    type = "Company",
                     id = company.Id,
                     attributes = new CompanySummary {
                         Id = company.Id,
@@ -57,6 +57,42 @@ public class CompanyController : ControllerBase {
             return NotFound();
         }
     }
+
+    [HttpPost]
+    public async Task<IActionResult> CreateCompany([FromBody] Company comp, string password) {
+
+        // Check if the email is already registered
+        var existingUser = await _userManager.FindByEmailAsync(comp.Email!);
+        if (existingUser != null) {
+            return BadRequest("Email already registered!");
+        }
+
+        var company = new Company {
+            UserName = comp.UserName,
+            Email = comp.Email,
+            PhoneNumber = comp.PhoneNumber,
+            Country = comp.Country,
+            State = comp.State,
+            City = comp.City
+        };
+
+        var result = await _userManager.CreateAsync(company, password);
+
+        if (result.Succeeded) {
+
+            var roleExists = await _roleManager.RoleExistsAsync(Common.Company_Role);
+            if (!roleExists) {
+                await _roleManager.CreateAsync(new IdentityRole(Common.Company_Role));
+            }
+
+            await _userManager.AddToRoleAsync(company, Common.Company_Role);
+            return Ok("Company created successfully!");
+        }else{
+            return StatusCode(500, "Internal Server Error: Register Company Unsuccessful");
+        }
+    }
+
+    [HttpPost]
 
     [HttpPatch("{string:id}")]
     public IActionResult UpdateCompany(string id, [FromBody] Company newCompany) {

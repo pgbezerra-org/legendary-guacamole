@@ -126,7 +126,7 @@ public class RealEstatesController : ControllerBase {
     [HttpPost]
     public IActionResult CreateRealEstate([FromBody]RealEstate request ) {
 
-        if(_context.RealEstates.Find(request.Id)!=null){
+        if(_context.RealEstates.Find(request.Id)!=null) {
             return BadRequest("Real Estate Already Exists!");
         }
         
