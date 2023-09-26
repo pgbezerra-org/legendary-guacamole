@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using webserver.Data;
 using webserver.Models;
 using System.Net;
+using Microsoft.IdentityModel.Tokens;
 
 namespace webserver.Controllers;
 
@@ -55,6 +56,70 @@ public class CompanyController : ControllerBase {
             return Ok(response);
         }else{
             return NotFound();
+        }
+    }
+
+    [HttpGet]
+    public IActionResult ReadCompanies(string? Country, string? State, string? City, int? offset, int? limit, string sort = "Name") {
+
+        var companies = _context.Company.AsQueryable();
+
+        if (!string.IsNullOrEmpty(City)) {
+            companies = companies.Where(re => re.City == City);
+        }
+        if (!string.IsNullOrEmpty(State)) {
+            companies = companies.Where(re => re.State == State);
+        }
+        if (!string.IsNullOrEmpty(Country)) {
+            companies = companies.Where(re => re.Country == Country);
+        }
+
+        sort = sort.ToLower();
+        switch (sort) {
+            case "city":
+                companies = companies.OrderBy(re => re.City);
+                break;
+            case "state":
+                companies = companies.OrderBy(re => re.State);
+                break;
+            case "country":
+                companies = companies.OrderBy(re => re.Country);
+                break;
+            default:
+                companies = companies.OrderBy(re => re.UserName);
+                break;
+        }
+
+        if(offset.HasValue){
+            companies=companies.Skip(offset.Value);
+        }
+        if(limit.HasValue){
+            companies=companies.Take(limit.Value);
+        }
+
+        var result = companies.ToList();
+
+        if (result == null) {
+            return NotFound();
+        }else {
+
+            var response = new {
+                data = result.Select(re => new {
+                    
+                    type = "Company",
+                    attributes = new CompanySummary {
+                        Id = re.Id,
+                        UserName = re.UserName!,
+                        Email=re.Email!,
+                        PhoneNumber=re.PhoneNumber!,
+                        Country=re.Country,
+                        State=re.State,
+                        City=re.City
+                    }
+                })
+            };
+
+            return Ok(response);
         }
     }
 

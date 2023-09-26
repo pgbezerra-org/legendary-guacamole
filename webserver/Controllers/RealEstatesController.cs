@@ -108,9 +108,9 @@ public class RealEstatesController : ControllerBase {
             var response = new {
                 data = result.Select(re => new {
                     
-                    type = "RealEstates[]",
-                    id = re.Id,
+                    type = "RealEstate",
                     attributes = new RealEstateSummary {
+                        Id = re.Id,
                         Name = re.Name,
                         Price = re.Price,
                         Address = re.Address,
