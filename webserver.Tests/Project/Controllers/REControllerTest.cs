@@ -287,7 +287,7 @@ namespace webserver.Tests.Project.Controllers {
         public void DeleteRealEstate_ReturnsNotFound_WhenRealEstateDoesNotExist() {
 
             // Arrange
-            int NotExistId=404;
+            int NotExistId=40;
             var options = new DbContextOptionsBuilder<WebserverContext>()
                 .UseInMemoryDatabase(databaseName: "InMemoryDatabase")
                 .Options;
