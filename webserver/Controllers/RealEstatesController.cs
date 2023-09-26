@@ -134,8 +134,8 @@ public class RealEstatesController : ControllerBase {
             return BadRequest("Owner Company does Not Exist!");
         }
         
-        _context.RealEstates.Add(request);
-        _context.SaveChanges();
+        _context.RealEstates.AddAsync(request);
+        _context.SaveChangesAsync();
 
         var response = new {
             data = new {
@@ -150,7 +150,7 @@ public class RealEstatesController : ControllerBase {
             }
         };
 
-        return CreatedAtAction(nameof(CreateRealEstate), new { id = request.Id }, response);
+        return Ok(response);
     }
 
     [HttpPatch("{int:id}")]

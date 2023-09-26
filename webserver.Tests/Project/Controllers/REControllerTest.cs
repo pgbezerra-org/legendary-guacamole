@@ -3,6 +3,8 @@ using Microsoft.AspNetCore.Mvc;
 using webserver.Models;
 using webserver.Data;
 using webserver.Controllers;
+using NuGet.Protocol;
+using Castle.Components.DictionaryAdapter.Xml;
 
 namespace webserver.Tests.Project.Controllers {
     public class REControllerTest {
@@ -62,6 +64,9 @@ namespace webserver.Tests.Project.Controllers {
                 Assert.NotNull(result);
                 Assert.NotNull(realEstate);
                 Assert.Equal(200, result.StatusCode);
+                Assert.Equal("Sesame Street",realEstate.Address);
+                Assert.Equal("Property1",realEstate.Name);
+                Assert.Equal(40,realEstate.Price);
             }
         }
 
@@ -118,17 +123,25 @@ namespace webserver.Tests.Project.Controllers {
                 .Options;
 
             using (var context = new WebserverContext(options)) {
+
+                int createId=637;
+
+                Company comp = new Company { Id="a1b1c1d1"}; 
+                context.Company.Add(comp);
+                context.SaveChanges();
+
                 var controller = new RealEstatesController(context);
-                var newRealEstate = new RealEstate { Id = 11, Name = "NewProperty", Price = 300, CompanyId = "a1b1c1d1" };
+                var newRealEstate = new RealEstate { Id = createId, Name = "NewProperty", Price = 300, CompanyId = "a1b1c1d1" };
+
+                var result = controller.CreateRealEstate(newRealEstate) as ObjectResult;
 
                 // Act
-                var actionResult = controller.CreateRealEstate(newRealEstate) as CreatedAtActionResult;
-                var createdRealEstate = actionResult.Value as RealEstate;
+                var createdRealEstate = context.RealEstates.Find(createId);
 
                 // Assert
-                Assert.NotNull(actionResult);
+                Assert.NotNull(result);
+                Console.WriteLine(result.Value);
                 Assert.NotNull(createdRealEstate);
-                Assert.Equal(201, actionResult.StatusCode);
                 Assert.Equal(newRealEstate.Id, createdRealEstate.Id);
                 Assert.Equal(newRealEstate.Name, createdRealEstate.Name);
                 Assert.Equal(newRealEstate.Price, createdRealEstate.Price);
