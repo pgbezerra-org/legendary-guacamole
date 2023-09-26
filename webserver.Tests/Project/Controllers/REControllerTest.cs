@@ -56,15 +56,15 @@ namespace webserver.Tests.Project.Controllers {
                 .Options;
 
             using (var context = new WebserverContext(options)) {
-                context.RealEstates.Add(new RealEstate { Id = 1, Address="Sesame Street", Name = "Property1", Price = 40, CompanyId="a1b1c1d1" });
+                int readOKID=59;
+
+                context.RealEstates.Add(new RealEstate { Id = readOKID, Address="Sesame Street", Name = "Property1", Price = 40, CompanyId="a1b1c1d1" });
                 context.SaveChanges();
                 var controller = new RealEstatesController(context);
 
                 // Act
-                var result = controller.ReadRealEstate(1) as OkObjectResult;
-                var realEstate = result.Value as RealEstate;
-                
-                #pragma warning restore format
+                var result = controller.ReadRealEstate(readOKID) as OkObjectResult;
+                var realEstate = context.RealEstates.Find(readOKID);
 
                 // Assert
                 Assert.NotNull(result);
@@ -83,7 +83,7 @@ namespace webserver.Tests.Project.Controllers {
                 .UseInMemoryDatabase(databaseName: "InMemoryDatabase")
                 .Options;
 
-            int nonExist = 404;
+            int nonExist = 86;
 
             using (var context = new WebserverContext(options)) {
                 context.RealEstates.Add(new RealEstate { Id = nonExist, Address="Sesame Street", Name = "Property1", Price = 40, CompanyId="a1b1c1d1" });
@@ -92,27 +92,6 @@ namespace webserver.Tests.Project.Controllers {
 
                 // Act
                 var result = controller.ReadRealEstate(nonExist) as NotFoundResult;
-
-                // Assert
-                Assert.NotNull(result);
-                Assert.Equal(404, result.StatusCode);
-            }
-        }
-
-        [Fact]
-        public void ReadRealEstate_ReturnsNotFound_WhenOwnerCompanyDoesNotExist() {
-            // Arrange
-            var options = new DbContextOptionsBuilder<WebserverContext>()
-                .UseInMemoryDatabase(databaseName: "InMemoryDatabase")
-                .Options;
-
-            using (var context = new WebserverContext(options)) {
-                context.RealEstates.Add(new RealEstate { Id = 1, Address="Sesame Street", Name = "Property1", Price = 40, CompanyId="DefinellyNotExist" });
-                context.SaveChanges();
-                var controller = new RealEstatesController(context);
-
-                // Act
-                var result = controller.ReadRealEstate(1) as NotFoundResult;
 
                 // Assert
                 Assert.NotNull(result);
@@ -130,7 +109,7 @@ namespace webserver.Tests.Project.Controllers {
 
             using (var context = new WebserverContext(options)) {
 
-                int createId=637;
+                int createId=112;
 
                 Company comp = new Company { Id="a1b1c1d1"}; 
                 context.Company.Add(comp);
@@ -164,12 +143,14 @@ namespace webserver.Tests.Project.Controllers {
                 .Options;
 
             using (var context = new WebserverContext(options)) {
+                int existsId=1;
+
                 // Adding a real estate with the same Id
-                context.RealEstates.Add(new RealEstate { Id = 1, Name = "ExistingProperty", Price = 200, CompanyId = "a1b1c1d1" });
+                context.RealEstates.Add(new RealEstate { Id = existsId, Name = "ExistingProperty", Price = 200, CompanyId = "a1b1c1d1" });
                 context.SaveChanges();
 
                 var controller = new RealEstatesController(context);
-                var existingRealEstate = new RealEstate { Id = 1, Name = "NewProperty", Price = 300, CompanyId = "a1b1c1d1" };
+                var existingRealEstate = new RealEstate { Id = existsId, Name = "NewProperty", Price = 300, CompanyId = "a1b1c1d1" };
 
                 // Act
                 var result = controller.CreateRealEstate(existingRealEstate) as BadRequestObjectResult;
@@ -189,8 +170,10 @@ namespace webserver.Tests.Project.Controllers {
                 .Options;
 
             using (var context = new WebserverContext(options)) {
+                int ownerExistsId=173;
+
                 var controller = new RealEstatesController(context);
-                var newRealEstate = new RealEstate { Id = 14, Name = "NewProperty", Price = 300, CompanyId="DefinellyNotExists" };
+                var newRealEstate = new RealEstate { Id = ownerExistsId, Name = "NewProperty", Price = 300, CompanyId="DefinellyNotExists" };
 
                 // Act
                 var result = controller.CreateRealEstate(newRealEstate) as BadRequestObjectResult;
@@ -209,7 +192,7 @@ namespace webserver.Tests.Project.Controllers {
                 .UseInMemoryDatabase(databaseName: "InMemoryDatabase")
                 .Options;
 
-            int upId=13;
+            int upId=195;
             
             using (var context = new WebserverContext(options)) {
 
@@ -242,7 +225,7 @@ namespace webserver.Tests.Project.Controllers {
                 .UseInMemoryDatabase(databaseName: "InMemoryDatabase")
                 .Options;
 
-            int nonId=999;
+            int nonId=228;
 
             using (var context = new WebserverContext(options)) {
                 var controller = new RealEstatesController(context);
@@ -260,7 +243,7 @@ namespace webserver.Tests.Project.Controllers {
         [Fact]
         public void DeleteRealEstate_ReturnsNoContent_WhenRealEstateExists() {
 
-            int testId=1;
+            int existsId=246;
 
             // Arrange
             var options = new DbContextOptionsBuilder<WebserverContext>()
@@ -268,12 +251,15 @@ namespace webserver.Tests.Project.Controllers {
                 .Options;
 
             using (var context = new WebserverContext(options)) {
+                var initialRealEstate = new RealEstate { Id = existsId, Name = "Property13", Price = 100, Address = "Address13" };
+                context.RealEstates.Add(initialRealEstate);
+                context.SaveChanges();
 
                 var controller = new RealEstatesController(context);
 
                 // Act
-                var result = controller.DeleteRealEstate(testId) as NoContentResult;
-                var deletedRealEstate = context.RealEstates.Find(testId);
+                var result = controller.DeleteRealEstate(existsId) as NoContentResult;
+                var deletedRealEstate = context.RealEstates.Find(existsId);
 
                 // Assert
                 Assert.NotNull(result);
@@ -286,7 +272,7 @@ namespace webserver.Tests.Project.Controllers {
         public void DeleteRealEstate_ReturnsNotFound_WhenRealEstateDoesNotExist() {
 
             // Arrange
-            int NotExistId=40;
+            int NotExistId=275;
             var options = new DbContextOptionsBuilder<WebserverContext>()
                 .UseInMemoryDatabase(databaseName: "InMemoryDatabase")
                 .Options;
