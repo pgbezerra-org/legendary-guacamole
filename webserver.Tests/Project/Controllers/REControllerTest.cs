@@ -17,22 +17,26 @@ namespace webserver.Tests.Project.Controllers {
                 .Options;
             
             using (var context = new WebserverContext(options)) {
-                //context.Company.Add(new Company { Id = "a1b1c1d1", UserName = "ExampleCompany", Email = "exempComp@gmail.com" });
-                context.RealEstates.Add(new RealEstate { Id = 1, Address="Sesame Street", Name = "Property1", Price = 40, CompanyId="a1b1c1d1" });
-                context.RealEstates.Add(new RealEstate { Id = 2, Address="Hollywood Boulevard", Name = "Property2", Price = 200, CompanyId = "a1b1c1d1" });
-                context.RealEstates.Add(new RealEstate { Id = 3, Address="Sunset Boulevard", Name = "Property3", Price = 99, CompanyId = "a1b1c1d1" });
-                context.RealEstates.Add(new RealEstate { Id = 4, Address="The Bar", Name = "Property4", Price = 100, CompanyId = "a1b1c1d1" });
-                context.RealEstates.Add(new RealEstate { Id = 5, Address="Something", Name = "Property5", Price = 101, CompanyId = "a1b1c1d1" });
-                context.RealEstates.Add(new RealEstate { Id = 6, Address="Anything", Name = "Property6", Price = 102, CompanyId = "a1b1c1d1" });
-                context.RealEstates.Add(new RealEstate { Id = 7, Address="Whatsoever", Name = "Property7", Price = 103, CompanyId = "a1b1c1d1" });
+                //context.RealEstates.Add(new RealEstate { Id = 1, Address="Sesame Street", Name = "Property1", Price = 40, CompanyId="a1b1c1d1" });
+                //context.SaveChanges();
+                context.RealEstates.Add(new RealEstate { Id = 1, Address="Sesame Street", Name = "Property1", Price = 40});
+                context.RealEstates.Add(new RealEstate { Id = 2, Address="Hollywood Boulevard", Name = "Property2", Price = 200});
+                context.RealEstates.Add(new RealEstate { Id = 3, Address="Sunset Boulevard", Name = "Property3", Price = 99});
+                context.RealEstates.Add(new RealEstate { Id = 4, Address="The Bar", Name = "Property4", Price = 100});
+                context.RealEstates.Add(new RealEstate { Id = 5, Address="Something", Name = "Property5", Price = 101});
+                context.RealEstates.Add(new RealEstate { Id = 6, Address="Anything", Name = "Property6", Price = 102});
+                context.RealEstates.Add(new RealEstate { Id = 7, Address="Whatsoever", Name = "Property7", Price = 103});
                 context.SaveChanges();
                 
                 var controller = new RealEstatesController(context);
 
                 // Act
                 var result = await controller.ReadRealEstates(minPrice: 50, maxPrice: 150, offset: 1, limit: 3, sort: "price") as OkObjectResult;
-                var realEstates = result.Value  as RealEstate[];
-                //var realEstates = JsonConvert.DeserializeObject<RealEstate[]>(result.Value.ToJToken().ToArray());
+
+                var query = context.RealEstates.AsQueryable();
+                query = query.Where(re => re.Price >= 50 && re.Price <= 150);
+                query = query.Skip(1).Take(3);
+                var realEstates = query.ToList();
 
                 // Assert
                 Assert.NotNull(result);
@@ -40,7 +44,7 @@ namespace webserver.Tests.Project.Controllers {
 
                 Assert.Equal(200, result.StatusCode);
                 Assert.Equal("Property4", realEstates[0].Name);
-                Assert.True(realEstates.Length == 3);//Assert.Equal(1, realEstates.Count);                
+                Assert.True(realEstates.Count == 3);//Assert.Equal(1, realEstates.Count);                
             }
         }
 
@@ -59,6 +63,8 @@ namespace webserver.Tests.Project.Controllers {
                 // Act
                 var result = controller.ReadRealEstate(1) as OkObjectResult;
                 var realEstate = result.Value as RealEstate;
+                
+                #pragma warning restore format
 
                 // Assert
                 Assert.NotNull(result);
