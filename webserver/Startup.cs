@@ -3,6 +3,7 @@ using webserver.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.OpenApi.Models;
 
 namespace webserver {
 
@@ -47,7 +48,7 @@ namespace webserver {
             
             string connectionString="MyConnection";
             services.AddDbContext<WebserverContext>(options =>
-                options.UseMySQL(connectionString));
+                options.UseMySQL(connectionString));            
         }
 
         public async void Configure(IApplicationBuilder app, IWebHostEnvironment env, IServiceProvider serviceProvider) {
@@ -79,8 +80,7 @@ namespace webserver {
 
             app.UseCookiePolicy();
 
-            app.UseEndpoints(endpoints =>
-            {
+            app.UseEndpoints(endpoints => {
                 endpoints.MapRazorPages();
                 endpoints.MapControllers();
             });

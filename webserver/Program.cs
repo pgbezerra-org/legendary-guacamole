@@ -39,10 +39,11 @@ builder.Services.AddAuthorization();
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(c => {
-    c.SwaggerDoc("v1", new OpenApiInfo { Title = "GuacAPI", Version = "v1" });
+    c.SwaggerDoc("api", new OpenApiInfo { Title = "GuacAPI", Version = "v1" });
     //var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
     //var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
     //c.IncludeXmlComments(xmlPath);
+    c.ResolveConflictingActions(apiDescriptions => apiDescriptions.First());
 });
 
 var app = builder.Build();
@@ -75,7 +76,7 @@ app.MapControllerRoute(
 app.UseSwagger();
 app.UseSwaggerUI(c =>
 {
-    c.SwaggerEndpoint("/swagger/v1/swagger.json", "GuacAPI");
+    c.SwaggerEndpoint("/swagger/api/swagger.json", "GuacAPI");
     c.RoutePrefix = "swagger";
     c.DocExpansion(DocExpansion.None);
 });

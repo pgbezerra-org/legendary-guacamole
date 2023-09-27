@@ -4,8 +4,8 @@ using webserver.Models;
 
 namespace webserver.Controllers;
 
-[Route("api/v1/clients")]
 [ApiController]
+[Route("api/v1/clients")]
 public class ClientController : ControllerBase {
     
     private readonly WebserverContext _context;

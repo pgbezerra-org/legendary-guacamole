@@ -1,14 +1,13 @@
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using webserver.Data;
 using webserver.Models;
-using System.Net;
-using Microsoft.IdentityModel.Tokens;
 
 namespace webserver.Controllers;
 
-[Route("api/v1/company")]
 [ApiController]
+[Route("api/v1/company")]
 public class CompanyController : ControllerBase {
     
     private readonly WebserverContext _context;
@@ -31,7 +30,7 @@ public class CompanyController : ControllerBase {
         public string City { get; set; } = string.Empty;
     }
 
-    [HttpGet]
+    [HttpGet("unique/{id}")]
     public IActionResult ReadCompany(string id) {
         var company = _context.Company.Find(id);
 
@@ -157,7 +156,7 @@ public class CompanyController : ControllerBase {
         }
     }
 
-    [HttpPatch]
+    [HttpPatch("id")]
     public IActionResult UpdateCompany(string id, [FromBody] Company newCompany) {
 
         var existingCompany = _context.Company.Find(id);
@@ -189,7 +188,7 @@ public class CompanyController : ControllerBase {
         return Ok(response);
     }
 
-    [HttpDelete]
+    [HttpDelete("id")]
     public IActionResult DeleteCompany(string id) {
         var comp=_context.Company.Find(id);
         if(comp==null){

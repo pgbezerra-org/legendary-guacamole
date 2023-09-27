@@ -5,8 +5,8 @@ using webserver.Models;
 
 namespace webserver.Controllers;
 
-[Route("api/v1/realestates")]
 [ApiController]
+[Route("api/v1/realestates")]
 public class RealEstatesController : ControllerBase {
 
     public class RealEstateSummary {
@@ -150,7 +150,7 @@ public class RealEstatesController : ControllerBase {
         return Ok(response);
     }
 
-    [HttpPatch]
+    [HttpPatch("id")]
     public IActionResult UpdateRealEstate(int id, [FromBody]RealEstate upRE) {
 
         var realEstate = _context.RealEstates.Find(id);
@@ -180,7 +180,7 @@ public class RealEstatesController : ControllerBase {
         return Ok(response);    
     }
 
-    [HttpDelete]
+    [HttpDelete("id")]
     public IActionResult DeleteRealEstate(int id) {
 
         var RE = _context.RealEstates.Find(id);
