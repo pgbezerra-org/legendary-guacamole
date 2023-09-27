@@ -8,7 +8,7 @@ namespace webserver.Pages {
         private readonly WebserverContext context;
 
         [BindProperty]
-        public RealEstateINFO[] states {get; set;}=new RealEstateINFO[3];
+        public RealEstateINFO[] states {get; set;} = new RealEstateINFO[3];
 
         public IndexModel(WebserverContext _context) {
             context = _context;
@@ -23,11 +23,13 @@ namespace webserver.Pages {
 
             states = query.ToArray();
 
+            //New companies will have an empty Real Estate!
+
         }
 
         public class RealEstateINFO{
-            public string Name { get; set;}=string.Empty;
-            public string Address { get; set;}=string.Empty;
+            public string Name { get; set;} = string.Empty;
+            public string Address { get; set;} = string.Empty;
 
             public decimal Price;
         }

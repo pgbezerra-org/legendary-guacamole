@@ -130,9 +130,13 @@ public class RealEstatesController : ControllerBase {
         if (_context.Company.Find(request.CompanyId) == null) {
             return BadRequest("Owner Company does Not Exist!");
         }
+
+        request.OwnerCompany=_context.Company.Find(request.CompanyId);
         
         _context.RealEstates.AddAsync(request);
         _context.SaveChangesAsync();
+
+        Console.WriteLine(_context.RealEstates.Find(request.Id).Name);
 
         var response = new {
             data = new {
