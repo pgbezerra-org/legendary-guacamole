@@ -22,7 +22,7 @@ public class ClientController : ControllerBase {
         public string PhoneNumber { get; set; } = string.Empty;
     }
 
-    [HttpGet("{string:id}")]
+    [HttpGet]
     public IActionResult ReadClients() {
 
         var clients = _context.Clients.Select(client => new ClientSummary {
@@ -40,7 +40,7 @@ public class ClientController : ControllerBase {
         }
     }
 
-    [HttpPatch("{string:id}")]
+    [HttpPatch]
     public IActionResult UpdateClient(string id, [FromBody]Client upClient){
         var client=_context.Clients.Find(id);
         if(client==null){
@@ -55,7 +55,7 @@ public class ClientController : ControllerBase {
         return Ok();
     }
 
-    [HttpDelete("{string:id}")]
+    [HttpDelete]
     public IActionResult DeleteClient(string id){
 
         var client=_context.Clients.Find(id);

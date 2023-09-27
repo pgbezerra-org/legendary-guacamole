@@ -31,7 +31,7 @@ public class CompanyController : ControllerBase {
         public string City { get; set; } = string.Empty;
     }
 
-    [HttpGet("{string:id}")]
+    [HttpGet]
     public IActionResult ReadCompany(string id) {
         var company = _context.Company.Find(id);
 
@@ -157,9 +157,7 @@ public class CompanyController : ControllerBase {
         }
     }
 
-    [HttpPost]
-
-    [HttpPatch("{string:id}")]
+    [HttpPatch]
     public IActionResult UpdateCompany(string id, [FromBody] Company newCompany) {
 
         var existingCompany = _context.Company.Find(id);
@@ -191,7 +189,7 @@ public class CompanyController : ControllerBase {
         return Ok(response);
     }
 
-    [HttpDelete("{string:id}")]
+    [HttpDelete]
     public IActionResult DeleteCompany(string id) {
         var comp=_context.Company.Find(id);
         if(comp==null){

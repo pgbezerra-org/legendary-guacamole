@@ -35,7 +35,7 @@ public class RealEstatesController : ControllerBase {
         _context = context;
     }
 
-    [HttpGet("{int:id}")]
+    [HttpGet("unique/{id}")]
     public IActionResult ReadRealEstate(int id){
 
         var realEstate = _context.RealEstates.Find(id);
@@ -150,7 +150,7 @@ public class RealEstatesController : ControllerBase {
         return Ok(response);
     }
 
-    [HttpPatch("{int:id}")]
+    [HttpPatch]
     public IActionResult UpdateRealEstate(int id, [FromBody]RealEstate upRE) {
 
         var realEstate = _context.RealEstates.Find(id);
@@ -180,7 +180,7 @@ public class RealEstatesController : ControllerBase {
         return Ok(response);    
     }
 
-    [HttpDelete("{int:id}")]
+    [HttpDelete]
     public IActionResult DeleteRealEstate(int id) {
 
         var RE = _context.RealEstates.Find(id);
