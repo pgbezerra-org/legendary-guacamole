@@ -11,15 +11,17 @@ namespace webserver.Tests.Project.Controllers {
 
         [Fact]
         public async Task ReadRealEstates_ReturnsOkResult_WithValidParameters() {
+
             // Arrange
             var options = new DbContextOptionsBuilder<WebserverContext>()
                 .UseInMemoryDatabase(databaseName: "InMemoryDatabase")
                 .Options;
             
             using (var context = new WebserverContext(options)) {
-                //context.RealEstates.Add(new RealEstate { Id = 1, Address="Sesame Street", Name = "Property1", Price = 40, CompanyId="a1b1c1d1" });
-                //context.SaveChanges();
-                context.RealEstates.Add(new RealEstate { Id = 1, Address="Sesame Street", Name = "Property1", Price = 40});
+
+                Company comp = new Company{UserName="initialcomp",Email="initialcomp@gmail.com"};
+                context.Company.Add(comp);
+
                 context.RealEstates.Add(new RealEstate { Id = 2, Address="Hollywood Boulevard", Name = "Property2", Price = 200});
                 context.RealEstates.Add(new RealEstate { Id = 3, Address="Sunset Boulevard", Name = "Property3", Price = 99});
                 context.RealEstates.Add(new RealEstate { Id = 4, Address="The Bar", Name = "Property4", Price = 100});
@@ -63,8 +65,9 @@ namespace webserver.Tests.Project.Controllers {
                 context.RealEstates.Add(new RealEstate { Id = readOKID, Address = "Sesame Street", Name = "Property1", Price = 40, CompanyId="a1b1c1d1" });
                 context.SaveChanges();
 
-                // Act
                 var controller = new RealEstatesController(context);
+
+                // Act
                 var result = controller.ReadRealEstate(readOKID) as OkObjectResult;
                 var realEstate = context.RealEstates.Find(readOKID);
 
@@ -112,8 +115,12 @@ namespace webserver.Tests.Project.Controllers {
 
             using (var context = new WebserverContext(options)) {
 
+                Company comp = new Company { UserName="compania", Email="compania@gmail.com" };
+                context.Company.Add(comp);
+                context.SaveChanges();
+
                 var controller = new RealEstatesController(context);
-                var newRealEstate = new RealEstate { Id = createId, Name = "NewProperty", Price = 300, CompanyId = "a1b1c1d1" };
+                var newRealEstate = new RealEstate { Id = createId, Name = "NewProperty", Price = 300, CompanyId = comp.Id };
 
                 // Act
                 var result = controller.CreateRealEstate(newRealEstate) as ObjectResult;
@@ -199,9 +206,10 @@ namespace webserver.Tests.Project.Controllers {
                 var controller = new RealEstatesController(context);
                 var updatedRealEstate = new RealEstate { Id = upId, Name = "UpdatedProperty", Price = 200, Address = "UpdatedAddress" };
 
-                // Act
                 context.RealEstates.Add(initialRealEstate);
                 context.SaveChanges();
+
+                // Act
 
                 var result = controller.UpdateRealEstate(upId, updatedRealEstate) as OkObjectResult;
                 var updatedResult = context.RealEstates.Find(upId);
@@ -255,10 +263,10 @@ namespace webserver.Tests.Project.Controllers {
                 var initialRealEstate = new RealEstate { Id = existsId, Name = "Property13", Price = 100, Address = "Address13" };
                 var controller = new RealEstatesController(context);
 
-                // Act
                 context.RealEstates.Add(initialRealEstate);
                 context.SaveChanges();
 
+                // Act
                 var result = controller.DeleteRealEstate(existsId) as NoContentResult;
                 var deletedRealEstate = context.RealEstates.Find(existsId);
 
@@ -280,8 +288,9 @@ namespace webserver.Tests.Project.Controllers {
             int NotExistId = 275;
 
             using (var context = new WebserverContext(options)) {
-                var controller = new RealEstatesController(context);
 
+                var controller = new RealEstatesController(context);
+                
                 // Act
                 var result = controller.DeleteRealEstate(NotExistId) as NotFoundResult;
 
