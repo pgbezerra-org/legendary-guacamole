@@ -1,7 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using webserver.Data;
-using webserver.Migrations;
 using webserver.Models;
 
 namespace webserver.Controllers;
@@ -21,6 +20,7 @@ public class RealEstatesController : ControllerBase {
 
         public static explicit operator RealEstate(RealEstateSummary summary) {
             return new RealEstate {
+                Id = summary.Id,
                 Name = summary.Name,
                 Address = summary.Address,
                 Price = summary.Price,
@@ -39,26 +39,24 @@ public class RealEstatesController : ControllerBase {
     public IActionResult ReadRealEstate(int id){
 
         var realEstate = _context.RealEstates.Find(id);
-
-        if(realEstate!=null) {
-
-            var response = new {
-                data = new {
-                    type = "RealEstate",
-                    attribute = new RealEstateSummary {
-                        Id = id,
-                        Name = realEstate.Name,
-                        Price = realEstate.Price,
-                        Address = realEstate.Address,
-                        CompanyId = realEstate.CompanyId
-                    }
-                }
-            };
-
-            return Ok(response);
-        }else{
+        if(realEstate==null){
             return NotFound();
         }
+
+        var response = new {
+            data = new {
+                type = "RealEstate",
+                attribute = new RealEstateSummary {
+                    Id = id,
+                    Name = realEstate.Name,
+                    Price = realEstate.Price,
+                    Address = realEstate.Address,
+                    CompanyId = realEstate.CompanyId
+                }
+            }
+        };
+
+        return Ok(response);
     }
 
     [HttpGet]
@@ -101,26 +99,25 @@ public class RealEstatesController : ControllerBase {
 
         var result = await realEstates.ToListAsync();
 
-        if (result == null) {
+        if(result==null){
             return NotFound();
-        }else {
-
-            var response = new {
-                data = result.Select(re => new {
-                    
-                    type = "RealEstate",
-                    attributes = new RealEstateSummary {
-                        Id = re.Id,
-                        Name = re.Name,
-                        Price = re.Price,
-                        Address = re.Address,
-                        CompanyId = re.CompanyId,
-                    }
-                })
-            };
-
-            return Ok(response);
         }
+
+        var response = new {
+            data = result.Select(re => new {
+                
+                type = "RealEstate",
+                attributes = new RealEstateSummary {
+                    Id = re.Id,
+                    Name = re.Name,
+                    Price = re.Price,
+                    Address = re.Address,
+                    CompanyId = re.CompanyId,
+                }
+            })
+        };
+
+        return Ok(response);
     }
 
     [HttpPost]
@@ -140,8 +137,8 @@ public class RealEstatesController : ControllerBase {
         var response = new {
             data = new {
                 type = "RealEstate",
-                id = request.Id,
                 attribute = new RealEstateSummary {
+                    Id = request.Id,
                     Name = request.Name,
                     Price = request.Price,
                     Address = request.Address,
@@ -156,22 +153,22 @@ public class RealEstatesController : ControllerBase {
     [HttpPatch("{int:id}")]
     public IActionResult UpdateRealEstate(int id, [FromBody]RealEstate upRE) {
 
-        var realEstate=_context.RealEstates.Find(id);
-        if(realEstate==null){
+        var realEstate = _context.RealEstates.Find(id);
+        if(realEstate == null){
             return NotFound();
         }
         
-        realEstate.Address=upRE.Address;
-        realEstate.Price=upRE.Price;
-        realEstate.Name=upRE.Name;
+        realEstate.Address = upRE.Address;
+        realEstate.Price = upRE.Price;
+        realEstate.Name = upRE.Name;
 
         _context.SaveChanges();
         
         var response = new {
             data = new {
                 type = "RealEstate",
-                id = realEstate.Id,
                 attribute = new RealEstateSummary {
+                    Id = realEstate.Id,
                     Name = realEstate.Name,
                     Price = realEstate.Price,
                     Address = realEstate.Address,
@@ -184,10 +181,10 @@ public class RealEstatesController : ControllerBase {
     }
 
     [HttpDelete("{int:id}")]
-    public IActionResult DeleteRealEstate(int id){
+    public IActionResult DeleteRealEstate(int id) {
 
-        var RE=_context.RealEstates.Find(id);
-        if(RE==null){
+        var RE = _context.RealEstates.Find(id);
+        if(RE==null) {
             return NotFound();
         }
 
