@@ -128,7 +128,6 @@ namespace webserver.Tests.Project.Controllers {
 
                 // Assert
                 Assert.NotNull(result);
-                Console.WriteLine(result.Value);
                 Assert.NotNull(createdRealEstate);
                 Assert.Equal(newRealEstate.Id, createdRealEstate.Id);
                 Assert.Equal(newRealEstate.Name, createdRealEstate.Name);
@@ -290,7 +289,7 @@ namespace webserver.Tests.Project.Controllers {
             using (var context = new WebserverContext(options)) {
 
                 var controller = new RealEstatesController(context);
-                
+
                 // Act
                 var result = controller.DeleteRealEstate(NotExistId) as NotFoundResult;
 
