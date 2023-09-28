@@ -2,32 +2,13 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using webserver.Data;
 using webserver.Models;
+using webserver.Models.DTOs;
 
 namespace webserver.Controllers;
 
 [ApiController]
 [Route("api/v1/realestates")]
 public class RealEstatesController : ControllerBase {
-
-    public class RealEstateSummary {
-
-        public int Id { get; set; }
-        public string Name { get; set; } = string.Empty;
-        public string Address { get; set; } = string.Empty;
-        public decimal Price { get; set; }
-        public string CompanyId { get; set; } = string.Empty;
-
-
-        public static explicit operator RealEstate(RealEstateSummary summary) {
-            return new RealEstate {
-                Id = summary.Id,
-                Name = summary.Name,
-                Address = summary.Address,
-                Price = summary.Price,
-                CompanyId = summary.CompanyId
-            };
-        }
-    }
     
     private readonly WebserverContext _context;
 
@@ -46,13 +27,7 @@ public class RealEstatesController : ControllerBase {
         var response = new {
             data = new {
                 type = "RealEstate",
-                attribute = new RealEstateSummary {
-                    Id = id,
-                    Name = realEstate.Name,
-                    Price = realEstate.Price,
-                    Address = realEstate.Address,
-                    CompanyId = realEstate.CompanyId
-                }
+                attribute = new RealEstateDTO (id, realEstate.Name, realEstate.Address, realEstate.Price, realEstate.CompanyId)
             }
         };
 
@@ -107,13 +82,7 @@ public class RealEstatesController : ControllerBase {
             data = result.Select(re => new {
                 
                 type = "RealEstate",
-                attributes = new RealEstateSummary {
-                    Id = re.Id,
-                    Name = re.Name,
-                    Price = re.Price,
-                    Address = re.Address,
-                    CompanyId = re.CompanyId,
-                }
+                attribute = new RealEstateDTO (re.Id, re.Name, re.Address, re.Price, re.CompanyId)
             })
         };
 
@@ -141,13 +110,7 @@ public class RealEstatesController : ControllerBase {
         var response = new {
             data = new {
                 type = "RealEstate",
-                attribute = new RealEstateSummary {
-                    Id = request.Id,
-                    Name = request.Name,
-                    Price = request.Price,
-                    Address = request.Address,
-                    CompanyId = request.CompanyId
-                }
+                attribute = new RealEstateDTO (request.Id, request.Name, request.Address, request.Price, request.CompanyId)
             }
         };
 
@@ -171,13 +134,7 @@ public class RealEstatesController : ControllerBase {
         var response = new {
             data = new {
                 type = "RealEstate",
-                attribute = new RealEstateSummary {
-                    Id = realEstate.Id,
-                    Name = realEstate.Name,
-                    Price = realEstate.Price,
-                    Address = realEstate.Address,
-                    CompanyId = realEstate.CompanyId
-                }
+                attribute = new RealEstateDTO (realEstate.Id, realEstate.Name, realEstate.Address, realEstate.Price, realEstate.CompanyId)
             }
         };
 
