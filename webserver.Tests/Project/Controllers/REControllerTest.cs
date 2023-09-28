@@ -5,6 +5,7 @@ using webserver.Models;
 using webserver.Data;
 using NuGet.Protocol;
 using SQLitePCL;
+using webserver.Models.DTOs;
 
 namespace webserver.Tests.Project.Controllers {
     public class REControllerTest {
@@ -123,7 +124,7 @@ namespace webserver.Tests.Project.Controllers {
                 var newRealEstate = new RealEstate { Id = createId, Name = "NewProperty", Price = 300, CompanyId = comp.Id };
 
                 // Act
-                var result = controller.CreateRealEstate(newRealEstate) as ObjectResult;
+                var result = controller.CreateRealEstate((RealEstateDTO)newRealEstate) as ObjectResult;
                 var createdRealEstate = context.RealEstates.Find(createId);
 
                 // Assert
@@ -157,7 +158,7 @@ namespace webserver.Tests.Project.Controllers {
                 var existingRealEstate = new RealEstate { Id = existsId, Name = "NewProperty", Price = 300, CompanyId = "a1b1c1d1" };
 
                 // Act
-                var result = controller.CreateRealEstate(existingRealEstate) as BadRequestObjectResult;
+                var result = controller.CreateRealEstate((RealEstateDTO)existingRealEstate) as BadRequestObjectResult;
 
                 // Assert
                 Assert.NotNull(result);
@@ -181,7 +182,7 @@ namespace webserver.Tests.Project.Controllers {
                 var newRealEstate = new RealEstate { Id = ownerExistsId, Name = "NewProperty", Price = 300, CompanyId="DefinellyNotExists" };
 
                 // Act
-                var result = controller.CreateRealEstate(newRealEstate) as BadRequestObjectResult;
+                var result = controller.CreateRealEstate((RealEstateDTO)newRealEstate) as BadRequestObjectResult;
 
                 // Assert
                 Assert.NotNull(result);
@@ -210,7 +211,7 @@ namespace webserver.Tests.Project.Controllers {
 
                 // Act
 
-                var result = controller.UpdateRealEstate(upId, updatedRealEstate) as OkObjectResult;
+                var result = controller.UpdateRealEstate(upId, (RealEstateDTO)updatedRealEstate) as OkObjectResult;
                 var updatedResult = context.RealEstates.Find(upId);
 
                 // Assert
@@ -239,7 +240,7 @@ namespace webserver.Tests.Project.Controllers {
                 var updatedRealEstate = new RealEstate { Id = nonId, Name = "UpdatedProperty", Price = 200, Address = "UpdatedAddress" };
 
                 // Act
-                var result = controller.UpdateRealEstate(nonId, updatedRealEstate) as NotFoundResult;
+                var result = controller.UpdateRealEstate(nonId, (RealEstateDTO)updatedRealEstate) as NotFoundResult;
 
                 // Assert
                 Assert.NotNull(result);

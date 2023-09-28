@@ -90,22 +90,18 @@ public class RealEstatesController : ControllerBase {
     }
 
     [HttpPost]
-    public IActionResult CreateRealEstate([FromBody]RealEstate request ) {
+    public IActionResult CreateRealEstate([FromBody]RealEstateDTO request ) {
 
-        if(_context.RealEstates.Find(request.Id)!=null) {
+        if(_context.RealEstates.Find(request.Id) != null) {
             return BadRequest("Real Estate Already Exists!");
         }
         
         if (_context.Company.Find(request.CompanyId) == null) {
             return BadRequest("Owner Company does Not Exist!");
         }
-
-        request.OwnerCompany=_context.Company.Find(request.CompanyId);
         
-        _context.RealEstates.AddAsync(request);
+        _context.RealEstates.AddAsync((RealEstate)request);
         _context.SaveChangesAsync();
-
-        Console.WriteLine(_context.RealEstates.Find(request.Id).Name);
 
         var response = new {
             data = new {
@@ -118,7 +114,7 @@ public class RealEstatesController : ControllerBase {
     }
 
     [HttpPatch("id")]
-    public IActionResult UpdateRealEstate(int id, [FromBody]RealEstate upRE) {
+    public IActionResult UpdateRealEstate(int id, [FromBody]RealEstateDTO upRE) {
 
         var realEstate = _context.RealEstates.Find(id);
         if(realEstate == null){
