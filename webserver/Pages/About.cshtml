@@ -1,18 +1,29 @@
 @page
 @model webserver.Pages.About
 
+<style>
+    .line-spacing {
+        line-height: 1.2;
+    }
+</style>
+
+
 <h3>@ViewData["Title"]</h3>
 
-<div>
+<div class="line-spacing">
     <h1>About Legendary Guacamole</h1>
     <p></p>
     <p>Guacamole is a multi-tenant royal-state web service</p>
     <p>
-        A <b>.NET Core</b> web app project, written mostly in <b>C#</b>, and a <b>MySQL</b> for database management system. Both the Database and the Webserver project
+        A <b>.NET Core</b> web app project, written mostly in <b>C#</b>, and a <b>MySQL</b> for database management system
+    </p>
+    <p>Both the Database and the Webserver project
         are dockerized
     </p>
     <p>
-        This enterprise was developed and deployed in <b>Linux</b> systems. Although meant for a tech-demo, the project was fully designed and developed meeting serious project standards
+        This enterprise was developed and deployed in <b>Linux</b> systems
+    </p>
+    <p>Although meant for a tech-demo, the project was fully designed and developed meeting serious project standards
     </p>
     <p>The project contains a <b>RESTful JSON:API</b> for communicating with the database</p>
     <p>

@@ -62,21 +62,31 @@
 <br>
 <h2>Latest Real-Estates Available:</h2>
 <div class="recard-container">
-  <div class="recard">
-    <h2>@Model.states[0].Name</h2>
-    <p>@Model.states[0].Address</p>
-    <p>@Model.states[0].Price</p>
-  </div>
-  <div class="recard">
-    <h2>@Model.states[1].Name</h2>
-    <p>@Model.states[1].Address</p>
-    <p>@Model.states[1].Price</p>
-  </div>
-  <div class="recard">
-    <h2>@Model.states[1].Name</h2>
-    <p>@Model.states[1].Address</p>
-    <p>@Model.states[1].Price</p>
-  </div>
+
+  <a asp-page="/Views/RealEstateProfile" asp-route-id=@Model.states[0].Id class="btn">
+    <div class="recard">
+      <h2>@Model.states[0].Name</h2>
+      <p>@Model.states[0].Address</p>
+      <p>@Model.states[0].Price</p>
+    </div>
+  </a>
+
+  <a asp-page="/Views/RealEstateProfile" asp-route-id=@Model.states[1].Id class="btn">
+    <div class="recard">
+      <h2>@Model.states[1].Name</h2>
+      <p>@Model.states[1].Address</p>
+      <p>@Model.states[1].Price</p>
+    </div>
+  </a>
+
+  <a asp-page="/Views/RealEstateProfile" asp-route-id=@Model.states[2].Id class="btn">
+    <div class="recard">
+      <h2>@Model.states[2].Name</h2>
+      <p>@Model.states[2].Address</p>
+      <p>@Model.states[2].Price</p>
+    </div>
+  </a>
+
 </div>
 
 <footer class="border-top footer text-muted">
