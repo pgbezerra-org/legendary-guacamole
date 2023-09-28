@@ -18,6 +18,9 @@ namespace webserver.Pages.Account {
         private readonly SignInManager<BZEAccount> _signInManager;
         private readonly UserManager<BZEAccount> _userManager;
 
+        [Display(Name = "Remember me")]
+        public bool RememberMe { get; set; }
+
         public LoginModel(SignInManager<BZEAccount> signInManager, UserManager<BZEAccount> userManager) {
             _userManager = userManager;
             _signInManager = signInManager;
@@ -48,7 +51,7 @@ namespace webserver.Pages.Account {
                 return Page();
             }
             
-            var result = await _signInManager.PasswordSignInAsync(user, Credential.Password, isPersistent: true, lockoutOnFailure: false);
+            var result = await _signInManager.PasswordSignInAsync(user, Credential.Password, RememberMe, lockoutOnFailure: false);
 
             if (!result.Succeeded) {
                 ModelState.AddModelError(string.Empty, "Invalid login attempt. " + result.ToString());

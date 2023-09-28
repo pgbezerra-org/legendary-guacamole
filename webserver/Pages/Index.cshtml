@@ -19,7 +19,7 @@
     flex-direction: column;
     justify-content: center;
     margin: 2%;
-    padding: 2.5%;
+    padding: 2%;
     border: 1px solid #ccc;
     text-align: center;
   }
@@ -31,11 +31,11 @@
   }
 
   .recard {
-    flex: 0 0 calc(25% - 2rem); /* Adjust the percentage and spacing as needed */
+    flex: 0 0 calc(25% - 2rem);
     display: flex;
     flex-direction: column;
-    margin: 3rem; /* Increase the margin to separate them more horizontally */
-    padding: 1.8%;
+    margin: 2rem;
+    padding: 1.8em;
     border: 1px solid #ccc;
     text-align: left;
   }
@@ -67,7 +67,7 @@
     <div class="recard">
       <h2>@Model.states[0].Name</h2>
       <p>@Model.states[0].Address</p>
-      <p>@Model.states[0].Price</p>
+      <p>R$: @Model.states[0].Price</p>
     </div>
   </a>
 
@@ -75,7 +75,7 @@
     <div class="recard">
       <h2>@Model.states[1].Name</h2>
       <p>@Model.states[1].Address</p>
-      <p>@Model.states[1].Price</p>
+      <p>R$: @Model.states[1].Price</p>
     </div>
   </a>
 
@@ -83,7 +83,7 @@
     <div class="recard">
       <h2>@Model.states[2].Name</h2>
       <p>@Model.states[2].Address</p>
-      <p>@Model.states[2].Price</p>
+      <p>R$: @Model.states[2].Price</p>
     </div>
   </a>
 

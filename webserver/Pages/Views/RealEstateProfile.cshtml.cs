@@ -1,13 +1,11 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using webserver.Data;
 using webserver.Models;
 
 namespace webserver.Pages.Views {
+
+    [Authorize]    
     public class RealEstateProfile : PageModel {
         public WebserverContext context;
 

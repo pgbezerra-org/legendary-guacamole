@@ -38,7 +38,7 @@ namespace webserver.Pages.Manage {
             await context.RealEstates.AddAsync(realEstate);
             await context.SaveChangesAsync();
             
-            return RedirectToPage("/Success");
+            return RedirectToPage("/Manage/RECRUD");
         }
 
         public class InputModel {
