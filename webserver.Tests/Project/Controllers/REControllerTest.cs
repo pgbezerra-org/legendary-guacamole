@@ -3,8 +3,6 @@ using Microsoft.AspNetCore.Mvc;
 using webserver.Controllers;
 using webserver.Models;
 using webserver.Data;
-using NuGet.Protocol;
-using SQLitePCL;
 using webserver.Models.DTOs;
 
 namespace webserver.Tests.Project.Controllers {
@@ -211,7 +209,7 @@ namespace webserver.Tests.Project.Controllers {
 
                 // Act
 
-                var result = controller.UpdateRealEstate(upId, (RealEstateDTO)updatedRealEstate) as OkObjectResult;
+                var result = controller.UpdateRealEstate((RealEstateDTO)updatedRealEstate) as OkObjectResult;
                 var updatedResult = context.RealEstates.Find(upId);
 
                 // Assert
@@ -240,7 +238,7 @@ namespace webserver.Tests.Project.Controllers {
                 var updatedRealEstate = new RealEstate { Id = nonId, Name = "UpdatedProperty", Price = 200, Address = "UpdatedAddress" };
 
                 // Act
-                var result = controller.UpdateRealEstate(nonId, (RealEstateDTO)updatedRealEstate) as NotFoundResult;
+                var result = controller.UpdateRealEstate((RealEstateDTO)updatedRealEstate) as NotFoundResult;
 
                 // Assert
                 Assert.NotNull(result);

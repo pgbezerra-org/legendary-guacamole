@@ -73,6 +73,7 @@ public class RealEstatesController : ControllerBase {
         }
 
         var result = await realEstates.ToListAsync();
+        //var result = await realEstates.ToArrayAsync();
 
         if(result==null){
             return NotFound();
@@ -81,8 +82,8 @@ public class RealEstatesController : ControllerBase {
         var response = new {
             data = result.Select(re => new {
                 
-                type = "RealEstate",
-                attribute = new RealEstateDTO (re.Id, re.Name, re.Address, re.Price, re.CompanyId)
+                type = "RealEstate[]",
+                attributes = new RealEstateDTO (re.Id, re.Name, re.Address, re.Price, re.CompanyId)
             })
         };
 
@@ -113,10 +114,10 @@ public class RealEstatesController : ControllerBase {
         return Ok(response);
     }
 
-    [HttpPatch("id")]
-    public IActionResult UpdateRealEstate(int id, [FromBody]RealEstateDTO upRE) {
+    [HttpPatch]
+    public IActionResult UpdateRealEstate([FromBody]RealEstateDTO upRE) {
 
-        var realEstate = _context.RealEstates.Find(id);
+        var realEstate = _context.RealEstates.Find(upRE.Id);
         if(realEstate == null){
             return NotFound();
         }

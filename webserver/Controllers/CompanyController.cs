@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using webserver.Data;
 using webserver.Models;
+using webserver.Models.DTOs;
 
 namespace webserver.Controllers;
 
@@ -20,42 +21,25 @@ public class CompanyController : ControllerBase {
         _roleManager = roleManager;
     }
 
-    class CompanySummary {
-        public string Id { get; set; } = string.Empty;
-        public string UserName { get; set; } = string.Empty;
-        public string Email { get; set; } = string.Empty;
-        public string PhoneNumber { get; set; } = string.Empty;
-        public string Country { get; set; } = string.Empty;
-        public string State { get; set; } = string.Empty;
-        public string City { get; set; } = string.Empty;
-    }
-
     [HttpGet("unique/{id}")]
     public IActionResult ReadCompany(string id) {
+
         var company = _context.Company.Find(id);
-
-        if (company != null) {
-
-            var response = new {
-                data = new {
-                    type = "Company",
-                    id = company.Id,
-                    attributes = new CompanySummary {
-                        Id = company.Id,
-                        UserName = company.UserName!,
-                        Email = company.Email!,
-                        PhoneNumber = company.PhoneNumber!,
-                        Country = company.Country,
-                        State = company.State,
-                        City = company.City
-                    }
-                }
-            };
-
-            return Ok(response);
-        }else{
+        if(company==null){
             return NotFound();
         }
+
+        var response = new {
+            data = new {
+                type = "Company",
+                attribute = new CompanyDTO (
+                    company.Id, company.UserName!, company.Email!, company.PhoneNumber!,
+                    company.Country, company.State, company.City
+                )
+            }
+        };
+
+        return Ok(response);
     }
 
     [HttpGet]
@@ -96,49 +80,42 @@ public class CompanyController : ControllerBase {
             companies=companies.Take(limit.Value);
         }
 
-        var result = companies.ToList();
-
-        if (result == null) {
+        //var result = companies.ToList();
+        var result = companies.ToArray();
+        
+        if(result==null){
             return NotFound();
-        }else {
-
-            var response = new {
-                data = result.Select(re => new {
-                    
-                    type = "Company",
-                    attributes = new CompanySummary {
-                        Id = re.Id,
-                        UserName = re.UserName!,
-                        Email=re.Email!,
-                        PhoneNumber=re.PhoneNumber!,
-                        Country=re.Country,
-                        State=re.State,
-                        City=re.City
-                    }
-                })
-            };
-
-            return Ok(response);
         }
+
+        var response = new {
+            data = result.Select(c => new {
+                
+                type = "Company[]",
+                attributes = new CompanyDTO (
+                    c.Id, c.UserName!, c.Email!, c.PhoneNumber!,
+                    c.Country, c.State, c.City
+                )
+            })
+        };
+
+        return Ok(response);
     }
 
     [HttpPost]
-    public async Task<IActionResult> CreateCompany([FromBody] Company comp, string password) {
+    public async Task<IActionResult> CreateCompany([FromBody] CompanyDTO comp, string password) {
 
         // Check if the email is already registered
-        var existingUser = await _userManager.FindByEmailAsync(comp.Email!);
-        if (existingUser != null) {
+        var existingEmail = await _userManager.FindByEmailAsync(comp.Email);
+        if (existingEmail != null) {
             return BadRequest("Email already registered!");
         }
 
-        var company = new Company {
-            UserName = comp.UserName,
-            Email = comp.Email,
-            PhoneNumber = comp.PhoneNumber,
-            Country = comp.Country,
-            State = comp.State,
-            City = comp.City
-        };
+        var existingUsername = await _userManager.FindByNameAsync(comp.UserName);
+        if (existingUsername != null) {
+            return BadRequest("UserName already registered!");
+        }
+
+        Company company = (Company)comp;
 
         var result = await _userManager.CreateAsync(company, password);
 
@@ -150,38 +127,29 @@ public class CompanyController : ControllerBase {
             }
 
             await _userManager.AddToRoleAsync(company, Common.Company_Role);
+
             return Ok("Company created successfully!");
         }else{
             return StatusCode(500, "Internal Server Error: Register Company Unsuccessful");
         }
     }
 
-    [HttpPatch("id")]
-    public IActionResult UpdateCompany(string id, [FromBody] Company newCompany) {
+    [HttpPatch]
+    public IActionResult UpdateCompany([FromBody] CompanyDTO newCompany) {
 
-        var existingCompany = _context.Company.Find(id);
+        var existingCompany = _context.Company.Find(newCompany.Id);
         if (existingCompany == null) {
             return NotFound();
         }
 
-        existingCompany.UserName = newCompany.UserName;
-        existingCompany.Email = newCompany.Email;
-        existingCompany.PhoneNumber = newCompany.PhoneNumber;
-        existingCompany.Country = newCompany.Country;
-        existingCompany.State = newCompany.State;
-        existingCompany.City = newCompany.City;
+        existingCompany=(Company)newCompany;
 
         _context.SaveChanges();
 
         var response = new {
             data = new {
                 type = "Company",
-                id = existingCompany.Id,
-                attributes = new CompanySummary {
-                    Country = existingCompany.Country,
-                    State = existingCompany.State,
-                    City = existingCompany.City
-                }
+                attribute = (CompanyDTO)existingCompany
             }
         };
 
@@ -190,8 +158,9 @@ public class CompanyController : ControllerBase {
 
     [HttpDelete("id")]
     public IActionResult DeleteCompany(string id) {
+
         var comp=_context.Company.Find(id);
-        if(comp==null){
+        if(comp == null){
             return NotFound();
         }
 
