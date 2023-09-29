@@ -3,6 +3,9 @@ using Microsoft.EntityFrameworkCore;
 using webserver.Data;
 using webserver.Models;
 using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.OpenApi.Models;
+using System.Reflection;
+using Swashbuckle.AspNetCore.SwaggerUI;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -33,14 +36,15 @@ builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationSc
     });
 
 builder.Services.AddAuthorization();
-/*
-builder.Services.ConfigureApplicationCookie(options=>{
-                options.Cookie.Name=Common.BZE_Cookie;
-                options.LoginPath="/Accounts/Login";
-                options.AccessDeniedPath = "/Accounts/Login";
-                options.ExpireTimeSpan = TimeSpan.FromMinutes(30);
-                options.SlidingExpiration = true;
-            });*/            
+
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSwaggerGen(c => {
+    c.SwaggerDoc("api", new OpenApiInfo { Title = "GuacAPI", Version = "v1" });
+    //var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
+    //var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
+    //c.IncludeXmlComments(xmlPath);
+    c.ResolveConflictingActions(apiDescriptions => apiDescriptions.First());
+});
 
 var app = builder.Build();
 
@@ -55,11 +59,26 @@ if (!app.Environment.IsDevelopment()) {
 app.UseHttpsRedirection();
 app.UseStaticFiles();
 
+app.MapControllers();
+
 app.UseRouting();
 
 app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapRazorPages();
+
+app.MapControllerRoute(
+    name: "default",
+    pattern:"{controller=Home}/{action=Index}/{id?}"
+);
+
+app.UseSwagger();
+app.UseSwaggerUI(c =>
+{
+    c.SwaggerEndpoint("/swagger/api/swagger.json", "GuacAPI");
+    c.RoutePrefix = "swagger";
+    c.DocExpansion(DocExpansion.None);
+});
 
 app.Run();
