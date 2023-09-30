@@ -4,7 +4,6 @@ using webserver.Data;
 using webserver.Models;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.OpenApi.Models;
-using System.Reflection;
 using Swashbuckle.AspNetCore.SwaggerUI;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -14,13 +13,11 @@ builder.Services.AddRazorPages();
 
 builder.Services.AddDbContext<WebserverContext>(options =>
     options.UseMySQL(builder.Configuration.GetConnectionString("MyConnection") ?? throw new InvalidOperationException("Connection string 'Guacamole' not found.")));
-//builder.Services.AddDatabaseDeveloperPageExceptionFilter(); //useless but alright
 
 builder.Services.AddDefaultIdentity<BZEAccount>().AddRoles<IdentityRole>()
                 .AddEntityFrameworkStores<WebserverContext>()
         .AddDefaultTokenProviders();
 
-//builder.Services.AddDefaultIdentity<BZEmployee>().AddEntityFrameworkStores<WebserverContext>();
 builder.Services.AddIdentityCore<BZEmployee>().AddRoles<IdentityRole>().AddEntityFrameworkStores<WebserverContext>();
 builder.Services.AddIdentityCore<Company>().AddRoles<IdentityRole>().AddEntityFrameworkStores<WebserverContext>();
 builder.Services.AddIdentityCore<Client>().AddRoles<IdentityRole>().AddEntityFrameworkStores<WebserverContext>();
@@ -40,9 +37,6 @@ builder.Services.AddAuthorization();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(c => {
     c.SwaggerDoc("api", new OpenApiInfo { Title = "GuacAPI", Version = "v1" });
-    //var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
-    //var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
-    //c.IncludeXmlComments(xmlPath);
     c.ResolveConflictingActions(apiDescriptions => apiDescriptions.First());
 });
 
