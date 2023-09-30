@@ -6,7 +6,7 @@ using webserver.Data;
 using webserver.Models.DTOs;
 
 namespace webserver.Tests.Project.Controllers {
-    public class REControllerTest {
+    public class RealEstatesController {
 
         [Fact]
         public async Task ReadRealEstates_ReturnsOkResult_WithValidParameters() {
@@ -29,7 +29,7 @@ namespace webserver.Tests.Project.Controllers {
                 context.RealEstates.Add(new RealEstate { Id = 7, Address="Whatsoever", Name = "Property7", Price = 103});
                 context.SaveChanges();
                 
-                var controller = new RealEstatesController(context);
+                var controller = new webserver.Controllers.RealEstatesController(context);
 
                 // Act
                 var result = await controller.ReadRealEstates(minPrice: 50, maxPrice: 150, offset: 1, limit: 3, sort: "price") as OkObjectResult;
@@ -64,7 +64,7 @@ namespace webserver.Tests.Project.Controllers {
                 context.RealEstates.Add(new RealEstate { Id = readOKID, Address = "Sesame Street", Name = "Property1", Price = 40, CompanyId="a1b1c1d1" });
                 context.SaveChanges();
 
-                var controller = new RealEstatesController(context);
+                var controller = new webserver.Controllers.RealEstatesController(context);
 
                 // Act
                 var result = controller.ReadRealEstate(readOKID) as OkObjectResult;
@@ -91,7 +91,7 @@ namespace webserver.Tests.Project.Controllers {
 
             using (var context = new WebserverContext(options)) {
 
-                var controller = new RealEstatesController(context);
+                var controller = new webserver.Controllers.RealEstatesController(context);
 
                 // Act
                 var result = controller.ReadRealEstate(nonExist) as NotFoundResult;
@@ -118,7 +118,7 @@ namespace webserver.Tests.Project.Controllers {
                 context.Company.Add(comp);
                 context.SaveChanges();
 
-                var controller = new RealEstatesController(context);
+                var controller = new webserver.Controllers.RealEstatesController(context);
                 var newRealEstate = new RealEstate { Id = createId, Name = "NewProperty", Price = 300, CompanyId = comp.Id };
 
                 // Act
@@ -152,7 +152,7 @@ namespace webserver.Tests.Project.Controllers {
                 context.RealEstates.Add(new RealEstate { Id = existsId, Name = "ExistingProperty", Price = 200, CompanyId = comp.Id });
                 context.SaveChanges();
 
-                var controller = new RealEstatesController(context);
+                var controller = new webserver.Controllers.RealEstatesController(context);
                 var existingRealEstate = new RealEstate { Id = existsId, Name = "NewProperty", Price = 300, CompanyId = "a1b1c1d1" };
 
                 // Act
@@ -176,7 +176,7 @@ namespace webserver.Tests.Project.Controllers {
 
             using (var context = new WebserverContext(options)) {
 
-                var controller = new RealEstatesController(context);
+                var controller = new webserver.Controllers.RealEstatesController(context);
                 var newRealEstate = new RealEstate { Id = ownerExistsId, Name = "NewProperty", Price = 300, CompanyId="DefinellyNotExists" };
 
                 // Act
@@ -201,7 +201,7 @@ namespace webserver.Tests.Project.Controllers {
             using (var context = new WebserverContext(options)) {
 
                 var initialRealEstate = new RealEstate { Id = upId, Name = "Property13", Price = 100, Address = "Address13" };
-                var controller = new RealEstatesController(context);
+                var controller = new webserver.Controllers.RealEstatesController(context);
                 var updatedRealEstate = new RealEstate { Id = upId, Name = "UpdatedProperty", Price = 200, Address = "UpdatedAddress" };
 
                 context.RealEstates.Add(initialRealEstate);
@@ -234,7 +234,7 @@ namespace webserver.Tests.Project.Controllers {
             int nonId = 228;
 
             using (var context = new WebserverContext(options)) {
-                var controller = new RealEstatesController(context);
+                var controller = new webserver.Controllers.RealEstatesController(context);
                 var updatedRealEstate = new RealEstate { Id = nonId, Name = "UpdatedProperty", Price = 200, Address = "UpdatedAddress" };
 
                 // Act
@@ -259,7 +259,7 @@ namespace webserver.Tests.Project.Controllers {
             using (var context = new WebserverContext(options)) {
 
                 var initialRealEstate = new RealEstate { Id = existsId, Name = "Property13", Price = 100, Address = "Address13" };
-                var controller = new RealEstatesController(context);
+                var controller = new webserver.Controllers.RealEstatesController(context);
 
                 context.RealEstates.Add(initialRealEstate);
                 context.SaveChanges();
@@ -287,7 +287,7 @@ namespace webserver.Tests.Project.Controllers {
 
             using (var context = new WebserverContext(options)) {
 
-                var controller = new RealEstatesController(context);
+                var controller = new webserver.Controllers.RealEstatesController(context);
 
                 // Act
                 var result = controller.DeleteRealEstate(NotExistId) as NotFoundResult;

@@ -18,17 +18,17 @@ public class RealEstateDTO {
         CompanyId = companyId;
     }
 
-    public static explicit operator RealEstate(RealEstateDTO DTO) {
+    public static explicit operator RealEstate(RealEstateDTO dto) {
         return new RealEstate {
-            Id = DTO.Id,
-            Name = DTO.Name,
-            Address = DTO.Address,
-            Price = DTO.Price,
-            CompanyId = DTO.CompanyId
+            Id = dto.Id,
+            Name = dto.Name,
+            Address = dto.Address,
+            Price = dto.Price,
+            CompanyId = dto.CompanyId
         };
     }
 
-    public static explicit operator RealEstateDTO(RealEstate RE){
-        return new RealEstateDTO (RE.Id, RE.Name, RE.Address, RE.Price, RE.CompanyId);
+    public static explicit operator RealEstateDTO(RealEstate re){
+        return new RealEstateDTO (re.Id, re.Name, re.Address, re.Price, re.CompanyId);
     }
 }
