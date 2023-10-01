@@ -3,6 +3,8 @@ using Microsoft.EntityFrameworkCore;
 using webserver.Data;
 using webserver.Models;
 using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.OpenApi.Models;
+using Swashbuckle.AspNetCore.SwaggerUI;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -11,13 +13,11 @@ builder.Services.AddRazorPages();
 
 builder.Services.AddDbContext<WebserverContext>(options =>
     options.UseMySQL(builder.Configuration.GetConnectionString("MyConnection") ?? throw new InvalidOperationException("Connection string 'Guacamole' not found.")));
-//builder.Services.AddDatabaseDeveloperPageExceptionFilter(); //useless but alright
 
 builder.Services.AddDefaultIdentity<BZEAccount>().AddRoles<IdentityRole>()
                 .AddEntityFrameworkStores<WebserverContext>()
         .AddDefaultTokenProviders();
 
-//builder.Services.AddDefaultIdentity<BZEmployee>().AddEntityFrameworkStores<WebserverContext>();
 builder.Services.AddIdentityCore<BZEmployee>().AddRoles<IdentityRole>().AddEntityFrameworkStores<WebserverContext>();
 builder.Services.AddIdentityCore<Company>().AddRoles<IdentityRole>().AddEntityFrameworkStores<WebserverContext>();
 builder.Services.AddIdentityCore<Client>().AddRoles<IdentityRole>().AddEntityFrameworkStores<WebserverContext>();
@@ -33,14 +33,12 @@ builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationSc
     });
 
 builder.Services.AddAuthorization();
-/*
-builder.Services.ConfigureApplicationCookie(options=>{
-                options.Cookie.Name=Common.BZE_Cookie;
-                options.LoginPath="/Accounts/Login";
-                options.AccessDeniedPath = "/Accounts/Login";
-                options.ExpireTimeSpan = TimeSpan.FromMinutes(30);
-                options.SlidingExpiration = true;
-            });*/            
+
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSwaggerGen(c => {
+    c.SwaggerDoc("api", new OpenApiInfo { Title = "GuacAPI", Version = "v1" });
+    c.ResolveConflictingActions(apiDescriptions => apiDescriptions.First());
+});
 
 var app = builder.Build();
 
@@ -55,11 +53,21 @@ if (!app.Environment.IsDevelopment()) {
 app.UseHttpsRedirection();
 app.UseStaticFiles();
 
+app.MapControllers();
+
 app.UseRouting();
 
 app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapRazorPages();
+
+app.UseSwagger();
+app.UseSwaggerUI(c =>
+{
+    c.SwaggerEndpoint("/swagger/api/swagger.json", "GuacAPI");
+    c.RoutePrefix = "swagger";
+    c.DocExpansion(DocExpansion.None);
+});
 
 app.Run();
