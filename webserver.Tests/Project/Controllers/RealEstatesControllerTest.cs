@@ -6,7 +6,7 @@ using webserver.Data;
 using webserver.Models.DTOs;
 
 namespace webserver.Tests.Project.Controllers {
-    public class RealEstatesController {
+    public class RealEstatesControllerTest {
 
         [Fact]
         public async Task ReadRealEstates_ReturnsOkResult_WithValidParameters() {
