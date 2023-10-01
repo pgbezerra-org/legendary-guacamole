@@ -18,9 +18,9 @@ public class RealEstatesController : ControllerBase {
     }
 
     [HttpGet("unique/{id}")]
-    public IActionResult ReadRealEstate(int id){
+    public async Task<IActionResult> ReadRealEstate(int id){
 
-        var realEstate = _context.RealEstates.Find(id);
+        var realEstate = await _context.RealEstates.FindAsync(id);
         if(realEstate==null){
             return NotFound();
         }
@@ -81,7 +81,7 @@ public class RealEstatesController : ControllerBase {
     }
 
     [HttpPost]
-    public IActionResult CreateRealEstate([FromBody]RealEstateDTO request ) {
+    public async Task<IActionResult> CreateRealEstate([FromBody]RealEstateDTO request ) {
 
         if(_context.RealEstates.Find(request.Id) != null) {
             return BadRequest("Real Estate Already Exists!");
@@ -91,8 +91,8 @@ public class RealEstatesController : ControllerBase {
             return BadRequest("Owner Company does Not Exist!");
         }
         
-        _context.RealEstates.AddAsync((RealEstate)request);
-        _context.SaveChangesAsync();
+        _context.RealEstates.Add((RealEstate)request);
+        await _context.SaveChangesAsync();
 
         var realEstateDto = JsonConvert.SerializeObject( new RealEstateDTO (request.Id, request.Name, request.Address, request.Price, request.CompanyId));
 
@@ -100,7 +100,7 @@ public class RealEstatesController : ControllerBase {
     }
 
     [HttpPatch]
-    public IActionResult UpdateRealEstate([FromBody]RealEstateDTO upRE) {
+    public async Task<IActionResult> UpdateRealEstate([FromBody]RealEstateDTO upRE) {
 
         var realEstate = _context.RealEstates.Find(upRE.Id);
         if(realEstate == null){
@@ -111,7 +111,7 @@ public class RealEstatesController : ControllerBase {
         realEstate.Price = upRE.Price;
         realEstate.Name = upRE.Name;
 
-        _context.SaveChanges();
+        await _context.SaveChangesAsync();
         
         var realEstateDto = JsonConvert.SerializeObject( new RealEstateDTO (upRE.Id, upRE.Name, upRE.Address, upRE.Price, upRE.CompanyId));
 
@@ -119,7 +119,7 @@ public class RealEstatesController : ControllerBase {
     }
 
     [HttpDelete("id")]
-    public IActionResult DeleteRealEstate(int id) {
+    public async Task<IActionResult> DeleteRealEstate(int id) {
 
         var RE = _context.RealEstates.Find(id);
         if(RE==null) {
@@ -127,7 +127,7 @@ public class RealEstatesController : ControllerBase {
         }
 
         _context.RealEstates.Remove(RE);
-        _context.SaveChanges();
+        await _context.SaveChangesAsync();
         
         return NoContent();
     }
