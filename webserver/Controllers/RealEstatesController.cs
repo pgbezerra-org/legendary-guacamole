@@ -69,7 +69,7 @@ public class RealEstatesController : ControllerBase {
         }
 
         var resultArray = await realEstates.ToArrayAsync();
-        var resultDtoArray = realEstates.Select(r=>(RealEstateDTO)r).ToArray();
+        var resultDtoArray = resultArray.Select(r=>(RealEstateDTO)r).ToArray();
 
         if(resultDtoArray==null){
             return NotFound();
