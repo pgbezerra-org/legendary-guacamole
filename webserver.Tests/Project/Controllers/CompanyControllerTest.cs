@@ -63,15 +63,15 @@ public class CompanyControllerTest : IDisposable {
 
 
     [Fact]
-    public void ReadCompany_ReturnsOk_WhenUserExists() {
+    public async Task ReadCompany_ReturnsOk_WhenUserExists() {
         // Arrange
-        var companyId = "existingUserId";
-        var companyEmail = "existemail@gmail.com";
-        var company = new Company { Id = companyId, Email = companyEmail };
-        
+        var companyId="newId";
+        var companyUser="username";
+        var companyEmail="myemail123@gmail.com";
+        var newUser=new CompanyDTO("newId",companyUser,companyEmail, "9899344788","brazil","MA","Sao Luis");
+
         // Act
-        _context.Company.Add(company);
-        _context.SaveChanges();
+        await userManager.CreateAsync((Company)newUser, "#Company1234");
         var result = _controller.ReadCompany(companyId);
 
         // Assert
@@ -80,6 +80,7 @@ public class CompanyControllerTest : IDisposable {
         CompanyDTO myDto = JsonConvert.DeserializeObject<CompanyDTO>(valueJson)!;
 
         Assert.Equal(companyId, myDto.Id);
+        Assert.Equal(companyUser, myDto.UserName);
         Assert.Equal(companyEmail, myDto.Email);
     }
 
