@@ -80,7 +80,6 @@ public class CompanyControllerTest : IDisposable {
 
     [Fact]
     public void ReadCompany_ReturnsNotFound_WhenUserDoesNotExist() {
-        
         // Arrange
         var nonExistentCompanyId = "nonExistentUserId";
 
@@ -93,7 +92,7 @@ public class CompanyControllerTest : IDisposable {
 
     [Fact]
     public async Task RegisterUser_ExistingEmail_ReturnsBadRequest() {
-        
+        //Arrange
         var email = "myemail123@gmail.com";
         var newCompDto = new CompanyDTO("newId","username",email, "9899344788","brazil","MA","Sao Luis");
 
@@ -110,10 +109,10 @@ public class CompanyControllerTest : IDisposable {
 
     [Fact]
     public async Task RegisterUser_ExistingUsername_ReturnsBadRequest() {
-        
+        //Arrange
         var email = "myemail123@gmail.com";
         var newCompDto = new CompanyDTO("newId","username",email, "9899344788","brazil","MA","Sao Luis");
-
+        
         var newComp = (Company)newCompDto;
         newComp.Id = "newCompId1234";
         newComp.Email = "newemail1234@gmail.com";
@@ -128,7 +127,7 @@ public class CompanyControllerTest : IDisposable {
 
     [Fact]
     public async Task RegisterUser_NewCompany_ReturnsCreatedAtAction() {
-        
+        //Arrange
         var newCompDto = new CompanyDTO("newId","username","myemail123@gmail.com", "9899344788","brazil","MA","Sao Luis");
 
         //Act
@@ -144,5 +143,30 @@ public class CompanyControllerTest : IDisposable {
         Assert.Equal(newCompDto.Email, myDto.Email);
     }
 
+    [Fact]
+    public async Task DeleteCompany_NonExistingId_ReturnsBadRequest() {
+        // Arrange
+        var nonExistingId = "non-existing-id";
+
+        // Act
+        var result = await _controller.DeleteCompany(nonExistingId);
+
+        // Assert
+        Assert.IsType<BadRequestResult>(result);
+    }
+
+    [Fact]
+    public async Task DeleteCompany_ExistingId_ReturnsNoContent() {
+        // Arrange
+        var existingId = "existing-id";
+        var newCompDto = new CompanyDTO(existingId,"username","myemail123@gmail.com","9899344788","brazil","MA","Sao Luis");
+
+        // Act
+        await userManager.CreateAsync((Company)newCompDto, "#Company1234");
+        var result = await _controller.DeleteCompany(existingId);
+
+        // Assert
+        Assert.IsType<NoContentResult>(result);
+    }
     
 }
