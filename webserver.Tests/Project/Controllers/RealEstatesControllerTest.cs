@@ -1,143 +1,134 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Mvc;
-using webserver.Controllers;
+using Microsoft.Data.Sqlite;
 using webserver.Models;
 using webserver.Data;
 using webserver.Models.DTOs;
+using webserver.Controllers;
+using Newtonsoft.Json;
 
 namespace webserver.Tests.Project.Controllers;
-public class RealEstatesControllerTest {
+public class RealEstatesControllerTest : IDisposable {
+
+    private readonly WebserverContext _context;
+    private readonly RealEstatesController _controller;
+
+    public RealEstatesControllerTest(){
+        var connectionStringBuilder = new SqliteConnectionStringBuilder {
+            DataSource = ":memory:"
+        };
+        var connection = new SqliteConnection(connectionStringBuilder.ToString());
+        
+        DbContextOptions<WebserverContext> _options = new DbContextOptionsBuilder<WebserverContext>()
+            .UseSqlite(connection)
+            .Options;
+
+        _context = new WebserverContext(_options);
+        _context.Database.OpenConnection();
+        _context.Database.EnsureCreated();
+
+        _controller=new RealEstatesController(_context);
+    }
+
+    public void Dispose() {
+        _context.Database.EnsureDeleted();
+        _context.Dispose();
+    }
 
     [Fact]
     public async Task ReadRealEstates_ReturnsOkResult_WithValidParameters() {
 
-        // Arrange
-        var options = new DbContextOptionsBuilder<WebserverContext>()
-            .UseInMemoryDatabase(databaseName: "InMemoryDatabase")
-            .Options;
+        Company comp = new Company{UserName="initialcomp",Email="initialcomp@gmail.com"};
+        _context.Company.Add(comp);
+
+        _context.RealEstates.Add(new RealEstate { Id = 2, Address="Hollywood Boulevard", Name = "Property2", Price = 200});
+        _context.RealEstates.Add(new RealEstate { Id = 3, Address="Sunset Boulevard", Name = "Property3", Price = 99});
+        _context.RealEstates.Add(new RealEstate { Id = 4, Address="The Bar", Name = "Property4", Price = 100});
+        _context.RealEstates.Add(new RealEstate { Id = 5, Address="Something", Name = "Property5", Price = 101});
+        _context.RealEstates.Add(new RealEstate { Id = 6, Address="Anything", Name = "Property6", Price = 102});
+        _context.RealEstates.Add(new RealEstate { Id = 7, Address="Whatsoever", Name = "Property7", Price = 103});
+        _context.SaveChanges();
         
-        using (var context = new WebserverContext(options)) {
+        // Act
+        int length = 3;
 
-            Company comp = new Company{UserName="initialcomp",Email="initialcomp@gmail.com"};
-            context.Company.Add(comp);
+        var query = _context.RealEstates.AsQueryable();
+        query = query.Where(re => re.Price >= 50 && re.Price <= 150).Skip(1).Take(length);
 
-            context.RealEstates.Add(new RealEstate { Id = 2, Address="Hollywood Boulevard", Name = "Property2", Price = 200});
-            context.RealEstates.Add(new RealEstate { Id = 3, Address="Sunset Boulevard", Name = "Property3", Price = 99});
-            context.RealEstates.Add(new RealEstate { Id = 4, Address="The Bar", Name = "Property4", Price = 100});
-            context.RealEstates.Add(new RealEstate { Id = 5, Address="Something", Name = "Property5", Price = 101});
-            context.RealEstates.Add(new RealEstate { Id = 6, Address="Anything", Name = "Property6", Price = 102});
-            context.RealEstates.Add(new RealEstate { Id = 7, Address="Whatsoever", Name = "Property7", Price = 103});
-            context.SaveChanges();
-            
-            var controller = new webserver.Controllers.RealEstatesController(context);
+        var realEstates = query.ToArray();
+        var response = await _controller.ReadRealEstates(minPrice: 50, maxPrice: 150, offset: 1, limit: length, sort: "price");
 
-            // Act
-            var result = await controller.ReadRealEstates(minPrice: 50, maxPrice: 150, offset: 1, limit: 3, sort: "price") as OkObjectResult;
+        // Assert
+        var result = Assert.IsType<OkObjectResult>(response);
+        string valueJson = result.Value!.ToString()!;
+        RealEstateDTO[] realEstatesDtoArray = JsonConvert.DeserializeObject<RealEstateDTO[]>(valueJson)!;
 
-            var query = context.RealEstates.AsQueryable();
-            query = query.Where(re => re.Price >= 50 && re.Price <= 150);
-            query = query.Skip(1).Take(3);
-            var realEstates = query.ToList();
-
-            // Assert
-            Assert.NotNull(result);
-            Assert.NotNull(realEstates);
-
-            Assert.Equal(200, result.StatusCode);
-            Assert.Equal("Property4", realEstates[0].Name);
-            Assert.True(realEstates.Count == 3);//Assert.Equal(1, realEstates.Count);                
-        }
+        Assert.True(realEstatesDtoArray!.Length == length);
+        Assert.Equal("The Bar", realEstates[0].Address);
+        Assert.Equal("Property4", realEstates[0].Name);
+        Assert.Equal(100, realEstates[0].Price);
     }
 
     [Fact]
-    public void ReadRealEstate_ReturnsOkResult_WhenRealEstateExists() {
+    public async Task ReadRealEstate_ReturnsOkResult_WhenRealEstateExists() {
 
         // Arrange
-        var options = new DbContextOptionsBuilder<WebserverContext>()
-            .UseInMemoryDatabase(databaseName: "InMemoryDatabase")
-            .Options;
+        int idToRead = 76;
+        RealEstateDTO realDto = new RealEstateDTO(idToRead, "Sesame Street", "Sesame House", 40, "a1b1c1d1");
 
-        int readOKID = 56;
+        _context.RealEstates.Add((RealEstate)realDto);
+        _context.SaveChanges();
 
-        using (var context = new WebserverContext(options)) {
+        // Act
+        var result = await _controller.ReadRealEstate(idToRead);
 
-            context.RealEstates.Add(new RealEstate { Id = readOKID, Address = "Sesame Street", Name = "Property1", Price = 40, CompanyId="a1b1c1d1" });
-            context.SaveChanges();
+        // Assert
+        var response = Assert.IsType<OkObjectResult>(result);
+        string valueJson = response.Value!.ToString()!;
+        RealEstateDTO[] realEstatesDtoArray = JsonConvert.DeserializeObject<RealEstateDTO[]>(valueJson)!;
 
-            var controller = new webserver.Controllers.RealEstatesController(context);
-
-            // Act
-            var result = controller.ReadRealEstate(readOKID) as OkObjectResult;
-            var realEstate = context.RealEstates.Find(readOKID);
-
-            // Assert
-            Assert.NotNull(result);
-            Assert.NotNull(realEstate);
-            Assert.Equal(200, result.StatusCode);
-            Assert.Equal("Sesame Street",realEstate.Address);
-            Assert.Equal("Property1",realEstate.Name);
-            Assert.Equal(40,realEstate.Price);
-        }
+        Assert.Equal(realDto.Id, realEstatesDtoArray[0].Id);
+        Assert.Equal(realDto.Address, realEstatesDtoArray[0].Address);
+        Assert.Equal(realDto.Name, realEstatesDtoArray[0].Name);
+        Assert.Equal(realDto.Price, realEstatesDtoArray[0].Price);
+        Assert.Equal(realDto.CompanyId, realEstatesDtoArray[0].CompanyId);
     }
 
     [Fact]
-    public void ReadRealEstate_ReturnsNotFound_WhenRealEstateDoesNotExist() {
-        // Arrange
-        var options = new DbContextOptionsBuilder<WebserverContext>()
-            .UseInMemoryDatabase(databaseName: "InMemoryDatabase")
-            .Options;
+    public async Task ReadRealEstate_ReturnsNotFound_WhenRealEstateDoesNotExist() {
+        // Act
+        var result = _controller.ReadRealEstate(0);
 
-        int nonExist = 86;
-
-        using (var context = new WebserverContext(options)) {
-
-            var controller = new webserver.Controllers.RealEstatesController(context);
-
-            // Act
-            var result = controller.ReadRealEstate(nonExist) as NotFoundResult;
-
-            // Assert
-            Assert.NotNull(result);
-            Assert.Equal(404, result.StatusCode);
-        }
+        // Assert
+        Assert.IsType<NotFoundResult>(result);
     }
 
     [Fact]
-    public void CreateRealEstate_ReturnsOkResult_WhenRealEstateDoesNotExist() {
+    public async Task CreateRealEstate_ReturnsOkResult_WhenRealEstateDoesNotExist() {
 
         // Arrange
-        var options = new DbContextOptionsBuilder<WebserverContext>()
-            .UseInMemoryDatabase(databaseName: "InMemoryDatabase")
-            .Options;
+        Company comp = new Company { UserName="compania", Email="compania@gmail.com" };
+        _context.Company.Add(comp);
+        _context.SaveChanges();
 
-        int createId = 112;
+        var newRealEstate = new RealEstate { Id = createId, Name = "NewProperty", Price = 300, CompanyId = comp.Id };
 
-        using (var context = new WebserverContext(options)) {
+        // Act
+        var result = controller.CreateRealEstate((RealEstateDTO)newRealEstate) as ObjectResult;
+        var createdRealEstate = context.RealEstates.Find(createId);
 
-            Company comp = new Company { UserName="compania", Email="compania@gmail.com" };
-            context.Company.Add(comp);
-            context.SaveChanges();
-
-            var controller = new webserver.Controllers.RealEstatesController(context);
-            var newRealEstate = new RealEstate { Id = createId, Name = "NewProperty", Price = 300, CompanyId = comp.Id };
-
-            // Act
-            var result = controller.CreateRealEstate((RealEstateDTO)newRealEstate) as ObjectResult;
-            var createdRealEstate = context.RealEstates.Find(createId);
-
-            // Assert
-            Assert.NotNull(result);
-            Assert.NotNull(createdRealEstate);
-            Assert.Equal(newRealEstate.Id, createdRealEstate.Id);
-            Assert.Equal(newRealEstate.Name, createdRealEstate.Name);
-            Assert.Equal(newRealEstate.Price, createdRealEstate.Price);
-            Assert.Equal(newRealEstate.Address, createdRealEstate.Address);
-            Assert.Equal(newRealEstate.CompanyId, createdRealEstate.CompanyId);
-        }
+        // Assert
+        Assert.NotNull(result);
+        Assert.NotNull(createdRealEstate);
+        Assert.Equal(newRealEstate.Id, createdRealEstate.Id);
+        Assert.Equal(newRealEstate.Name, createdRealEstate.Name);
+        Assert.Equal(newRealEstate.Price, createdRealEstate.Price);
+        Assert.Equal(newRealEstate.Address, createdRealEstate.Address);
+        Assert.Equal(newRealEstate.CompanyId, createdRealEstate.CompanyId);
     }
 
     [Fact]
-    public void CreateRealEstate_ReturnsBadRequest_WhenRealEstateAlreadyExists() {
+    public async Task CreateRealEstate_ReturnsBadRequest_WhenRealEstateAlreadyExists() {
         // Arrange
         var options = new DbContextOptionsBuilder<WebserverContext>()
             .UseInMemoryDatabase(databaseName: "InMemoryDatabase")
@@ -166,7 +157,7 @@ public class RealEstatesControllerTest {
     }
 
     [Fact]
-    public void CreateRealEstate_ReturnsBadRequest_WhenOwnerCompanyNotExists() {
+    public async Task CreateRealEstate_ReturnsBadRequest_WhenOwnerCompanyNotExists() {
         // Arrange
         var options = new DbContextOptionsBuilder<WebserverContext>()
             .UseInMemoryDatabase(databaseName: "InMemoryDatabase")
@@ -190,7 +181,7 @@ public class RealEstatesControllerTest {
     }
 
     [Fact]
-    public void UpdateRealEstate_ReturnsOkResult_WhenRealEstateExists() {
+    public async Task UpdateRealEstate_ReturnsOkResult_WhenRealEstateExists() {
         // Arrange
         var options = new DbContextOptionsBuilder<WebserverContext>()
             .UseInMemoryDatabase(databaseName: "InMemoryDatabase")
@@ -224,7 +215,7 @@ public class RealEstatesControllerTest {
     }
 
     [Fact]
-    public void UpdateRealEstate_ReturnsNotFound_WhenRealEstateDoesNotExist() {
+    public async Task UpdateRealEstate_ReturnsNotFound_WhenRealEstateDoesNotExist() {
 
         // Arrange
         var options = new DbContextOptionsBuilder<WebserverContext>()
@@ -247,7 +238,7 @@ public class RealEstatesControllerTest {
     }
 
     [Fact]
-    public void DeleteRealEstate_ReturnsNoContent_WhenRealEstateExists() {
+    public async Task DeleteRealEstate_ReturnsNoContent_WhenRealEstateExists() {
 
         // Arrange
         var options = new DbContextOptionsBuilder<WebserverContext>()
@@ -276,7 +267,7 @@ public class RealEstatesControllerTest {
     }
 
     [Fact]
-    public void DeleteRealEstate_ReturnsNotFound_WhenRealEstateDoesNotExist() {
+    public async Task DeleteRealEstate_ReturnsNotFound_WhenRealEstateDoesNotExist() {
 
         // Arrange
         var options = new DbContextOptionsBuilder<WebserverContext>()
