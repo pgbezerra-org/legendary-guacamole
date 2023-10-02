@@ -91,7 +91,7 @@ public class CompanyControllerTest : IDisposable {
     }
 
     [Fact]
-    public async Task RegisterUser_ExistingEmail_ReturnsBadRequest() {
+    public async Task RegisterUser_ReturnsBadRequest_WhenEmailExists() {
         //Arrange
         var email = "myemail123@gmail.com";
         var newCompDto = new CompanyDTO("newId","username",email, "9899344788","brazil","MA","Sao Luis");
@@ -108,7 +108,7 @@ public class CompanyControllerTest : IDisposable {
     }
 
     [Fact]
-    public async Task RegisterUser_ExistingUsername_ReturnsBadRequest() {
+    public async Task RegisterUser_ReturnsBadRequest_WhenUsername_Exists() {
         //Arrange
         var email = "myemail123@gmail.com";
         var newCompDto = new CompanyDTO("newId","username",email, "9899344788","brazil","MA","Sao Luis");
@@ -126,7 +126,7 @@ public class CompanyControllerTest : IDisposable {
     }
 
     [Fact]
-    public async Task RegisterUser_NewCompany_ReturnsCreatedAtAction() {
+    public async Task RegisterUser_ReturnsCreatedAtAction_WhenCompanyDoesntExist() {
         //Arrange
         var newCompDto = new CompanyDTO("newId","username","myemail123@gmail.com", "9899344788","brazil","MA","Sao Luis");
 
@@ -135,8 +135,7 @@ public class CompanyControllerTest : IDisposable {
 
         // Assert
         var okResult = Assert.IsType<CreatedAtActionResult>(result);
-        var resultValue = Assert.IsType<CompanyDTO>(okResult.Value);
-        CompanyDTO myDto = JsonConvert.DeserializeObject<CompanyDTO>(resultValue.ToJson())!;
+        CompanyDTO myDto = JsonConvert.DeserializeObject<CompanyDTO>(okResult.Value.ToJson())!;
 
         Assert.Equal(newCompDto.Id, myDto.Id);
         Assert.Equal(newCompDto.UserName, myDto.UserName);
@@ -144,7 +143,42 @@ public class CompanyControllerTest : IDisposable {
     }
 
     [Fact]
-    public async Task DeleteCompany_NonExistingId_ReturnsBadRequest() {
+    public async Task UpdateCompany_ReturnsOk_ExistingId() {
+        // Arrange
+        var existingId = "existing-id";
+        var oldCompDto = new CompanyDTO(existingId,"username","myemail123@gmail.com","9899344788","brazil","MA","Sao Luis");
+
+        var newCompDto = oldCompDto;
+        newCompDto.UserName = "newNameForTheUser1234";
+        newCompDto.PhoneNumber = "98988263255";
+
+        // Act
+        await userManager.CreateAsync((Company)oldCompDto, "#Company1234");
+        var result = await _controller.UpdateCompany(newCompDto);
+
+        // Assert
+        var okResult = Assert.IsType<OkObjectResult>(result);
+        string valueJson = okResult.Value!.ToString()!;
+        CompanyDTO myDto = JsonConvert.DeserializeObject<CompanyDTO>(valueJson)!;
+
+        Assert.Equal(myDto.Id, newCompDto.Id);
+        Assert.Equal(myDto.Email, newCompDto.Email);
+        Assert.Equal(myDto.PhoneNumber, newCompDto.PhoneNumber);
+        Assert.Equal(myDto.UserName, newCompDto.UserName);
+    }
+
+    [Fact]
+    public async Task UpdateCompany_ReturnsBadRequest_WhenIdDoesntExist() {
+        //Arrange
+        CompanyDTO nonExistCompDto = new CompanyDTO("nonExistId","lendacerda","#NonPass7890","32260637","Brazil","MA","Sao Luis");
+        //Act
+        var result = await _controller.UpdateCompany(nonExistCompDto);
+        //Arrange
+        Assert.IsType<BadRequestObjectResult>(result);
+    }
+
+    [Fact]
+    public async Task DeleteCompany_ReturnsBadRequest_WhenIdDoesntExist() {
         // Arrange
         var nonExistingId = "non-existing-id";
 
@@ -152,11 +186,11 @@ public class CompanyControllerTest : IDisposable {
         var result = await _controller.DeleteCompany(nonExistingId);
 
         // Assert
-        Assert.IsType<BadRequestResult>(result);
+        Assert.IsType<BadRequestObjectResult>(result);
     }
 
     [Fact]
-    public async Task DeleteCompany_ExistingId_ReturnsNoContent() {
+    public async Task DeleteCompany_ReturnsNoContent_WhenIdExists() {
         // Arrange
         var existingId = "existing-id";
         var newCompDto = new CompanyDTO(existingId,"username","myemail123@gmail.com","9899344788","brazil","MA","Sao Luis");
@@ -167,6 +201,10 @@ public class CompanyControllerTest : IDisposable {
 
         // Assert
         Assert.IsType<NoContentResult>(result);
-    }
-    
+    }    
+
+    //Testa pra read_companies_withFilters
+    //adicionar a checagem do statusCode
+    //add 'useRole' in the api tests
+    //not let the user send bad Dtos even tho the responses go as they should
 }
