@@ -113,4 +113,22 @@ public class CompanyControllerTest : IDisposable {
         // Assert
         Assert.IsType<BadRequestObjectResult>(result);
     }
+
+    [Fact]
+    public async Task RegisterUser_ExistingUsername_ReturnsBadRequest() {
+        
+        var email="myemail123@gmail.com";
+        var newUser=new CompanyDTO("newId","username",email, "9899344788","brazil","MA","Sao Luis");
+
+        var newComp=(Company)newUser;
+        newComp.Id="newCompId1234";
+        newComp.Email="newemail1234@gmail.com";
+
+        await userManager.CreateAsync(newComp, "#Company1234");
+
+        var result = await _controller.CreateCompany(newUser, "@1234Password");
+
+        // Assert
+        Assert.IsType<BadRequestObjectResult>(result);
+    }
 }
