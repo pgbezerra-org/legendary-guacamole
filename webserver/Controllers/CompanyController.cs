@@ -36,7 +36,7 @@ public class CompanyController : ControllerBase {
     }
 
     [HttpGet]
-    public async Task<IActionResult> ReadCompanies(string? Country, string? State, string? City, int? offset, int? limit, string sort = "Name") {
+    public async Task<IActionResult> ReadCompanies(string? name, int? offset, int? limit, string? Country, string? State, string? City, string sort = "Name") {
 
         var companies = _context.Company.AsQueryable();
 
@@ -71,6 +71,10 @@ public class CompanyController : ControllerBase {
         }
         if(limit.HasValue){
             companies = companies.Take(limit.Value);
+        }
+
+        if(!string.IsNullOrEmpty(name)){
+            companies=companies.Where(c=>c.UserName!.ToLower().Contains(name.ToLower()));
         }
 
         var resultArray = await companies.ToArrayAsync();
@@ -123,10 +127,16 @@ public class CompanyController : ControllerBase {
 
         var existingCompany = _context.Company.Find(newCompany.Id);
         if (existingCompany==null) {
-            return NotFound();
+            return BadRequest("Company does not Exist!");
         }
 
-        existingCompany = (Company)newCompany;
+        existingCompany.UserName = newCompany.UserName;
+        existingCompany.PhoneNumber=newCompany.PhoneNumber;
+        existingCompany.Email=newCompany.Email;
+        
+        existingCompany.City=newCompany.City;
+        existingCompany.State=newCompany.State;
+        existingCompany.Country=newCompany.Country;
 
         await _context.SaveChangesAsync();
 
@@ -140,7 +150,7 @@ public class CompanyController : ControllerBase {
 
         var comp = _context.Company.Find(id);
         if(comp == null){
-            return NotFound();
+            return BadRequest("Company does not Exist!");
         }
 
         var relatedRealEstates = _context.RealEstates.Where(re => re.CompanyId == comp.Id);

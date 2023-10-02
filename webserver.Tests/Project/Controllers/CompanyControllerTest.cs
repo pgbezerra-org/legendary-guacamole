@@ -1,72 +1,90 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Xunit;
-
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Mvc;
 using webserver.Controllers;
 using webserver.Models;
 using webserver.Data;
 using webserver.Models.DTOs;
-
 using Microsoft.Data.Sqlite;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Newtonsoft.Json;
 
-namespace webserver.Tests.Project.Controllers {
-    public class CompanyControllerTest : IDisposable {
-        private readonly DbContextOptions<WebserverContext> _options;
-        private readonly WebserverContext _context;
+namespace webserver.Tests.Project.Controllers;
 
-        private readonly CompanyController _controller;
+public class CompanyControllerTest : IDisposable {
+    private readonly DbContextOptions<WebserverContext> _options;
+    private readonly WebserverContext _context;
 
-        public CompanyControllerTest() {
-            var connectionStringBuilder = new SqliteConnectionStringBuilder {
-                DataSource = ":memory:"
-            };
-            var connection = new SqliteConnection(connectionStringBuilder.ToString());
+    private readonly CompanyController _controller;
 
-            _options = new DbContextOptionsBuilder<WebserverContext>()
-                .UseSqlite(connection)
-                .Options;
+    public CompanyControllerTest() {
+        var connectionStringBuilder = new SqliteConnectionStringBuilder {
+            DataSource = ":memory:"
+        };
+        var connection = new SqliteConnection(connectionStringBuilder.ToString());
 
-            _context = new WebserverContext(_options);
-            _context.Database.OpenConnection();
-            _context.Database.EnsureCreated();
-        }
+        _options = new DbContextOptionsBuilder<WebserverContext>()
+            .UseSqlite(connection)
+            .Options;
 
-        public void Dispose() {
-            _context.Database.EnsureDeleted();
-            _context.Dispose();
-        }
+        _context = new WebserverContext(_options);
+        _context.Database.OpenConnection();
+        _context.Database.EnsureCreated();
 
-        [Fact]
-        public void ReadCompany_ReturnsOk_WhenUserExists() {
-            // Arrange
-            var companyId = "existingUserId";
-            var company = new Company { Id = companyId, /* Other properties */ };
-            _context.Company.Add(company);
-            _context.SaveChanges();
+        var userStore = new UserStore<Company>(_context);
+        var passwordValidator = new PasswordValidator<Company>();
+        var userValidator = new UserValidator<Company>();
 
-            // Act
-            var result = _controller.ReadCompany(companyId);
+        // Create an instance of IPasswordHasher<Company> and IUserValidator<Company>
+        var passwordHasher = new PasswordHasher<Company>();
+        var userValidators = new List<IUserValidator<Company>> { userValidator };
 
-            // Assert
-            var okResult = Assert.IsType<OkObjectResult>(result);
-            var companyDTO = Assert.IsType<CompanyDTO>(okResult.Value);
-            Assert.Equal(companyId, companyDTO.Id);
-        }
+        var userManager = new UserManager<Company>( userStore, null, passwordHasher, userValidators,
+            null, null, null, null, null);
+        
+        var roleStore = new RoleStore<IdentityRole>(_context);
+        var roleValidator = new List<IRoleValidator<IdentityRole>> { new RoleValidator<IdentityRole>() };
+        var roleManager = new RoleManager<IdentityRole>(roleStore, roleValidator, null, null, null);
 
-        [Fact]
-        public void ReadCompany_ReturnsNotFound_WhenUserDoesNotExist() {
-            // Arrange
-            var nonExistentCompanyId = "nonExistentUserId";
+        _controller=new CompanyController(_context, userManager, roleManager);        
+    }
 
-            // Act
-            var result = controller.ReadCompany(nonExistentCompanyId);
+    public void Dispose() {
+        _context.Database.EnsureDeleted();
+        _context.Dispose();
+    }
 
-            // Assert
-            Assert.IsType<NotFoundResult>(result);
-        }
+    [Fact]
+    public void ReadCompany_ReturnsOk_WhenUserExists() {
+        // Arrange
+        var companyId = "existingUserId";
+        var companyEmail= "existemail@gmail.com";
+        var company = new Company { Id = companyId, Email = companyEmail };
+        _context.Company.Add(company);
+        _context.SaveChanges();
+
+        // Act
+        var result = _controller.ReadCompany(companyId);
+
+        // Assert
+        var okResponse = Assert.IsType<OkObjectResult>(result);
+        string valueJson = okResponse.Value!.ToString()!;
+        CompanyDTO myDto = JsonConvert.DeserializeObject<CompanyDTO>(valueJson)!;
+
+        Assert.Equal(companyId, myDto.Id);
+        Assert.Equal(companyEmail, myDto.Email);
+    }
+
+    [Fact]
+    public void ReadCompany_ReturnsNotFound_WhenUserDoesNotExist() {
+        
+        // Arrange
+        var nonExistentCompanyId = "nonExistentUserId";
+
+        // Act
+        var result = _controller.ReadCompany(nonExistentCompanyId);
+
+        // Assert
+        Assert.IsType<NotFoundResult>(result);
     }
 }
