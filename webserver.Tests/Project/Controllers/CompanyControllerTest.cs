@@ -12,7 +12,6 @@ using Newtonsoft.Json;
 namespace webserver.Tests.Project.Controllers;
 
 public class CompanyControllerTest : IDisposable {
-    private readonly DbContextOptions<WebserverContext> _options;
     private readonly WebserverContext _context;
 
     private readonly CompanyController _controller;
@@ -23,7 +22,8 @@ public class CompanyControllerTest : IDisposable {
         };
         var connection = new SqliteConnection(connectionStringBuilder.ToString());
 
-        _options = new DbContextOptionsBuilder<WebserverContext>()
+        
+        DbContextOptions<WebserverContext> _options = new DbContextOptionsBuilder<WebserverContext>()
             .UseSqlite(connection)
             .Options;
 
@@ -60,10 +60,10 @@ public class CompanyControllerTest : IDisposable {
         var companyId = "existingUserId";
         var companyEmail= "existemail@gmail.com";
         var company = new Company { Id = companyId, Email = companyEmail };
+        
+        // Act
         _context.Company.Add(company);
         _context.SaveChanges();
-
-        // Act
         var result = _controller.ReadCompany(companyId);
 
         // Assert
