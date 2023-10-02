@@ -76,7 +76,7 @@ public class CompanyController : ControllerBase {
         var resultArray = await companies.ToArrayAsync();
         var resultDtoArray = resultArray.Select(c=>(CompanyDTO)c).ToArray();
         
-        if(resultDtoArray==null){
+        if(resultDtoArray==null || resultDtoArray.Length==0){
             return NotFound();
         }
         
