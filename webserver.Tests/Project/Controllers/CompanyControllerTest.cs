@@ -249,9 +249,5 @@ public class CompanyControllerTest : IDisposable {
 
         // Assert
         Assert.IsType<NoContentResult>(result);
-    }    
-
-    //adicionar a checagem do statusCode
-    //add 'useRole' in the api tests
-    //not let the user send bad Dtos even tho the responses go as they should
+    }
 }
