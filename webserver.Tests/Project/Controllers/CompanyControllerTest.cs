@@ -16,6 +16,9 @@ public class CompanyControllerTest : IDisposable {
 
     private readonly CompanyController _controller;
 
+    private readonly UserManager<Company> userManager;
+    private readonly RoleManager<IdentityRole> roleManager;
+
     public CompanyControllerTest() {
         var connectionStringBuilder = new SqliteConnectionStringBuilder {
             DataSource = ":memory:"
@@ -39,12 +42,12 @@ public class CompanyControllerTest : IDisposable {
         var passwordHasher = new PasswordHasher<Company>();
         var userValidators = new List<IUserValidator<Company>> { userValidator };
 
-        var userManager = new UserManager<Company>( userStore, null, passwordHasher, userValidators,
+        userManager = new UserManager<Company>( userStore, null, passwordHasher, userValidators,
             null, null, null, null, null);
         
         var roleStore = new RoleStore<IdentityRole>(_context);
         var roleValidator = new List<IRoleValidator<IdentityRole>> { new RoleValidator<IdentityRole>() };
-        var roleManager = new RoleManager<IdentityRole>(roleStore, roleValidator, null, null, null);
+        roleManager = new RoleManager<IdentityRole>(roleStore, roleValidator, null, null, null);
 
         _controller=new CompanyController(_context, userManager, roleManager);        
     }
@@ -58,7 +61,7 @@ public class CompanyControllerTest : IDisposable {
     public void ReadCompany_ReturnsOk_WhenUserExists() {
         // Arrange
         var companyId = "existingUserId";
-        var companyEmail= "existemail@gmail.com";
+        var companyEmail = "existemail@gmail.com";
         var company = new Company { Id = companyId, Email = companyEmail };
         
         // Act
@@ -87,4 +90,6 @@ public class CompanyControllerTest : IDisposable {
         // Assert
         Assert.IsType<NotFoundResult>(result);
     }
+
+    
 }
