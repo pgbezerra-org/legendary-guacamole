@@ -10,7 +10,6 @@ using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Newtonsoft.Json;
 
 namespace webserver.Tests.Project.Controllers;
-
 public class CompanyControllerTest : IDisposable {
     private readonly WebserverContext _context;
 
@@ -52,10 +51,16 @@ public class CompanyControllerTest : IDisposable {
         _controller=new CompanyController(_context, userManager, roleManager);        
     }
 
-    public void Dispose() {
-        _context.Database.EnsureDeleted();
-        _context.Dispose();
-    }
+    public void Dispose()
+{
+    // Clean up test data
+    _context.Company.RemoveRange(_context.Company);
+    _context.SaveChanges();
+
+    _context.Database.EnsureDeleted();
+    _context.Dispose();
+}
+
 
     [Fact]
     public void ReadCompany_ReturnsOk_WhenUserExists() {
@@ -91,5 +96,20 @@ public class CompanyControllerTest : IDisposable {
         Assert.IsType<NotFoundResult>(result);
     }
 
-    
+    [Fact]
+    public async Task RegisterUser_ExistingEmail_ReturnsBadRequest() {
+        
+        var email="myemail123@gmail.com";
+        var newUser=new CompanyDTO("newId","username",email, "9899344788","brazil","MA","Sao Luis");
+
+        var newComp=(Company)newUser;
+        newComp.Id="newCompId1234";
+
+        await userManager.CreateAsync(newComp, "#Company1234");
+
+        var result = await _controller.CreateCompany(newUser, "@1234Password");
+
+        // Assert
+        Assert.IsType<BadRequestObjectResult>(result);
+    }
 }
