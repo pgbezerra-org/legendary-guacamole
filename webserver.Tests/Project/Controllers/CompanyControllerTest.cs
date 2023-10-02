@@ -8,14 +8,14 @@ using Microsoft.Data.Sqlite;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Newtonsoft.Json;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
+using NuGet.Protocol;
 
 namespace webserver.Tests.Project.Controllers;
 public class CompanyControllerTest : IDisposable {
     private readonly WebserverContext _context;
-
     private readonly CompanyController _controller;
-
-    private readonly UserManager<Company> userManager;
+    private readonly UserManager<Company> userManager;    
     private readonly RoleManager<IdentityRole> roleManager;
 
     public CompanyControllerTest() {
@@ -48,35 +48,29 @@ public class CompanyControllerTest : IDisposable {
         var roleValidator = new List<IRoleValidator<IdentityRole>> { new RoleValidator<IdentityRole>() };
         roleManager = new RoleManager<IdentityRole>(roleStore, roleValidator, null, null, null);
 
-        _controller=new CompanyController(_context, userManager, roleManager);        
+        _controller = new CompanyController(_context, userManager, roleManager);        
     }
 
-    public void Dispose()
-{
-    // Clean up test data
-    _context.Company.RemoveRange(_context.Company);
-    _context.SaveChanges();
-
-    _context.Database.EnsureDeleted();
-    _context.Dispose();
-}
-
+    public void Dispose() {
+        _context.Database.EnsureDeleted();
+        _context.Dispose();
+    }
 
     [Fact]
     public async Task ReadCompany_ReturnsOk_WhenUserExists() {
         // Arrange
-        var companyId="newId";
-        var companyUser="username";
-        var companyEmail="myemail123@gmail.com";
-        var newUser=new CompanyDTO("newId",companyUser,companyEmail, "9899344788","brazil","MA","Sao Luis");
+        var companyId = "newId";
+        var companyUser = "username";
+        var companyEmail = "myemail123@gmail.com";
+        var newCompDto = new CompanyDTO("newId",companyUser,companyEmail, "9899344788","brazil","MA","Sao Luis");
 
         // Act
-        await userManager.CreateAsync((Company)newUser, "#Company1234");
+        await userManager.CreateAsync((Company)newCompDto, "#Company1234");
         var result = _controller.ReadCompany(companyId);
 
         // Assert
-        var okResponse = Assert.IsType<OkObjectResult>(result);
-        string valueJson = okResponse.Value!.ToString()!;
+        var okResult = Assert.IsType<OkObjectResult>(result);
+        string valueJson = okResult.Value!.ToString()!;
         CompanyDTO myDto = JsonConvert.DeserializeObject<CompanyDTO>(valueJson)!;
 
         Assert.Equal(companyId, myDto.Id);
@@ -100,15 +94,15 @@ public class CompanyControllerTest : IDisposable {
     [Fact]
     public async Task RegisterUser_ExistingEmail_ReturnsBadRequest() {
         
-        var email="myemail123@gmail.com";
-        var newUser=new CompanyDTO("newId","username",email, "9899344788","brazil","MA","Sao Luis");
+        var email = "myemail123@gmail.com";
+        var newCompDto = new CompanyDTO("newId","username",email, "9899344788","brazil","MA","Sao Luis");
 
-        var newComp=(Company)newUser;
-        newComp.Id="newCompId1234";
+        var newComp = (Company)newCompDto;
+        newComp.Id = "newCompId1234";
 
+        //Act
         await userManager.CreateAsync(newComp, "#Company1234");
-
-        var result = await _controller.CreateCompany(newUser, "@1234Password");
+        var result = await _controller.CreateCompany(newCompDto, "@1234Password");
 
         // Assert
         Assert.IsType<BadRequestObjectResult>(result);
@@ -117,18 +111,38 @@ public class CompanyControllerTest : IDisposable {
     [Fact]
     public async Task RegisterUser_ExistingUsername_ReturnsBadRequest() {
         
-        var email="myemail123@gmail.com";
-        var newUser=new CompanyDTO("newId","username",email, "9899344788","brazil","MA","Sao Luis");
+        var email = "myemail123@gmail.com";
+        var newCompDto = new CompanyDTO("newId","username",email, "9899344788","brazil","MA","Sao Luis");
 
-        var newComp=(Company)newUser;
-        newComp.Id="newCompId1234";
-        newComp.Email="newemail1234@gmail.com";
+        var newComp = (Company)newCompDto;
+        newComp.Id = "newCompId1234";
+        newComp.Email = "newemail1234@gmail.com";
 
+        //Act
         await userManager.CreateAsync(newComp, "#Company1234");
-
-        var result = await _controller.CreateCompany(newUser, "@1234Password");
+        var result = await _controller.CreateCompany(newCompDto, "@1234Password");
 
         // Assert
         Assert.IsType<BadRequestObjectResult>(result);
     }
+
+    [Fact]
+    public async Task RegisterUser_NewCompany_ReturnsCreatedAtAction() {
+        
+        var newCompDto = new CompanyDTO("newId","username","myemail123@gmail.com", "9899344788","brazil","MA","Sao Luis");
+
+        //Act
+        var result = await _controller.CreateCompany(newCompDto, "@1234Password");
+
+        // Assert
+        var okResult = Assert.IsType<CreatedAtActionResult>(result);
+        var resultValue = Assert.IsType<CompanyDTO>(okResult.Value);
+        CompanyDTO myDto = JsonConvert.DeserializeObject<CompanyDTO>(resultValue.ToJson())!;
+
+        Assert.Equal(newCompDto.Id, myDto.Id);
+        Assert.Equal(newCompDto.UserName, myDto.UserName);
+        Assert.Equal(newCompDto.Email, myDto.Email);
+    }
+
+    
 }

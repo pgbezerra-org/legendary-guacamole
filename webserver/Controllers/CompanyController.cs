@@ -90,20 +90,20 @@ public class CompanyController : ControllerBase {
     }
 
     [HttpPost]
-    public async Task<IActionResult> CreateCompany([FromBody] CompanyDTO comp, string password) {
+    public async Task<IActionResult> CreateCompany([FromBody] CompanyDTO companyDto, string password) {
 
         // Check if the email is already registered
-        var existingEmail = await _userManager.FindByEmailAsync(comp.Email);
+        var existingEmail = await _userManager.FindByEmailAsync(companyDto.Email);
         if (existingEmail != null) {
             return BadRequest("Email already registered!");
         }
 
-        var existingUsername = await _userManager.FindByNameAsync(comp.UserName);
+        var existingUsername = await _userManager.FindByNameAsync(companyDto.UserName);
         if (existingUsername != null) {
             return BadRequest("UserName already registered!");
         }
 
-        Company company = (Company)comp;
+        Company company = (Company)companyDto;
 
         var result = await _userManager.CreateAsync(company, password);
 
@@ -116,7 +116,7 @@ public class CompanyController : ControllerBase {
 
             await _userManager.AddToRoleAsync(company, Common.Company_Role);
 
-            return Ok("Company created successfully!");
+            return CreatedAtAction(nameof(CreateCompany), (CompanyDTO)company);
         }else{
             return StatusCode(500, "Internal Server Error: Register Company Unsuccessful");
         }
