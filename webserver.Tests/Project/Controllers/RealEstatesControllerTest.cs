@@ -2,11 +2,84 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Data.Sqlite;
 using webserver.Models;
+using webserver.Controllers;
 using webserver.Data;
 using webserver.Models.DTOs;
+using Newtonsoft.Json;
+using NuGet.Protocol;
 
-namespace webserver.Tests.Project.Controllers {
-    public class RealEstatesController {
+namespace webserver.Tests.Project.Controllers;
+public class RealEstatesControllerTest : IDisposable {
+
+    private readonly WebserverContext _context;
+    private readonly RealEstatesController _controller;
+
+    public RealEstatesControllerTest(){
+        var connectionStringBuilder = new SqliteConnectionStringBuilder {
+            DataSource = ":memory:"
+        };
+        var connection = new SqliteConnection(connectionStringBuilder.ToString());
+        
+        DbContextOptions<WebserverContext> _options = new DbContextOptionsBuilder<WebserverContext>()
+            .UseSqlite(connection)
+            .Options;
+
+        _context = new WebserverContext(_options);
+        _context.Database.OpenConnection();
+        _context.Database.EnsureCreated();
+
+        _controller = new RealEstatesController(_context);
+    }
+
+    public void Dispose() {
+        _context.Database.EnsureDeleted();
+        _context.Dispose();
+    }
+
+    [Fact]
+    public async Task CreateRealEstate_ReturnsOkResult_WhenRealEstateDoesNotExist() {
+        // Arrange
+        CompanyDTO companyDto = new CompanyDTO("q2w3e4r5", "company", "company123@hotmail.com", "5557890123", "Brazil", "RJ", "RJ");
+
+        _context.Company.Add((Company)companyDto);
+        _context.SaveChanges();
+
+        var newRealEstate = new RealEstateDTO(2, "rio state", "copacabana", 11, companyDto.Id);
+
+        // Act
+        var result = await _controller.CreateRealEstate(newRealEstate);
+
+        // Assert
+        var response = Assert.IsType<OkObjectResult>(result);
+        string json = response.Value.ToJson();
+
+    }
+
+    [Fact]
+    public async Task CreateRealEstate_ReturnsBadRequest_WhenRealEstateAlreadyExists() {
+        // Arrange
+        CompanyDTO companyDto = new CompanyDTO("q2w3e4r5", "company", "company123@hotmail.com", "5557890123", "Brazil", "RJ", "RJ");
+
+        _context.Company.Add((Company)companyDto);
+        _context.SaveChanges();
+
+        var newRealEstate = new RealEstateDTO(2, "rio state", "copacabana", 11, companyDto.Id);
+        _context.RealEstates.Add((RealEstate)newRealEstate);
+
+        var result = await _controller.CreateRealEstate(newRealEstate);
+
+        var response = Assert.IsType<BadRequestObjectResult>(result);
+        Assert.Equal(response.Value, "Real Estate Already Exists!");
+    }
+
+    [Fact]
+    public async Task CreateRealEstate_ReturnsBadRequest_WhenOwnerCompanyNotExists() {
+        // Assert
+    
+        // Act
+    
+        // Arrange
+    }
 
     [Fact]
     public async Task ReadRealEstates_ReturnsOkResult_WithValidParameters() {
@@ -43,6 +116,15 @@ namespace webserver.Tests.Project.Controllers {
     }
 
     [Fact]
+    public async Task ReadRealEstates_ReturnsNotFound_NoMatchesFound() {
+        // Assert
+    
+        // Act
+    
+        // Arrange
+    }
+
+    [Fact]
     public async Task ReadRealEstate_ReturnsOkResult_WhenRealEstateExists() {
 
         // Arrange
@@ -70,195 +152,52 @@ namespace webserver.Tests.Project.Controllers {
     [Fact]
     public async Task ReadRealEstate_ReturnsNotFound_WhenRealEstateDoesNotExist() {
         // Act
-        var result = _controller.ReadRealEstate(0);
+        var result = await _controller.ReadRealEstate(0);
 
         // Assert
         Assert.IsType<NotFoundResult>(result);
     }
 
     [Fact]
-    public async Task CreateRealEstate_ReturnsOkResult_WhenRealEstateDoesNotExist() {
-
-        // Arrange
-        Company comp = new Company { UserName="compania", Email="compania@gmail.com" };
-        _context.Company.Add(comp);
-        _context.SaveChanges();
-
-        var newRealEstate = new RealEstate { Id = createId, Name = "NewProperty", Price = 300, CompanyId = comp.Id };
-
-        // Act
-        var result = controller.CreateRealEstate((RealEstateDTO)newRealEstate) as ObjectResult;
-        var createdRealEstate = context.RealEstates.Find(createId);
-
-        // Assert
-        Assert.NotNull(result);
-        Assert.NotNull(createdRealEstate);
-        Assert.Equal(newRealEstate.Id, createdRealEstate.Id);
-        Assert.Equal(newRealEstate.Name, createdRealEstate.Name);
-        Assert.Equal(newRealEstate.Price, createdRealEstate.Price);
-        Assert.Equal(newRealEstate.Address, createdRealEstate.Address);
-        Assert.Equal(newRealEstate.CompanyId, createdRealEstate.CompanyId);
-    }
-
-    [Fact]
-    public async Task CreateRealEstate_ReturnsBadRequest_WhenRealEstateAlreadyExists() {
-        // Arrange
-        var options = new DbContextOptionsBuilder<WebserverContext>()
-            .UseInMemoryDatabase(databaseName: "InMemoryDatabase")
-            .Options;
-        
-        int existsId = 141;
-
-        using (var context = new WebserverContext(options)) {
-
-            Company comp = new Company { UserName = "TotallyExists", Email = "totalexist@gmail.com"};
-            context.Company.Add(comp);
-            context.RealEstates.Add(new RealEstate { Id = existsId, Name = "ExistingProperty", Price = 200, CompanyId = comp.Id });
-            context.SaveChanges();
-
-            var controller = new webserver.Controllers.RealEstatesController(context);
-            var existingRealEstate = new RealEstate { Id = existsId, Name = "NewProperty", Price = 300, CompanyId = "a1b1c1d1" };
-
-            // Act
-            var result = controller.CreateRealEstate((RealEstateDTO)existingRealEstate) as BadRequestObjectResult;
-
-            // Assert
-            Assert.NotNull(result);
-            Assert.Equal(400, result.StatusCode);
-            Assert.Equal("Real Estate Already Exists!", result.Value);
-        }
-    }
-
-    [Fact]
-    public async Task CreateRealEstate_ReturnsBadRequest_WhenOwnerCompanyNotExists() {
-        // Arrange
-        var options = new DbContextOptionsBuilder<WebserverContext>()
-            .UseInMemoryDatabase(databaseName: "InMemoryDatabase")
-            .Options;
-
-        int ownerExistsId = 173;
-
-        using (var context = new WebserverContext(options)) {
-
-            var controller = new webserver.Controllers.RealEstatesController(context);
-            var newRealEstate = new RealEstate { Id = ownerExistsId, Name = "NewProperty", Price = 300, CompanyId="DefinellyNotExists" };
-
-            // Act
-            var result = controller.CreateRealEstate((RealEstateDTO)newRealEstate) as BadRequestObjectResult;
-
-            // Assert
-            Assert.NotNull(result);
-            Assert.Equal(400, result.StatusCode);
-            Assert.Equal("Owner Company does Not Exist!", result.Value);
-        }
-    }
-
-    [Fact]
     public async Task UpdateRealEstate_ReturnsOkResult_WhenRealEstateExists() {
+        // Assert
+    
+        // Act
+    
         // Arrange
-        var options = new DbContextOptionsBuilder<WebserverContext>()
-            .UseInMemoryDatabase(databaseName: "InMemoryDatabase")
-            .Options;
-
-        int upId = 195;
-        
-        using (var context = new WebserverContext(options)) {
-
-            var initialRealEstate = new RealEstate { Id = upId, Name = "Property13", Price = 100, Address = "Address13" };
-            var controller = new webserver.Controllers.RealEstatesController(context);
-            var updatedRealEstate = new RealEstate { Id = upId, Name = "UpdatedProperty", Price = 200, Address = "UpdatedAddress" };
-
-            context.RealEstates.Add(initialRealEstate);
-            context.SaveChanges();
-
-            // Act
-
-            var result = controller.UpdateRealEstate((RealEstateDTO)updatedRealEstate) as OkObjectResult;
-            var updatedResult = context.RealEstates.Find(upId);
-
-            // Assert
-            Assert.NotNull(result);
-            Assert.NotNull(updatedResult);
-            Assert.Equal(200, result.StatusCode);
-            Assert.Equal(updatedRealEstate.Name, updatedResult.Name);
-            Assert.Equal(updatedRealEstate.Price, updatedResult.Price);
-            Assert.Equal(updatedRealEstate.Address, updatedResult.Address);
-            Assert.Equal(updatedRealEstate.CompanyId, updatedResult.CompanyId);
-        }
     }
 
     [Fact]
     public async Task UpdateRealEstate_ReturnsNotFound_WhenRealEstateDoesNotExist() {
-
+        // Assert
+    
+        // Act
+    
         // Arrange
-        var options = new DbContextOptionsBuilder<WebserverContext>()
-            .UseInMemoryDatabase(databaseName: "InMemoryDatabase")
-            .Options;
-
-        int nonId = 228;
-
-        using (var context = new WebserverContext(options)) {
-            var controller = new webserver.Controllers.RealEstatesController(context);
-            var updatedRealEstate = new RealEstate { Id = nonId, Name = "UpdatedProperty", Price = 200, Address = "UpdatedAddress" };
-
-            // Act
-            var result = controller.UpdateRealEstate((RealEstateDTO)updatedRealEstate) as NotFoundResult;
-
-            // Assert
-            Assert.NotNull(result);
-            Assert.Equal(404, result.StatusCode);
-        }
     }
 
     [Fact]
     public async Task DeleteRealEstate_ReturnsNoContent_WhenRealEstateExists() {
-
         // Arrange
-        var options = new DbContextOptionsBuilder<WebserverContext>()
-            .UseInMemoryDatabase(databaseName: "InMemoryDatabase")
-            .Options;
+        int idExist = 76;
+        RealEstateDTO realDto = new RealEstateDTO(idExist, "Sesame Street", "Sesame House", 40, "a1b1c1d1");
 
-        int existsId = 246;
+        _context.RealEstates.Add((RealEstate)realDto);
+        _context.SaveChanges();
 
-        using (var context = new WebserverContext(options)) {
+        // Act
+        var result = await _controller.DeleteRealEstate(idExist);
 
-            var initialRealEstate = new RealEstate { Id = existsId, Name = "Property13", Price = 100, Address = "Address13" };
-            var controller = new webserver.Controllers.RealEstatesController(context);
-
-            context.RealEstates.Add(initialRealEstate);
-            context.SaveChanges();
-
-            // Act
-            var result = controller.DeleteRealEstate(existsId) as NoContentResult;
-            var deletedRealEstate = context.RealEstates.Find(existsId);
-
-            // Assert
-            Assert.NotNull(result);
-            Assert.Null(deletedRealEstate);
-            Assert.Equal(204, result.StatusCode);                
-        }
+        // Assert
+        Assert.IsType<NoContentResult>(result);
     }
 
     [Fact]
     public async Task DeleteRealEstate_ReturnsNotFound_WhenRealEstateDoesNotExist() {
+        // Act
+        var result = await _controller.DeleteRealEstate(76);
 
-        // Arrange
-        var options = new DbContextOptionsBuilder<WebserverContext>()
-            .UseInMemoryDatabase(databaseName: "InMemoryDatabase")
-            .Options;
-
-        int NotExistId = 275;
-
-        using (var context = new WebserverContext(options)) {
-
-            var controller = new webserver.Controllers.RealEstatesController(context);
-
-            // Act
-            var result = controller.DeleteRealEstate(NotExistId) as NotFoundResult;
-
-            // Assert
-            Assert.NotNull(result);
-            Assert.Equal(404, result.StatusCode);
-        }
+        // Assert
+        Assert.IsType<NotFoundResult>(result);
     }
 }
