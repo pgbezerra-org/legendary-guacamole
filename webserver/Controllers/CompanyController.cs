@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Authorization;
 using webserver.Data;
 using webserver.Models;
 using webserver.Models.DTOs;
@@ -8,6 +9,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace webserver.Controllers;
 
+[Authorize]
 [ApiController]
 [Route("api/v1/company")]
 public class CompanyController : ControllerBase {
@@ -36,7 +38,7 @@ public class CompanyController : ControllerBase {
     }
 
     [HttpGet]
-    public async Task<IActionResult> ReadCompanies(int? offset, int? limit, string? Country, string? State, string? City, string sort = "Name") {
+    public async Task<IActionResult> ReadCompanies(int? offset, int? limit, string? Country, string? State, string? City, string? sort) {
 
         var companies = _context.Company.AsQueryable();
 
@@ -50,20 +52,22 @@ public class CompanyController : ControllerBase {
             companies = companies.Where(re => re.Country == Country);
         }
 
-        sort = sort.ToLower();
-        switch (sort) {
-            case "city":
-                companies = companies.OrderBy(re => re.City);
-                break;
-            case "state":
-                companies = companies.OrderBy(re => re.State);
-                break;
-            case "country":
-                companies = companies.OrderBy(re => re.Country);
-                break;
-            default:
-                companies = companies.OrderBy(re => re.UserName);
-                break;
+        if(!string.IsNullOrEmpty(sort)){
+            sort = sort.ToLower();
+            switch (sort) {
+                case "city":
+                    companies = companies.OrderBy(re => re.City).ThenBy(re => re.State).ThenBy(re => re.Country).ThenBy(re => re.UserName);
+                    break;
+                case "state":
+                    companies = companies.OrderBy(re => re.State).ThenBy(re => re.City).ThenBy(re => re.Country).ThenBy(re => re.UserName);
+                    break;
+                case "country":
+                    companies = companies.OrderBy(re => re.Country).ThenBy(re => re.State).ThenBy(re => re.City).ThenBy(re => re.UserName);
+                    break;
+                case "name":
+                    companies = companies.OrderBy(re => re.UserName).ThenBy(re => re.Country).ThenBy(re => re.State).ThenBy(re => re.City);
+                    break;
+            }
         }
 
         if(offset.HasValue){

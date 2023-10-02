@@ -65,10 +65,38 @@ public class CompanyControllerTest : IDisposable {
         await userManager.CreateAsync((Company)newCompDto, "#Company1234");
     
         // When
-        var result = await _controller.ReadCompanies(1,1,"USA","Nebraska","Lincoln");
+        var result = await _controller.ReadCompanies(1,1,"USA","Nebraska","Lincoln",null);
     
         // Then
         Assert.IsType<NotFoundResult>(result);
+    }
+
+    [Fact]
+    public async void ReadCompanies_ReturnsOK_MatchesFound() {
+        // Arrannge
+        var newCompDto = new CompanyDTO("a1b1c1d1","username","myemail123@gmail.com","9899344788","brazil","MA","Sao Luis");
+        await userManager.CreateAsync((Company)newCompDto, "#Company1234");
+        newCompDto = new CompanyDTO("d4s-1st-gu77","deutsch-mensch","deutsch@gmail.com","5559880123","Germany","Berlin","Berlin");
+        await userManager.CreateAsync((Company)newCompDto, "#Company1234");
+        newCompDto = new CompanyDTO("qwert5678","yeti-another","yeti-man@gmail.com","5559880123","USA","Texas","Dallas");   //Expects only this
+        await userManager.CreateAsync((Company)newCompDto, "#Company1234");
+
+        var expectedDto = new CompanyDTO("a1s2d3f4","anothername","another123@gmail.com","98988263255","USA","NY","NY");
+        await userManager.CreateAsync((Company)expectedDto, "#Company1234");
+    
+        // When
+        int limit = 1;
+        var result = await _controller.ReadCompanies(1,limit,"USA",null,null,"city");
+    
+        // Then
+        var okResult = Assert.IsType<OkObjectResult>(result);
+        string valueJson = okResult.Value!.ToString()!;
+        CompanyDTO[] myDto = JsonConvert.DeserializeObject<CompanyDTO[]>(valueJson)!;
+
+        Assert.True(myDto.Length == limit);
+        Assert.Equal(expectedDto.UserName,myDto[0].UserName);
+        Assert.Equal(expectedDto.Email,myDto[0].Email);
+        Assert.Equal(expectedDto.PhoneNumber,myDto[0].PhoneNumber);
     }
 
     [Fact]
