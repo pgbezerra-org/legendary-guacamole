@@ -9,7 +9,8 @@ using webserver.Data;
 using webserver.Models.DTOs;
 using Newtonsoft.Json;
 using NuGet.Protocol;
-using Microsoft.AspNetCore.Http.HttpResults;
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 
 namespace webserver.Tests.Project.Controllers;
 public class CompanyControllerTest : IDisposable {
@@ -23,7 +24,6 @@ public class CompanyControllerTest : IDisposable {
             DataSource = ":memory:"
         };
         var connection = new SqliteConnection(connectionStringBuilder.ToString());
-
         
         DbContextOptions<WebserverContext> _options = new DbContextOptionsBuilder<WebserverContext>()
             .UseSqlite(connection)
@@ -34,19 +34,24 @@ public class CompanyControllerTest : IDisposable {
         _context.Database.EnsureCreated();
 
         var userStore = new UserStore<Company>(_context);
-        var passwordValidator = new PasswordValidator<Company>();
         var userValidator = new UserValidator<Company>();
-
-        // Create an instance of IPasswordHasher<Company> and IUserValidator<Company>
         var passwordHasher = new PasswordHasher<Company>();
         var userValidators = new List<IUserValidator<Company>> { userValidator };
 
-        userManager = new UserManager<Company>( userStore, null, passwordHasher, userValidators,
-            null, null, null, null, null);
-        
+        var identityOptions = new IdentityOptions();
+        IOptions<IdentityOptions> optionsParameter = Options.Create(identityOptions);
+
+        var passwordValidators = new List<IPasswordValidator<Company>> {
+            new PasswordValidator<Company>(),
+        };
+
+        userManager = new UserManager<Company>( userStore, optionsParameter, passwordHasher, userValidators, passwordValidators,
+            new UpperInvariantLookupNormalizer(), new IdentityErrorDescriber(), null, new Logger<UserManager<Company>>(new LoggerFactory()));
+
         var roleStore = new RoleStore<IdentityRole>(_context);
-        var roleValidator = new List<IRoleValidator<IdentityRole>> { new RoleValidator<IdentityRole>() };
-        roleManager = new RoleManager<IdentityRole>(roleStore, roleValidator, null, null, null);
+        var roleValidator = new List<IRoleValidator<IdentityRole>> { new RoleValidator<IdentityRole>() };        
+        roleManager = new RoleManager<IdentityRole>( roleStore, roleValidator,
+            new UpperInvariantLookupNormalizer(), new IdentityErrorDescriber(), new Logger<RoleManager<IdentityRole>>(new LoggerFactory()));
 
         _controller = new CompanyController(_context, userManager, roleManager);        
     }
@@ -64,10 +69,10 @@ public class CompanyControllerTest : IDisposable {
         newCompDto = new CompanyDTO("a1s2d3f4","anothername","another123@gmail.com","98988263255","USA","NY","NY");
         await userManager.CreateAsync((Company)newCompDto, "#Company1234");
     
-        // When
+        // Act
         var result = await _controller.ReadCompanies(1,1,"USA","Nebraska","Lincoln",null);
     
-        // Then
+        // Assert
         Assert.IsType<NotFoundResult>(result);
     }
 
@@ -84,11 +89,11 @@ public class CompanyControllerTest : IDisposable {
         var expectedDto = new CompanyDTO("a1s2d3f4","anothername","another123@gmail.com","98988263255","USA","NY","NY");
         await userManager.CreateAsync((Company)expectedDto, "#Company1234");
     
-        // When
+        // Act
         int limit = 1;
         var result = await _controller.ReadCompanies(1,limit,"USA",null,null,"city");
     
-        // Then
+        // Assert
         var okResult = Assert.IsType<OkObjectResult>(result);
         string valueJson = okResult.Value!.ToString()!;
         CompanyDTO[] myDto = JsonConvert.DeserializeObject<CompanyDTO[]>(valueJson)!;
