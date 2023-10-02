@@ -3,7 +3,6 @@ using Microsoft.EntityFrameworkCore;
 using webserver.Data;
 using webserver.Models;
 using webserver.Models.DTOs;
-using Newtonsoft.Json;
 
 namespace webserver.Controllers;
 
@@ -25,9 +24,14 @@ public class RealEstatesController : ControllerBase {
             return NotFound();
         }
 
-        var realEstateDto = JsonConvert.SerializeObject( new RealEstateDTO (id, realEstate.Name, realEstate.Address, realEstate.Price, realEstate.CompanyId));
+        var response = new {
+            data = new {
+                type = "RealEstate",
+                attribute = new RealEstateDTO (id, realEstate.Name, realEstate.Address, realEstate.Price, realEstate.CompanyId)
+            }
+        };
 
-        return Ok(realEstateDto);
+        return Ok(response);
     }
 
     [HttpGet]
@@ -68,16 +72,22 @@ public class RealEstatesController : ControllerBase {
             realEstates=realEstates.Take(limit.Value);
         }
 
-        var resultArray = await realEstates.ToArrayAsync();
-        var resultDtoArray = realEstates.Select(r=>(RealEstateDTO)r).ToArray();
+        var result = await realEstates.ToListAsync();
+        //var result = await realEstates.ToArrayAsync();
 
-        if(resultDtoArray==null){
+        if(result==null){
             return NotFound();
         }
 
-        var resultSerial = JsonConvert.SerializeObject(resultDtoArray);
+        var response = new {
+            data = result.Select(re => new {
+                
+                type = "RealEstate[]",
+                attributes = new RealEstateDTO (re.Id, re.Name, re.Address, re.Price, re.CompanyId)
+            })
+        };
 
-        return Ok(resultSerial);
+        return Ok(response);
     }
 
     [HttpPost]
@@ -94,9 +104,14 @@ public class RealEstatesController : ControllerBase {
         _context.RealEstates.Add((RealEstate)request);
         await _context.SaveChangesAsync();
 
-        var realEstateDto = JsonConvert.SerializeObject( new RealEstateDTO (request.Id, request.Name, request.Address, request.Price, request.CompanyId));
+        var response = new {
+            data = new {
+                type = "RealEstate",
+                attribute = new RealEstateDTO (request.Id, request.Name, request.Address, request.Price, request.CompanyId)
+            }
+        };
 
-        return Ok(realEstateDto);
+        return Ok(response);
     }
 
     [HttpPatch]
@@ -113,9 +128,14 @@ public class RealEstatesController : ControllerBase {
 
         await _context.SaveChangesAsync();
         
-        var realEstateDto = JsonConvert.SerializeObject( new RealEstateDTO (upRE.Id, upRE.Name, upRE.Address, upRE.Price, upRE.CompanyId));
+        var response = new {
+            data = new {
+                type = "RealEstate",
+                attribute = new RealEstateDTO (realEstate.Id, realEstate.Name, realEstate.Address, realEstate.Price, realEstate.CompanyId)
+            }
+        };
 
-        return Ok(realEstateDto);    
+        return Ok(response);    
     }
 
     [HttpDelete("id")]

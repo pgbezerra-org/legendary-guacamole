@@ -4,36 +4,9 @@ using Microsoft.Data.Sqlite;
 using webserver.Models;
 using webserver.Data;
 using webserver.Models.DTOs;
-using webserver.Controllers;
-using Newtonsoft.Json;
 
-namespace webserver.Tests.Project.Controllers;
-public class RealEstatesControllerTest : IDisposable {
-
-    private readonly WebserverContext _context;
-    private readonly RealEstatesController _controller;
-
-    public RealEstatesControllerTest(){
-        var connectionStringBuilder = new SqliteConnectionStringBuilder {
-            DataSource = ":memory:"
-        };
-        var connection = new SqliteConnection(connectionStringBuilder.ToString());
-        
-        DbContextOptions<WebserverContext> _options = new DbContextOptionsBuilder<WebserverContext>()
-            .UseSqlite(connection)
-            .Options;
-
-        _context = new WebserverContext(_options);
-        _context.Database.OpenConnection();
-        _context.Database.EnsureCreated();
-
-        _controller=new RealEstatesController(_context);
-    }
-
-    public void Dispose() {
-        _context.Database.EnsureDeleted();
-        _context.Dispose();
-    }
+namespace webserver.Tests.Project.Controllers {
+    public class RealEstatesController {
 
     [Fact]
     public async Task ReadRealEstates_ReturnsOkResult_WithValidParameters() {
