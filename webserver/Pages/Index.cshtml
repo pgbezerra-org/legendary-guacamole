@@ -5,7 +5,7 @@
 }
 
 <div class="text-center">
-    <h1 class="display-5">Legendary Guacamole</h1>
+    <h2 class="display-4"><b>Legendary Guacamole</b></h1>
     <p>Your Real-Estates Company platform!</p>
 </div>
 
@@ -19,20 +19,23 @@
     flex-direction: column;
     justify-content: center;
     margin: 2%;
-    padding: 2.9%;
+    padding: 2%;
     border: 1px solid #ccc;
     text-align: center;
   }
 
   .recard-container {
     display: flex;
+    justify-content: center;
+    align-items: center;
   }
+
   .recard {
+    flex: 0 0 calc(25% - 2rem);
     display: flex;
     flex-direction: column;
-    justify-content: center;
-    margin: 4%;
-    padding: 1.8%;
+    margin: 2rem;
+    padding: 1.8em;
     border: 1px solid #ccc;
     text-align: left;
   }
@@ -59,21 +62,30 @@
 <br>
 <h2>Latest Real-Estates Available:</h2>
 <div class="recard-container">
-  <div class="recard">
-    <h2>@Model.states[0].Name</h2>
-    <p>@Model.states[0].Address</p>
-    <p>@Model.states[0].Price</p>
-  </div>
-  <div class="recard">
-    <h2>@Model.states[1].Name</h2>
-    <p>@Model.states[1].Address</p>
-    <p>@Model.states[1].Price</p>
-  </div>
-  <div class="recard">
-    <h2>@Model.states[1].Name</h2>
-    <p>@Model.states[1].Address</p>
-    <p>@Model.states[1].Price</p>
-  </div>
+
+  <a asp-page="/Views/RealEstateProfile" asp-route-id=@Model.states[0].Id class="btn">
+    <div class="recard">
+      <h2>@Model.states[0].Name</h2>
+      <p>@Model.states[0].Address</p>
+      <p>R$: @Model.states[0].Price</p>
+    </div>
+  </a>
+
+  <a asp-page="/Views/RealEstateProfile" asp-route-id=@Model.states[1].Id class="btn">
+    <div class="recard">
+      <h2>@Model.states[1].Name</h2>
+      <p>@Model.states[1].Address</p>
+      <p>R$: @Model.states[1].Price</p>
+    </div>
+  </a>
+
+  <a asp-page="/Views/RealEstateProfile" asp-route-id=@Model.states[2].Id class="btn">
+    <div class="recard">
+      <h2>@Model.states[2].Name</h2>
+      <p>@Model.states[2].Address</p>
+      <p>R$: @Model.states[2].Price</p>
+    </div>
+  </a>
 </div>
 
 <footer class="border-top footer text-muted">
