@@ -6,7 +6,6 @@ using webserver.Controllers;
 using webserver.Data;
 using webserver.Models.DTOs;
 using Newtonsoft.Json;
-using NuGet.Protocol;
 
 namespace webserver.Tests.Project.Controllers;
 public class RealEstatesControllerTest : IDisposable {
@@ -93,7 +92,7 @@ public class RealEstatesControllerTest : IDisposable {
         Assert.Equal(response.Value, "Owner Company does Not Exist!");
     }
 
-    [Fact]//BUGADA
+    [Fact]
     public async Task ReadRealEstates_ReturnsOkResult_WithValidParameters() {
 
         Company comp = new Company{Id="c0mp4=ny55", UserName="initialcomp",Email="initialcomp@gmail.com"};
@@ -222,4 +221,7 @@ public class RealEstatesControllerTest : IDisposable {
         // Assert
         Assert.IsType<NotFoundResult>(result);
     }
+
+    //Fazer testes com o comentario "BUGADA
+    //renomear e tipar direito
 }

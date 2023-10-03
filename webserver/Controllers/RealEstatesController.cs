@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Authorization;
 using webserver.Data;
 using webserver.Models;
 using webserver.Models.DTOs;
@@ -7,6 +8,7 @@ using Newtonsoft.Json;
 
 namespace webserver.Controllers;
 
+[Authorize(Roles=Common.BZE_Role+","+Common.Company_Role)]
 [ApiController]
 [Route("api/v1/realestates")]
 public class RealEstatesController : ControllerBase {
@@ -48,7 +50,7 @@ public class RealEstatesController : ControllerBase {
                 realEstates = realEstates.OrderBy(re => re.Name);
                 break;
             case "price":
-                realEstates = realEstates.OrderBy(re => re.Price);
+                realEstates = realEstates.OrderBy(re => (double) re.Price);
                 break;
             case "companyid":
                 realEstates = realEstates.OrderBy(re => re.CompanyId);
