@@ -1,19 +1,18 @@
-using Microsoft.EntityFrameworkCore;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.Data.Sqlite;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using webserver.Controllers;
 using webserver.Models;
 using webserver.Data;
 using webserver.Models.DTOs;
 using Newtonsoft.Json;
-using NuGet.Protocol;
-using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
 
 namespace webserver.Tests.Project.Controllers;
-public class ClientControllerTest : IDisposable {
+public class ClientControllerTest  {
     
     private readonly WebserverContext _context;
     private readonly CompanyController _controller;

@@ -50,6 +50,5 @@ public class ClientController : ControllerBase {
         await _context.SaveChangesAsync();
 
         return NoContent();
-    }
-    
+    }    
 }
