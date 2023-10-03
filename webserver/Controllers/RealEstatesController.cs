@@ -1,11 +1,14 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Authorization;
 using webserver.Data;
 using webserver.Models;
 using webserver.Models.DTOs;
+using Newtonsoft.Json;
 
 namespace webserver.Controllers;
 
+[Authorize(Roles=Common.BZE_Role+","+Common.Company_Role)]
 [ApiController]
 [Route("api/v1/realestates")]
 public class RealEstatesController : ControllerBase {
@@ -17,21 +20,16 @@ public class RealEstatesController : ControllerBase {
     }
 
     [HttpGet("unique/{id}")]
-    public IActionResult ReadRealEstate(int id){
+    public async Task<IActionResult> ReadRealEstate(int id){
 
-        var realEstate = _context.RealEstates.Find(id);
+        var realEstate = await _context.RealEstates.FindAsync(id);
         if(realEstate==null){
             return NotFound();
         }
 
-        var response = new {
-            data = new {
-                type = "RealEstate",
-                attribute = new RealEstateDTO (id, realEstate.Name, realEstate.Address, realEstate.Price, realEstate.CompanyId)
-            }
-        };
+        var realEstateDto = JsonConvert.SerializeObject( new RealEstateDTO (id, realEstate.Name, realEstate.Address, realEstate.Price, realEstate.CompanyId));
 
-        return Ok(response);
+        return Ok(realEstateDto);
     }
 
     [HttpGet]
@@ -52,7 +50,7 @@ public class RealEstatesController : ControllerBase {
                 realEstates = realEstates.OrderBy(re => re.Name);
                 break;
             case "price":
-                realEstates = realEstates.OrderBy(re => re.Price);
+                realEstates = realEstates.OrderBy(re => (double) re.Price);
                 break;
             case "companyid":
                 realEstates = realEstates.OrderBy(re => re.CompanyId);
@@ -72,26 +70,20 @@ public class RealEstatesController : ControllerBase {
             realEstates=realEstates.Take(limit.Value);
         }
 
-        var result = await realEstates.ToListAsync();
-        //var result = await realEstates.ToArrayAsync();
+        var resultArray = await realEstates.ToArrayAsync();
+        var resultDtoArray = realEstates.Select(r=>(RealEstateDTO)r).ToArray();
 
-        if(result==null){
+        if(resultDtoArray==null){
             return NotFound();
         }
 
-        var response = new {
-            data = result.Select(re => new {
-                
-                type = "RealEstate[]",
-                attributes = new RealEstateDTO (re.Id, re.Name, re.Address, re.Price, re.CompanyId)
-            })
-        };
+        var resultSerial = JsonConvert.SerializeObject(resultDtoArray);
 
-        return Ok(response);
+        return Ok(resultSerial);
     }
 
     [HttpPost]
-    public IActionResult CreateRealEstate([FromBody]RealEstateDTO request ) {
+    public async Task<IActionResult> CreateRealEstate([FromBody]RealEstateDTO request ) {
 
         if(_context.RealEstates.Find(request.Id) != null) {
             return BadRequest("Real Estate Already Exists!");
@@ -101,21 +93,16 @@ public class RealEstatesController : ControllerBase {
             return BadRequest("Owner Company does Not Exist!");
         }
         
-        _context.RealEstates.AddAsync((RealEstate)request);
-        _context.SaveChangesAsync();
+        _context.RealEstates.Add((RealEstate)request);
+        await _context.SaveChangesAsync();
 
-        var response = new {
-            data = new {
-                type = "RealEstate",
-                attribute = new RealEstateDTO (request.Id, request.Name, request.Address, request.Price, request.CompanyId)
-            }
-        };
+        var realEstateDto = JsonConvert.SerializeObject( new RealEstateDTO (request.Id, request.Name, request.Address, request.Price, request.CompanyId));
 
-        return Ok(response);
+        return Ok(realEstateDto);
     }
 
     [HttpPatch]
-    public IActionResult UpdateRealEstate([FromBody]RealEstateDTO upRE) {
+    public async Task<IActionResult> UpdateRealEstate([FromBody]RealEstateDTO upRE) {
 
         var realEstate = _context.RealEstates.Find(upRE.Id);
         if(realEstate == null){
@@ -126,20 +113,15 @@ public class RealEstatesController : ControllerBase {
         realEstate.Price = upRE.Price;
         realEstate.Name = upRE.Name;
 
-        _context.SaveChanges();
+        await _context.SaveChangesAsync();
         
-        var response = new {
-            data = new {
-                type = "RealEstate",
-                attribute = new RealEstateDTO (realEstate.Id, realEstate.Name, realEstate.Address, realEstate.Price, realEstate.CompanyId)
-            }
-        };
+        var realEstateDto = JsonConvert.SerializeObject( new RealEstateDTO (upRE.Id, upRE.Name, upRE.Address, upRE.Price, upRE.CompanyId));
 
-        return Ok(response);    
+        return Ok(realEstateDto);    
     }
 
     [HttpDelete("id")]
-    public IActionResult DeleteRealEstate(int id) {
+    public async Task<IActionResult> DeleteRealEstate(int id) {
 
         var RE = _context.RealEstates.Find(id);
         if(RE==null) {
@@ -147,7 +129,7 @@ public class RealEstatesController : ControllerBase {
         }
 
         _context.RealEstates.Remove(RE);
-        _context.SaveChanges();
+        await _context.SaveChangesAsync();
         
         return NoContent();
     }
