@@ -9,6 +9,16 @@ public class RealEstateDTO {
 
     public string CompanyId { get; set; } = string.Empty;
 
+    public bool rentable { get; set; }
+
+    public int area { get; set; }
+
+    public int percentage { get; set; }
+
+    public int numBedrooms { get; set; }
+
+    public Common.HouseType houseType;
+
     public RealEstateDTO(int id, string name, string address, decimal price, string companyId){
 
         Id = id;
