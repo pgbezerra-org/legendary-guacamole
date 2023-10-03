@@ -35,8 +35,8 @@ public class EmployeesLIST : PageModel {
                 using (MySqlDataReader reader=command.ExecuteReader()){
                     while(reader.Read()){
                         EmployeeINFO bzeINFO = new EmployeeINFO();
-                        bzeINFO.Id=reader.GetString(0);
-                        bzeINFO.UserName=reader.GetString(1);
+                        bzeINFO.Id = reader.GetString(0);
+                        bzeINFO.UserName = reader.GetString(1);
                         listEmpls.Add(bzeINFO);
                     }
                 }

@@ -64,38 +64,38 @@ public class CompanyCreation : PageModel {
     public class CompanyINFO {
         [Required]
         [Display(Name = "Name")]
-        public string Name { get; set; }=string.Empty;
+        public string Name { get; set; } = string.Empty;
 
         [Required]
         [EmailAddress]
         [Display(Name = "Email")]
-        public string Email { get; set; }=string.Empty;
+        public string Email { get; set; } = string.Empty;
 
         [Required]
         [Phone]
         [Display(Name ="PhoneNumber")]
-        public string PhoneNumber {get; set;}=string.Empty;
+        public string PhoneNumber {get; set;} = string.Empty;
 
         [Required]
         [Display(Name = "City")]
-        public string City { get; set; }=string.Empty;
+        public string City { get; set; } = string.Empty;
 
         [Required]
         [Display(Name = "State")]
-        public string State { get; set; }=string.Empty;
+        public string State { get; set; } = string.Empty;
         
         [Required]
         [Display(Name = "Country")]
-        public string Country { get; set; }=string.Empty;
+        public string Country { get; set; } = string.Empty;
 
         [Required]
         [DataType(DataType.Password)]
         [Display(Name = "Password")]
-        public string Password { get; set; }=string.Empty;
+        public string Password { get; set; } = string.Empty;
 
         [Required]
         [DataType(DataType.Password)]
         [Display(Name = "ConfirmPassword")]
-        public string ConfirmPassword { get; set; }=string.Empty;
+        public string ConfirmPassword { get; set; } = string.Empty;
     }
 }

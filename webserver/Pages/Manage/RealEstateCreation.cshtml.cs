@@ -15,7 +15,7 @@ public class RealEstateCreation : PageModel {
     private readonly WebserverContext context;
 
     public RealEstateCreation(WebserverContext _context) {
-        context=_context;
+        context = _context;
     }
 
     public async Task<IActionResult> OnPostAsync() {
@@ -31,7 +31,7 @@ public class RealEstateCreation : PageModel {
             Name = Input.Name,
             Address = Input.Address,
             Price = Input.Price,
-            CompanyId=company.Id
+            CompanyId = company.Id
         };
         
         await context.RealEstates.AddAsync(realEstate);
@@ -44,15 +44,15 @@ public class RealEstateCreation : PageModel {
 
         [Required]
         [Display(Name = "Name")]
-        public string Name { get; set; }=string.Empty;
+        public string Name { get; set; } = string.Empty;
 
         [Required]
         [Display(Name = "Address")]
-        public string Address { get; set; }=string.Empty;
+        public string Address { get; set; } = string.Empty;
 
         [Required]
         [Display(Name = "Company")]
-        public string Company { get; set; }=string.Empty;
+        public string Company { get; set; } = string.Empty;
 
         [Required]
         [Display(Name = "Price")]

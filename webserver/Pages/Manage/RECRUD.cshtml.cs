@@ -42,14 +42,14 @@ public class RECRUD : PageModel {
             string allREs = $"SELECT RealEstates.*, AspNetUsers.* FROM RealEstates INNER JOIN AspNetUsers ON RealEstates.CompanyId = AspNetUsers.Id ORDER BY {orderby} LIMIT {pageSize} OFFSET {offset}";
             //Console.WriteLine(allREs+"   AQUIII MERMAAAAAO ----------- --------\n\n");
             using (MySqlCommand command = new MySqlCommand(allREs, connection)){
-                using (MySqlDataReader reader=command.ExecuteReader()){
+                using (MySqlDataReader reader = command.ExecuteReader()){
                     while(reader.Read()){
                         RealEstateINFO REINFO = new RealEstateINFO();
-                        REINFO.Id=reader.GetInt32(0);
-                        REINFO.Name=reader.GetString(1);
-                        REINFO.Address=reader.GetString(2);
-                        REINFO.Price=(decimal)reader.GetFloat(3);
-                        REINFO.CompanyId=reader.GetString(4);
+                        REINFO.Id = reader.GetInt32(0);
+                        REINFO.Name = reader.GetString(1);
+                        REINFO.Address = reader.GetString(2);
+                        REINFO.Price = (decimal)reader.GetFloat(3);
+                        REINFO.CompanyId = reader.GetString(4);
                         REINFO.CompanyName = reader.GetString(reader.GetOrdinal("UserName"));
                         //Console.WriteLine(reader.GetString());
                         listREINFOs.Add(REINFO);
@@ -78,7 +78,7 @@ public class RECRUD : PageModel {
         public decimal Price { get; set; } = 1;
 
         // Foreign key to associate the RealEstate with a Company
-        public string CompanyId { get; set; }=string.Empty;
-        public string CompanyName { get; set; }=string.Empty;
+        public string CompanyId { get; set; } = string.Empty;
+        public string CompanyName { get; set; } = string.Empty;
     }
 }
