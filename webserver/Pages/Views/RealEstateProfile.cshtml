@@ -1,0 +1,16 @@
+@page
+@model webserver.Pages.Views.RealEstateProfile
+@{
+    ViewData["Title"] = "RealEstateProfile";
+}
+
+<div>
+    <br>
+    <h1>@Model.realEstate!.Name</h1>
+    <a asp-page="/Views/CompanyProfile" asp-route-id=@Model.realEstate.CompanyId class="btn">
+        <p>Company:@Model.OwnerCompany!.UserName</p>
+    </a>
+    <br>
+    <p><strong>Address</strong>: @Model.realEstate.Address</p>
+    <p><strong>Price</strong>: @Model.realEstate.Price</p>
+</div>
