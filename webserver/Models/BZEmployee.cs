@@ -2,6 +2,6 @@
 
 public class BZEmployee : BZEAccount {
 
-    public float salary=2000;
+    public float salary { get; set; }
 
 }

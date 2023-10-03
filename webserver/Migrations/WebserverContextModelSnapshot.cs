@@ -238,6 +238,18 @@ namespace webserver.Migrations
                     b.Property<decimal>("Price")
                         .HasColumnType("decimal(18,2)");
 
+                    b.Property<int>("area")
+                        .HasColumnType("int");
+
+                    b.Property<int>("numBedrooms")
+                        .HasColumnType("int");
+
+                    b.Property<int>("percentage")
+                        .HasColumnType("int");
+
+                    b.Property<bool>("rentable")
+                        .HasColumnType("tinyint(1)");
+
                     b.HasKey("Id");
 
                     b.HasIndex("CompanyId");
@@ -258,6 +270,9 @@ namespace webserver.Migrations
             modelBuilder.Entity("webserver.Models.BZEmployee", b =>
                 {
                     b.HasBaseType("webserver.Models.BZEAccount");
+
+                    b.Property<float>("salary")
+                        .HasColumnType("float");
 
                     b.ToTable("BZEmployees");
                 });
