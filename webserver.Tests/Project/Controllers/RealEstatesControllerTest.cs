@@ -6,6 +6,7 @@ using webserver.Controllers;
 using webserver.Data;
 using webserver.Models.DTOs;
 using Newtonsoft.Json;
+using NuGet.Protocol;
 
 namespace webserver.Tests.Project.Controllers;
 public class RealEstatesControllerTest : IDisposable {
@@ -43,7 +44,7 @@ public class RealEstatesControllerTest : IDisposable {
         _context.Company.Add((Company)companyDto);
         _context.SaveChanges();
 
-        var newRealEstate = new RealEstateDTO(2, "rio state", "copacabana", 11, companyDto.Id);
+        RealEstateDTO newRealEstate = new RealEstateDTO(2, "rio state", "copacabana", 11, companyDto.Id);
 
         // Act
         var result = await _controller.CreateRealEstate(newRealEstate);
@@ -64,7 +65,7 @@ public class RealEstatesControllerTest : IDisposable {
     public async Task CreateRealEstate_ReturnsBadRequest_WhenRealEstateAlreadyExists() {
         // Arrange
         CompanyDTO companyDto = new CompanyDTO("q2w3e4r5", "company", "company123@hotmail.com", "5557890123", "Brazil", "RJ", "RJ");
-        var newRealEstate = new RealEstateDTO(2, "rio state", "copacabana", 11, companyDto.Id);
+        RealEstateDTO newRealEstate = new RealEstateDTO(2, "rio state", "copacabana", 11, companyDto.Id);
 
         _context.Company.Add((Company)companyDto);
         _context.RealEstates.Add((RealEstate)newRealEstate);
@@ -82,7 +83,7 @@ public class RealEstatesControllerTest : IDisposable {
     public async Task CreateRealEstate_ReturnsBadRequest_WhenOwnerCompanyNotExists() {
         // Arrange
         int stateId = 11;
-        var newRealEstate = new RealEstateDTO(stateId, "rio state", "copacabana", 11000, "noCompanyHere");
+        RealEstateDTO newRealEstate = new RealEstateDTO(stateId, "rio state", "copacabana", 11000, "noCompanyHere");
 
         // Act
         var result = await _controller.CreateRealEstate(newRealEstate);
@@ -94,7 +95,6 @@ public class RealEstatesControllerTest : IDisposable {
 
     [Fact]
     public async Task ReadRealEstates_ReturnsOkResult_WithValidParameters() {
-
         Company comp = new Company{Id="c0mp4=ny55", UserName="initialcomp",Email="initialcomp@gmail.com"};
         _context.Company.Add(comp);
 
@@ -112,7 +112,7 @@ public class RealEstatesControllerTest : IDisposable {
         var query = _context.RealEstates.AsQueryable();
         query = query.Where(re => re.Price >= 50 && re.Price <= 150).Skip(1).Take(length);
 
-        var realEstates = query.ToArray();
+        RealEstate[] realEstates = query.ToArray();
         var response = await _controller.ReadRealEstates(minPrice: 50, maxPrice: 150, offset: 1, limit: length, sort: "price");
 
         // Assert
@@ -128,11 +128,35 @@ public class RealEstatesControllerTest : IDisposable {
 
     [Fact]
     public async Task ReadRealEstates_ReturnsNotFound_NoMatchesFound() {
-        // Assert
-    
+        Company comp = new Company{Id="c0mp4=ny55", UserName="initialcomp",Email="initialcomp@gmail.com"};
+        _context.Company.Add(comp);
+
+        _context.RealEstates.Add(new RealEstate { Id = 2, Address="Hollywood Boulevard", Name = "Property2", Price = 50, CompanyId = comp.Id});
+        _context.RealEstates.Add(new RealEstate { Id = 3, Address="Sunset Boulevard", Name = "Property3", Price = 100, CompanyId = comp.Id});
+        _context.RealEstates.Add(new RealEstate { Id = 5, Address="Something", Name = "Property5", Price = 200, CompanyId = comp.Id});
+        _context.RealEstates.Add(new RealEstate { Id = 6, Address="Anything", Name = "Property6", Price = 250, CompanyId = comp.Id});
+        _context.RealEstates.Add(new RealEstate { Id = 7, Address="Whatsoever", Name = "Property7", Price = 300, CompanyId = comp.Id});
+        _context.RealEstates.Add(new RealEstate { Id = 4, Address="The Bar", Name = "AAA", Price = 150, CompanyId = comp.Id});
+        _context.SaveChanges();
+        
         // Act
-    
-        // Arrange
+        int length = 3;
+
+        var query = _context.RealEstates.AsQueryable();
+        query = query.Where(re => re.Price > 50 && re.Price < 300).Skip(1).Take(length).OrderBy(r=>r.Name);
+
+        RealEstate[] realEstates = query.ToArray();
+        var response = await _controller.ReadRealEstates(minPrice: 50, maxPrice: 300, offset: 1, limit: length, sort: "name");
+
+        // Assert
+        var result = Assert.IsType<OkObjectResult>(response);
+        string valueJson = result.Value!.ToString()!;
+        RealEstateDTO[] realEstatesDtoArray = JsonConvert.DeserializeObject<RealEstateDTO[]>(valueJson)!;
+
+        Assert.True(realEstatesDtoArray!.Length == length);
+        Assert.Equal("The Bar", realEstates[0].Address);
+        Assert.Equal("AAA", realEstates[0].Name);
+        Assert.Equal(150, realEstates[0].Price);
     }
 
     [Fact]
@@ -180,19 +204,35 @@ public class RealEstatesControllerTest : IDisposable {
         _context.RealEstates.Add((RealEstate)newRealEstate);
         _context.SaveChanges();
     
-        // Act
+        newRealEstate.Name="Copacabana pallace";
+        newRealEstate.Address="Copacabana Beach";
+        newRealEstate.Price=11000000;
 
-    
+        // Act
+        var result = await _controller.UpdateRealEstate(newRealEstate);
+
         // Arrange
+        var response = Assert.IsType<OkObjectResult>(result);
+        var json = response.Value!.ToString()!;
+        RealEstateDTO responseDto = JsonConvert.DeserializeObject<RealEstateDTO>(json)!;
+        
+        Assert.Equal(responseDto.Id, newRealEstate.Id);
+        Assert.Equal(responseDto.Name, newRealEstate.Name);
+        Assert.Equal(responseDto.Address, newRealEstate.Address);
+        Assert.Equal(responseDto.Price, newRealEstate.Price);
+        Assert.Equal(responseDto.CompanyId, newRealEstate.CompanyId);
     }
 
     [Fact]
     public async Task UpdateRealEstate_ReturnsNotFound_WhenRealEstateDoesNotExist() {
         // Assert
+        RealEstateDTO fictionDto = new RealEstateDTO(229, "fiction", "neverland", 229000, "nonexist");
     
         // Act
+        var result = await _controller.UpdateRealEstate(fictionDto);
     
         // Arrange
+        var response = Assert.IsType<NotFoundResult>(result);
     }
 
     [Fact]
@@ -221,7 +261,4 @@ public class RealEstatesControllerTest : IDisposable {
         // Assert
         Assert.IsType<NotFoundResult>(result);
     }
-
-    //Fazer testes com o comentario "BUGADA
-    //renomear e tipar direito
 }
