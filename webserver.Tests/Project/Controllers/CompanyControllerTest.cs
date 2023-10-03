@@ -46,7 +46,7 @@ public class CompanyControllerTest : IDisposable {
         };
 
         userManager = new UserManager<Company>( userStore, optionsParameter, passwordHasher, userValidators, passwordValidators,
-            new UpperInvariantLookupNormalizer(), new IdentityErrorDescriber(), null, new Logger<UserManager<Company>>(new LoggerFactory()));
+            new UpperInvariantLookupNormalizer(), new IdentityErrorDescriber(), Moq.Mock.Of<IServiceProvider>(), new Logger<UserManager<Company>>(new LoggerFactory()));
 
         var roleStore = new RoleStore<IdentityRole>(_context);
         var roleValidator = new List<IRoleValidator<IdentityRole>> { new RoleValidator<IdentityRole>() };        
