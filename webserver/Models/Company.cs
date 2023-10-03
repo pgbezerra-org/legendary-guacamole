@@ -5,7 +5,7 @@ namespace webserver.Models;
 public class Company : BZEAccount {
 
     public Company() {
-        RealEstates = new List<RealEstate> { new RealEstate() };
+        RealEstates = new List<RealEstate>();
     }
 
     [StringLength(30, MinimumLength = 3)]

@@ -7,18 +7,18 @@ public class RealEstate {
     public string Address { get; set; } = string.Empty;
     public decimal Price { get; set; }
 
-    public bool rentable = false;
+    public bool rentable { get; set; }
 
-    public int area = 16;
+    public int area { get; set; }
 
-    public int percentage = 100;
+    public int percentage { get; set; }
 
-    public int numBedrooms = 1;
+    public int numBedrooms { get; set; }
 
     public string houseType = string.Empty;
 
     // Foreign key to associate the RealEstate with a Company
-    public string CompanyId { get; set; }=string.Empty;
+    public string CompanyId { get; set; } = string.Empty;
     // Navigation property
     public Company? OwnerCompany { get; set; }
 }
