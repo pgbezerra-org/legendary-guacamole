@@ -7,7 +7,7 @@
 <div>
     <br>
     <h1>@Model.realEstate!.Name</h1>
-    <a asp-page="/Views/CompanyProfile" asp-route-id=@Model.realEstate.CompanyId class="btn btn-success">
+    <a asp-page="/Views/CompanyProfile" asp-route-id=@Model.realEstate.CompanyId class="btn btn-success" style="transform: scale(0.75);">
         <p>Company: @Model.OwnerCompany!.UserName</p>
     </a>
     <br>
@@ -19,8 +19,38 @@
     <br>
     <p><strong>Address</strong>: @Model.realEstate.Address</p>
     <p><strong>Price</strong>: @Model.realEstate.Price
+    @if(@Model.realEstate.percentage<100){
+        <br>
+        @if(@Model.realEstate.percentage==0){
+            <p>At the Blueprint</p>
+        }else if(@Model.realEstate.percentage>=75){
+            <p style="color: green;">Construction at: @Model.realEstate.percentage</p>
+        }else{
+            <p>Construction at: @Model.realEstate.percentage</p>
+        }
+    }
     @if(@Model.realEstate.rentable){
         <strong>Up for renting</strong>
     }
     </p>
+
+    @*These are all placeholders until we have images being saved*@
+    <style>
+        /* Style to set the container aspect ratio and crop images */
+        .image-container {
+            width: 30vw; /* 30% of the viewport width */
+            max-height: 30vw; /* Limit the height to maintain the 16:9 aspect ratio */
+            overflow: hidden; /* Hide any overflow content */
+        }
+
+        /* Style for the image inside the container */
+        .image-container img {
+            width: 100%; /* Image width is 100% of the container */
+            height: auto; /* Image height adjusts to maintain aspect ratio */
+        }
+    </style>
+    <div class="image-container">
+        <img src="https://source.unsplash.com/random/?apartment" alt="Random Apartment Image">
+        <img src="https://source.unsplash.com/random/?house" alt="Random Apartment Image">
+    </div>
 </div>
