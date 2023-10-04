@@ -7,10 +7,20 @@
 <div>
     <br>
     <h1>@Model.realEstate!.Name</h1>
-    <a asp-page="/Views/CompanyProfile" asp-route-id=@Model.realEstate.CompanyId class="btn">
-        <p>Company:@Model.OwnerCompany!.UserName</p>
+    <a asp-page="/Views/CompanyProfile" asp-route-id=@Model.realEstate.CompanyId class="btn btn-success">
+        <p>Company: @Model.OwnerCompany!.UserName</p>
     </a>
     <br>
+    <div style="display: flex; justify-content: space-between; width: 33%;">
+        <div></div> @*Placeholder for the houseType property*@
+        <div>@Model.realEstate.area m²</div>
+        <div>@Model.realEstate.numBedrooms</div>
+    </div>
+    <br>
     <p><strong>Address</strong>: @Model.realEstate.Address</p>
-    <p><strong>Price</strong>: @Model.realEstate.Price</p>
+    <p><strong>Price</strong>: @Model.realEstate.Price
+    @if(@Model.realEstate.rentable){
+        <strong>Up for renting</strong>
+    }
+    </p>
 </div>
