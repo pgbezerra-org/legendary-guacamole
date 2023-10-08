@@ -1,8 +1,10 @@
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.AspNetCore.Authorization;
 using webserver.Data;
 using webserver.Models;
 
 namespace webserver.Pages.Views;
+[Authorize(Roles =Common.BZE_Role+","+Common.Company_Role)]
 public class CompanyProfile : PageModel {
 
     public WebserverContext context;
@@ -14,6 +16,7 @@ public class CompanyProfile : PageModel {
     }
 
     public void OnGet(string id) {
+
         company = context.Company.Find(id);
 
         if(company==null){
