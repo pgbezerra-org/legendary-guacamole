@@ -22,11 +22,11 @@
     @if(@Model.realEstate.percentage<100){
         <br>
         @if(@Model.realEstate.percentage==0){
-            <p>At the Blueprint</p>
-        }else if(@Model.realEstate.percentage>=75){
-            <p style="color: green;">Construction at: @Model.realEstate.percentage</p>
-        }else{
+            <p style="color: blue;">| At the Blueprint |</p>
+        }else if(@Model.realEstate.percentage < 75){
             <p>Construction at: @Model.realEstate.percentage</p>
+        }else{
+            <p style="color: green;">Construction at: @Model.realEstate.percentage</p>
         }
     }
     @if(@Model.realEstate.rentable){

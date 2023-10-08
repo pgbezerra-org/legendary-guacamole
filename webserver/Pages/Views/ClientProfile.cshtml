@@ -4,8 +4,17 @@
     ViewData["Title"] = "ClientProfile";
 }
 
-<h1>@ViewData["Title"]</h1>
-
-<div>
-    
+<div style="display: flex; align-items: stretch;">
+    <div style="flex: 1;">
+        <h1>@Model.client!.UserName Profile</h1>
+        <br>
+        <div>
+            <strong>
+                <p>Email: @Model.client.Email</p>
+                <p>Phone: @Model.client.PhoneNumber</p>
+                <p>Salary: USD @Model.client.Occupation$</p>
+            </strong>
+        </div>
+    </div>
+    <img src="https://source.unsplash.com/random/?client" alt="Random Client Image" style="width: 25%; height: auto;">
 </div>

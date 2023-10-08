@@ -6,8 +6,8 @@ using webserver.Models;
 namespace webserver.Pages.Views;
 [Authorize]    
 public class RealEstateProfile : PageModel {
-    public WebserverContext context;
 
+    public WebserverContext context;
     public RealEstate? realEstate;
     public Company? OwnerCompany;
 

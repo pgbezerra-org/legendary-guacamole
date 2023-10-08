@@ -3,9 +3,16 @@
 @{
     ViewData["Title"] = "EmployeeProfile";
 }
-
-<h1>@ViewData["Title"]</h1>
-
-<div>
-    
+<div style="display: flex; align-items: stretch;">
+    <div style="flex: 1;">
+        <h1>@Model.employee!.UserName Profile</h1>
+        <div>
+            <strong>
+                <p>Email: @Model.employee.Email</p>
+                <p>Phone: @Model.employee.PhoneNumber</p>
+                <p>Salary: USD @Model.employee.salary$</p>
+            </strong>
+        </div>
+    </div>
+    <img src="https://source.unsplash.com/random/?employee" alt="Random Employee Image" style="width: 25%; height: auto;">
 </div>
