@@ -6,29 +6,40 @@
 
 <div>
     <br>
-    <h1>@Model.realEstate!.Name</h1>
-    <a asp-page="/Views/CompanyProfile" asp-route-id=@Model.realEstate.CompanyId class="btn btn-success" style="transform: scale(0.75);">
-        <p>Company: @Model.OwnerCompany!.UserName</p>
-    </a>
+
+    <h1>@Model.realEstate!.Name
+        <a asp-page="/Views/CompanyProfile" asp-route-id=@Model.realEstate.CompanyId class="btn btn-success" style="transform: scale(0.75);">
+            <p>Company: @Model.OwnerCompany!.UserName</p>
+        </a>
+    </h1>
     <br>
-    <div style="display: flex; justify-content: space-between; width: 33%;">
-        <div></div> @*Placeholder for the houseType property*@
+
+    <div style="display: flex; justify-content: space-between">
+        |
+        <div>Apartment</div> @*Placeholder for the houseType property*@
+        |
         <div>@Model.realEstate.area m²</div>
-        <div>@Model.realEstate.numBedrooms</div>
+        |
+        <div>@Model.realEstate.numBedrooms bedrooms</div>
+        |
     </div>
     <br>
+
     <p><strong>Address</strong>: @Model.realEstate.Address</p>
+
     <p><strong>Price</strong>: @Model.realEstate.Price
     @if(@Model.realEstate.percentage<100){
-        <br>
-        @if(@Model.realEstate.percentage==0){
-            <p style="color: blue;">| At the Blueprint |</p>
+        @if(@Model.realEstate.percentage == 0){
+        <span style="color: blue;">| At the Blueprint |</span>
         }else if(@Model.realEstate.percentage < 75){
-            <p>Construction at: @Model.realEstate.percentage</p>
+            <span>Construction at: @Model.realEstate.percentage</span>
         }else{
-            <p style="color: green;">Construction at: @Model.realEstate.percentage</p>
+            <span style="color: green;">Construction at: @Model.realEstate.percentage</span>
         }
     }
+    </p>
+
+
     @if(@Model.realEstate.rentable){
         <strong>Up for renting</strong>
     }
