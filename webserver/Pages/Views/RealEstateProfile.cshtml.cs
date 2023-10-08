@@ -4,28 +4,26 @@ using webserver.Data;
 using webserver.Models;
 
 namespace webserver.Pages.Views;
-[Authorize]
+[Authorize]    
 public class RealEstateProfile : PageModel {
+    public WebserverContext context;
 
-    public WebserverContext _context;
     public RealEstate? realEstate;
     public Company? OwnerCompany;
 
-    public RealEstateProfile(WebserverContext context) {
-        _context = context;
+    public RealEstateProfile(WebserverContext _context) {
+        context = _context;
     }
 
     public void OnGet(int id) {
 
-        
-
-        realEstate = _context.RealEstates.Find(id);
+        realEstate = context.RealEstates.Find(id);
 
         if(realEstate==null){
             Console.WriteLine("ERROR 404");
             return;
         }
 
-        OwnerCompany = _context.Company.Find(realEstate.CompanyId);
+        OwnerCompany = context.Company.Find(realEstate.CompanyId);
     }
 }

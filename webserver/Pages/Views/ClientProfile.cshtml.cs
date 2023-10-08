@@ -18,6 +18,16 @@ public class ClientProfile : PageModel {
         _context = context;        
     }
 
-    public void OnGet() {
+    public void OnGet(string id) {
+        client = _context.Clients.Find(id);
+
+        if(client==null){
+            Console.WriteLine("ERROR 404");
+            return;
+        }
+
+        if(client.PhoneNumber==null || client.PhoneNumber==""){
+            client.PhoneNumber="Unavailable";
+        }
     }
 }
