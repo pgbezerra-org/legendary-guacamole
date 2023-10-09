@@ -114,7 +114,7 @@ public class CompanyControllerTest : IDisposable {
 
         // Act
         await userManager.CreateAsync((Company)newCompDto, "#Company1234");
-        var result = _controller.ReadCompany(companyId);
+        var result = _controller.ReadClient(companyId);
 
         // Assert
         var okResult = Assert.IsType<OkObjectResult>(result);
@@ -132,7 +132,7 @@ public class CompanyControllerTest : IDisposable {
         var nonExistentCompanyId = "nonExistentUserId";
 
         // Act
-        var result = _controller.ReadCompany(nonExistentCompanyId);
+        var result = _controller.ReadClient(nonExistentCompanyId);
 
         // Assert
         Assert.IsType<NotFoundResult>(result);
