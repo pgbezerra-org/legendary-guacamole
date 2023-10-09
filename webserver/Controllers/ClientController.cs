@@ -38,7 +38,11 @@ public class ClientController : ControllerBase {
     }
 
     [HttpGet]
-    public async Task<IActionResult> ReadClients(int? offset, int? limit, string? sort) {
+    public async Task<IActionResult> ReadClients(string? username, int? offset, int? limit, string? sort) {
+
+        if(limit<1){
+            return BadRequest("Results amount are limited to less than 1");
+        }
 
         var clients = _context.Clients.AsQueryable();
 
