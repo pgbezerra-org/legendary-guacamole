@@ -1,15 +1,14 @@
 using Microsoft.Data.Sqlite;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
-using webserver.Controllers;
-using webserver.Models;
 using webserver.Data;
-
-using Microsoft.AspNetCore.Mvc;
+using webserver.Models;
 using webserver.Models.DTOs;
+using webserver.Controllers;
 using Newtonsoft.Json;
 using NuGet.Protocol;
 
@@ -75,7 +74,7 @@ public class ClientControllerTest : IDisposable {
     
         // Act
         var result = await _controller.ReadClients("brian",0,2,"name");
-    
+        
         // Assert
         Assert.IsType<NotFoundResult>(result);
     }
@@ -116,7 +115,7 @@ public class ClientControllerTest : IDisposable {
         var clientId = "newId";
         var clientUser = "username";
         var clientEmail = "myemail123@gmail.com";
-        var newClientDto = new ClientDTO("singer","s1n-n1gg3r",clientUser, clientEmail,"9899344788");
+        var newClientDto = new ClientDTO("singer", clientId, clientUser, clientEmail, "9899344788");
 
         // Act
         await userManager.CreateAsync((Client)newClientDto, "#Client1234");
@@ -150,10 +149,10 @@ public class ClientControllerTest : IDisposable {
         var newClientDto = new ClientDTO("Accountant","4cc0-c0un-t4nt","toby-ross", "myemail123@gmail.com", "3226-0637");
 
         var newClient = (Client)newClientDto;
-        newClient.Id = "newCompId1234";
+        newClient.Id = "newClientId1234";
 
         // Act
-        await userManager.CreateAsync(newClient, "#Company1234");
+        await userManager.CreateAsync(newClient, "#Client1234");
         var result = await _controller.CreateClient(newClientDto, "@1234Password");
 
         // Assert
@@ -167,11 +166,11 @@ public class ClientControllerTest : IDisposable {
         var newClientDto = new ClientDTO("Accountant","4cc0-c0un-t4nt","toby-ross", "myemail123@gmail.com", "3226-0637");
         
         var newClient = (Client)newClientDto;
-        newClient.Id = "newCompId1234";
+        newClient.Id = "newClientId1234";
         newClient.Email = "newemail1234@gmail.com";
 
         // Act
-        await userManager.CreateAsync(newClient, "#Company1234");
+        await userManager.CreateAsync(newClient, "#Client1234");
         var result = await _controller.CreateClient(newClientDto, "@1234Password");
 
         // Assert
@@ -207,7 +206,7 @@ public class ClientControllerTest : IDisposable {
         newClientDto.PhoneNumber = "98988263255";
 
         // Act
-        await userManager.CreateAsync((Client)oldClientDto, "#Company1234");
+        await userManager.CreateAsync((Client)oldClientDto, "#Client1234");
         var result = await _controller.UpdateClient(newClientDto);
 
         // Assert

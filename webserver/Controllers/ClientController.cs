@@ -46,6 +46,11 @@ public class ClientController : ControllerBase {
 
         var clients = _context.Clients.AsQueryable();
 
+        if(!string.IsNullOrEmpty(username)){
+            clients = clients.Where(client => client.UserName!.Contains(username));
+        }
+
+
         if(!string.IsNullOrEmpty(sort)){
             sort = sort.ToLower();
             switch (sort) {
