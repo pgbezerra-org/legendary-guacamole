@@ -1,10 +1,12 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using Newtonsoft.Json;
 using webserver.Data;
 using webserver.Models;
+using webserver.Models.DTOs;
 
 namespace webserver.Pages.Views;
-[Authorize]    
+[Authorize]
 public class RealEstateProfile : PageModel {
 
     public WebserverContext context;
@@ -15,8 +17,8 @@ public class RealEstateProfile : PageModel {
         context = _context;
     }
 
-    public void OnGet(int id) {
-
+    public async void OnGet(int id) {
+        
         realEstate = context.RealEstates.Find(id);
 
         if(realEstate==null){
