@@ -17,9 +17,14 @@ public class RealEstateProfile : PageModel {
         context = _context;
     }
 
-    public async void OnGet(int id) {
+    public void OnGet(int id) {
+
+        var client = new HttpClient();
+        var endpoint = "http://localhost:5097/api/v1/realestates/unique/"+id;
+        var result = client.GetAsync(endpoint).Result;
+        var json = result.Content.ReadAsStringAsync().Result;
         
-        realEstate = context.RealEstates.Find(id);
+        realEstate = (RealEstate) JsonConvert.DeserializeObject<RealEstateDTO>(json)!;
 
         if(realEstate==null){
             Console.WriteLine("ERROR 404");
