@@ -9,7 +9,7 @@ using Newtonsoft.Json;
 
 namespace webserver.Controllers;
 
-[Authorize(Roles=Common.BZE_Role+","+Common.Client_Role)]
+[Authorize]
 [ApiController]
 [Route("api/v1/client")]
 public class ClientController : ControllerBase {
