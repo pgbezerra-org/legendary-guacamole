@@ -1,7 +1,7 @@
 namespace webserver.Models.DTOs;
 public class BZEmployeeDTO {
 
-    public float salary;
+    public float Salary;
 
     //IdentityUser Fields
     public string Id { get; set; } = string.Empty;
@@ -9,14 +9,14 @@ public class BZEmployeeDTO {
     public string Email { get; set; } = string.Empty;
     public string PhoneNumber { get; set; } = string.Empty;
 
-    public BZEmployeeDTO(string id, string username, string email, string phonenumber, float _salary){
+    public BZEmployeeDTO(string id, string username, string email, string phonenumber, float salary){
 
         Id = id;
         UserName = username;
         Email = email;
         PhoneNumber = phonenumber;
         
-        salary = _salary;
+        Salary = salary;
     }
 
     public static explicit operator BZEmployee(BZEmployeeDTO dto){
@@ -26,7 +26,7 @@ public class BZEmployeeDTO {
             Email = dto.Email,
             PhoneNumber = dto.PhoneNumber,
 
-            salary = dto.salary
+            salary = dto.Salary
         };
     }
 
