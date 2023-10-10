@@ -1,5 +1,4 @@
 ﻿namespace webserver.Models;
-
 public class RealEstate {
 
     public int Id { get; set; }
@@ -20,5 +19,6 @@ public class RealEstate {
     // Foreign key to associate the RealEstate with a Company
     public string CompanyId { get; set; } = string.Empty;
     // Navigation property
+    [System.Text.Json.Serialization.JsonIgnore]
     public Company? OwnerCompany { get; set; }
 }
