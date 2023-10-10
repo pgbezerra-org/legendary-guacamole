@@ -7,7 +7,6 @@ using webserver.Models.DTOs;
 using Newtonsoft.Json;
 
 namespace webserver.Controllers;
-
 [Authorize(Roles=Common.BZE_Role+","+Common.Company_Role)]
 [ApiController]
 [Route("api/v1/realestates")]
@@ -27,7 +26,7 @@ public class RealEstatesController : ControllerBase {
             return NotFound();
         }
 
-        var realEstateDto = JsonConvert.SerializeObject( new RealEstateDTO (id, realEstate.Name, realEstate.Address, realEstate.Price, realEstate.CompanyId));
+        var realEstateDto = JsonConvert.SerializeObject(realEstate);
 
         return Ok(realEstateDto);
     }
@@ -71,13 +70,12 @@ public class RealEstatesController : ControllerBase {
         }
 
         var resultArray = await realEstates.ToArrayAsync();
-        var resultDtoArray = realEstates.Select(r=>(RealEstateDTO)r).ToArray();
 
-        if(resultDtoArray==null){
+        if(resultArray==null){
             return NotFound();
         }
 
-        var resultSerial = JsonConvert.SerializeObject(resultDtoArray);
+        var resultSerial = JsonConvert.SerializeObject(resultArray);
 
         return Ok(resultSerial);
     }
@@ -96,7 +94,7 @@ public class RealEstatesController : ControllerBase {
         _context.RealEstates.Add((RealEstate)request);
         await _context.SaveChangesAsync();
 
-        var realEstateDto = JsonConvert.SerializeObject( new RealEstateDTO (request.Id, request.Name, request.Address, request.Price, request.CompanyId));
+        var realEstateDto = JsonConvert.SerializeObject(request);
 
         return Ok(realEstateDto);
     }
@@ -115,7 +113,7 @@ public class RealEstatesController : ControllerBase {
 
         await _context.SaveChangesAsync();
         
-        var realEstateDto = JsonConvert.SerializeObject( new RealEstateDTO (upRE.Id, upRE.Name, upRE.Address, upRE.Price, upRE.CompanyId));
+        var realEstateDto = JsonConvert.SerializeObject(upRE);
 
         return Ok(realEstateDto);    
     }
