@@ -1,7 +1,9 @@
 namespace webserver.Models.DTOs;
 
+//DTOs are only being used for Http Requests. So i elected to keep the minimum to distinguish them apart
+//Http Responses are still the full RealEstate property, minus the 'OwnerCompany' class, since we have it's Id.
+
 public class RealEstateDTO {
-    
     public int Id { get; set; }
     public string Name { get; set; } = string.Empty;
     public string Address { get; set; } = string.Empty;
