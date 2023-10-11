@@ -3,7 +3,6 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Authorization;
 using webserver.Data;
 using webserver.Models;
-using webserver.Models.DTOs;
 using Newtonsoft.Json;
 
 namespace webserver.Controllers;
