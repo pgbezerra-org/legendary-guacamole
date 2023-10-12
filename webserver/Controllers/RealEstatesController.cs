@@ -69,7 +69,7 @@ public class RealEstatesController : ControllerBase {
 
         var resultArray = await realEstates.ToArrayAsync();
 
-        if(resultArray==null){
+        if(resultArray==null || resultArray.Length==0){
             return NotFound();
         }
 
@@ -77,11 +77,7 @@ public class RealEstatesController : ControllerBase {
     }
 
     [HttpPost]
-    public async Task<IActionResult> CreateRealEstate([FromBody]RealEstate request ) {
-
-        if(_context.RealEstates.Find(request.Id) != null) {
-            return BadRequest("Real Estate Already Exists!");
-        }
+    public async Task<IActionResult> CreateRealEstate([FromBody]RealEstate request) {
         
         if (_context.Company.Find(request.CompanyId) == null) {
             return BadRequest("Owner Company does Not Exist!");

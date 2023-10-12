@@ -27,12 +27,7 @@ public class RealEstateCreation : PageModel {
             return Page();
         }
 
-        var realEstate = new RealEstate {
-            Name = Input.Name,
-            Address = Input.Address,
-            Price = Input.Price,
-            CompanyId = company.Id
-        };
+        var realEstate = new RealEstate (0, Input.Name, Input.Address, Input.Price, company.Id);
         
         await context.RealEstates.AddAsync(realEstate);
         await context.SaveChangesAsync();

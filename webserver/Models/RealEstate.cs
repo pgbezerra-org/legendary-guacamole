@@ -17,4 +17,18 @@ public class RealEstate {
     public int percentage { get; set; }
     public int numBedrooms { get; set; }
     public string houseType = string.Empty;
+
+    public RealEstate(int id, string name, string address, decimal price, string companyId){
+        Id = id;
+        Name = name;
+        Address = address;
+        Price = price;
+        CompanyId = companyId;
+
+        rentable = false;
+        area = 50;
+        percentage = 100;
+        numBedrooms = 1;
+        houseType = Common.HouseType.house.ToString();
+    }
 }
