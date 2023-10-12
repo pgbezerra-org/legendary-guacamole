@@ -25,7 +25,6 @@ public class RealEstate {
         Price = price;
         CompanyId = companyId;
 
-        rentable = false;
         area = 50;
         percentage = 100;
         numBedrooms = 1;
