@@ -1,5 +1,4 @@
-namespace webserver.Models;
-
+namespace webserver.Utilities;
 public static class Common {
 
     public const string BZE_Cookie = "BZE_Auth";
