@@ -1,11 +1,19 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
 namespace webserver.Models;
-
 public class Company : BZEAccount {
 
-    public Company() {
+    public Company(){
         RealEstates = new List<RealEstate>();
+    }
+
+    public Company(string id, string username, string email, string phonenumber, string country, string state, string city){
+
+        RealEstates = new List<RealEstate>();
+
+        Id=id; UserName=username; Email=email; PhoneNumber=phonenumber;
+
+        Country = country; State = state; City = city;
     }
 
     [StringLength(30, MinimumLength = 3)]

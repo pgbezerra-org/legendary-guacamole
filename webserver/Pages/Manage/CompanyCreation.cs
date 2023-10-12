@@ -37,7 +37,8 @@ public class CompanyCreation : PageModel {
             return Page();
         }
 
-        var company = new Company { UserName = Input.Name, Email = Input.Email, PhoneNumber = Input.PhoneNumber, Country = Input.Country, State = Input.State, City = Input.City };
+        //The Id field will be overwritten by the _userManager at the Element's creation
+        var company = new Company("whatever",Input.Name,Input.Email,Input.PhoneNumber,Input.Country,Input.State,Input.City);
 
         var result = await _userManager.CreateAsync(company, Input.Password);
 

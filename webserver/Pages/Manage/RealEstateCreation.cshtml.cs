@@ -6,7 +6,7 @@ using webserver.Models;
 using webserver.Data;
 
 namespace webserver.Pages.Manage;
-[Authorize(Roles =Common.BZE_Role+","+Common.Company_Role)]
+[Authorize(Roles=Common.BZE_Role+","+Common.Company_Role)]
 public class RealEstateCreation : PageModel {
 
     [BindProperty]
@@ -36,7 +36,6 @@ public class RealEstateCreation : PageModel {
     }
 
     public class InputModel {
-
         [Required]
         [Display(Name = "Name")]
         public string Name { get; set; } = string.Empty;
@@ -51,7 +50,6 @@ public class RealEstateCreation : PageModel {
 
         [Required]
         [Display(Name = "Price")]
-        public decimal Price { get; set; } = 1;
-        
+        public decimal Price { get; set; } = 1;        
     }
 }

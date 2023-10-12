@@ -72,7 +72,7 @@ public class RealEstatesControllerTest : IDisposable {
     [Fact]
     public async Task ReadRealEstates_ReturnsOkResult_WithValidParameters() {
         //Arrange
-        Company comp = new Company{Id="c0mp4=ny55", UserName="initialcomp",Email="initialcomp@gmail.com"};
+        Company comp = new Company("c0mp4=ny55","initialcomp","initialcomp@gmail.com","9832263255","Brazil","RJ","RJ");
         _context.Company.Add(comp);
 
         _context.RealEstates.Add(new RealEstate ( 2, "Hollywood Boulevard", "Property2", 200, comp.Id));
@@ -109,7 +109,7 @@ public class RealEstatesControllerTest : IDisposable {
 
     [Fact]
     public async Task ReadRealEstates_ReturnsNotFound_NoMatchesFound() {
-        Company comp = new Company{Id="c0mp4=ny55", UserName="initialcomp",Email="initialcomp@gmail.com"};
+        Company comp = new Company("c0mp4=ny55","initialcomp","initialcomp@gmail.com","9832263255","Brazil","RJ","RJ");
         _context.Company.Add(comp);
 
         _context.RealEstates.Add(new RealEstate (2, "Hollywood Boulevard", "Property2", 50, comp.Id));
@@ -137,7 +137,7 @@ public class RealEstatesControllerTest : IDisposable {
     [Fact]
     public async Task ReadRealEstate_ReturnsOkResult_WhenRealEstateExists() {
         // Arrange
-        Company comp = new Company { Id="a1b1c1d1", UserName = "exampleCompany"};
+        Company comp = new Company("a1b1c1d1","exampleCompany","comp123@gmail.com","9832263255","Brazil","RJ","RJ");
         RealEstate realEstateToRead = new RealEstate(1, "Sesame Street", "Sesame House", 40, "a1b1c1d1");
 
         _context.Company.Add(comp);
@@ -177,9 +177,9 @@ public class RealEstatesControllerTest : IDisposable {
         _context.RealEstates.Add(newRealEstate);
         _context.SaveChanges();
     
-        newRealEstate.Name="Copacabana pallace";
-        newRealEstate.Address="Copacabana Beach";
-        newRealEstate.Price=11000000;
+        newRealEstate.Name = "Copacabana pallace";
+        newRealEstate.Address = "Copacabana Beach";
+        newRealEstate.Price = 11000000;
 
         // Act
         var result = await _controller.UpdateRealEstate(newRealEstate);

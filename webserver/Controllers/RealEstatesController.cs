@@ -61,10 +61,10 @@ public class RealEstatesController : ControllerBase {
         }
 
         if(offset.HasValue){
-            realEstates=realEstates.Skip(offset.Value);
+            realEstates = realEstates.Skip(offset.Value);
         }
         if(limit.HasValue){
-            realEstates=realEstates.Take(limit.Value);
+            realEstates = realEstates.Take(limit.Value);
         }
 
         var resultArray = await realEstates.ToArrayAsync();
