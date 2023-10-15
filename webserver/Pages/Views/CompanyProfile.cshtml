@@ -1,0 +1,50 @@
+@page
+@model webserver.Pages.Views.CompanyProfile
+@{
+    ViewData["Title"] = "CompanyProfile";
+}
+
+<div>
+    <br>
+    <h1>@Model.company!.UserName</h1>
+    <br>
+    <p>
+        <strong>Email</strong>: @Model.company.Email
+    </p>
+    <p>
+        <strong>Phone</strong>: @Model.company.PhoneNumber
+    </p>
+    <p>
+        <strong>Region</strong>: @Model.company.City, @Model.company.State, @Model.company.Country
+    </p>
+</div>
+
+<br>
+
+<div>
+    <h3>Real Estates for Sale</h3>
+    <p>@Model.company.UserName has @Model.states!.Length Real Estates for sale</p>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Address</th>
+                <th>Price</th>
+            </tr>
+        </thead>
+
+        <body>
+            <ul>
+                @foreach(var re in @Model.states){
+                    <tr>
+                        <td>@re.Name</td>
+                    <td>@re.Address</td>
+                    <td>R$ @re.Price</td>
+                    </tr>
+                }
+            </ul>
+        </body>
+    </table>
+    
+</div>
