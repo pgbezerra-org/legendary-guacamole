@@ -13,5 +13,4 @@ public static class Common {
     public enum HouseType {
         house = 1, condominium, apartment
     }
-    
 }    
