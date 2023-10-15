@@ -40,6 +40,10 @@ public class CompanyController : ControllerBase {
     [HttpGet]
     public async Task<IActionResult> ReadCompanies(int? offset, int? limit, string? Country, string? State, string? City, string? sort) {
 
+        if(limit<1){
+            return BadRequest("Results amount are limited to less than 1");
+        }
+
         var companies = _context.Company.AsQueryable();
 
         if (!string.IsNullOrEmpty(City)) {
@@ -131,11 +135,11 @@ public class CompanyController : ControllerBase {
         }
 
         existingCompany.UserName = newCompany.UserName;
-        existingCompany.PhoneNumber=newCompany.PhoneNumber;
+        existingCompany.PhoneNumber = newCompany.PhoneNumber;
         
-        existingCompany.City=newCompany.City;
-        existingCompany.State=newCompany.State;
-        existingCompany.Country=newCompany.Country;
+        existingCompany.City = newCompany.City;
+        existingCompany.State = newCompany.State;
+        existingCompany.Country = newCompany.Country;
 
         await _context.SaveChangesAsync();
 
