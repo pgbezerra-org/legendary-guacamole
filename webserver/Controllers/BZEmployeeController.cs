@@ -93,7 +93,12 @@ public class BZEmployeeController : ControllerBase {
             return BadRequest("UserName already registered!");
         }
 
-        BZEmployee bzemp = (BZEmployee)bzempDto;
+        BZEmployee bzemp = new BZEmployee {
+            salary = bzempDto.Salary,
+            UserName = bzempDto.UserName,
+            Email = bzempDto.Email,
+            PhoneNumber = bzempDto.PhoneNumber
+        };
 
         var result = await _userManager.CreateAsync(bzemp, password);
 

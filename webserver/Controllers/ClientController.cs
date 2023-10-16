@@ -93,7 +93,12 @@ public class ClientController : ControllerBase {
             return BadRequest("UserName already registered!");
         }
 
-        Client client = (Client)clientDto;
+        Client client = new Client {
+            Occupation = clientDto.Occupation,
+            UserName = clientDto.UserName,
+            Email = clientDto.Email,
+            PhoneNumber = clientDto.PhoneNumber
+        };
 
         var result = await _userManager.CreateAsync(client, password);
 

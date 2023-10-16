@@ -107,7 +107,14 @@ public class CompanyController : ControllerBase {
             return BadRequest("UserName already registered!");
         }
 
-        Company company = (Company)companyDto;
+        Company company = new Company {
+            City = companyDto.City,
+            State = companyDto.State,
+            Country = companyDto.Country,
+            UserName = companyDto.UserName,
+            Email = companyDto.Email,
+            PhoneNumber = companyDto.PhoneNumber
+        };        
 
         var result = await _userManager.CreateAsync(company, password);
 
