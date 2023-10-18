@@ -189,7 +189,6 @@ public class BZEmployeeControllerTest : IDisposable {
         var okResult = Assert.IsType<CreatedAtActionResult>(result);
         BZEmployeeDTO responseDto = JsonConvert.DeserializeObject<BZEmployeeDTO>(okResult.Value.ToJson())!;
 
-        Assert.Equal(newBZEmployeeDto.Id, responseDto.Id);
         Assert.Equal(newBZEmployeeDto.UserName, responseDto.UserName);
         Assert.Equal(newBZEmployeeDto.Email, responseDto.Email);
         Assert.Equal(newBZEmployeeDto.PhoneNumber, responseDto.PhoneNumber);

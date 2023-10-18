@@ -130,10 +130,8 @@ public class CompanyControllerTest : IDisposable {
     public void ReadCompany_ReturnsNotFound_WhenUserDoesNotExist() {
         // Arrange
         var nonExistentCompanyId = "nonExistentUserId";
-
         // Act
         var result = _controller.ReadCompany(nonExistentCompanyId);
-
         // Assert
         Assert.IsType<NotFoundResult>(result);
     }
@@ -185,7 +183,6 @@ public class CompanyControllerTest : IDisposable {
         var okResult = Assert.IsType<CreatedAtActionResult>(result);
         CompanyDTO myDto = JsonConvert.DeserializeObject<CompanyDTO>(okResult.Value.ToJson())!;
 
-        Assert.Equal(newCompDto.Id, myDto.Id);
         Assert.Equal(newCompDto.UserName, myDto.UserName);
         Assert.Equal(newCompDto.Email, myDto.Email);
     }

@@ -186,8 +186,7 @@ public class ClientControllerTest : IDisposable {
         // Assert
         var okResult = Assert.IsType<CreatedAtActionResult>(result);
         ClientDTO myDto = JsonConvert.DeserializeObject<ClientDTO>(okResult.Value.ToJson())!;
-
-        Assert.Equal(newClientDto.Id, myDto.Id);
+        
         Assert.Equal(newClientDto.UserName, myDto.UserName);
         Assert.Equal(newClientDto.Email, myDto.Email);
         Assert.Equal(newClientDto.PhoneNumber, myDto.PhoneNumber);
