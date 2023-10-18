@@ -137,7 +137,7 @@ public class CompanyControllerTest : IDisposable {
     }
 
     [Fact]
-    public async void RegisterUser_ReturnsBadRequest_WhenEmailExists() {
+    public async void CreateCompany_ReturnsBadRequest_WhenEmailExists() {
         // Arrange
         var email = "myemail123@gmail.com";
         var newCompDto = new CompanyDTO("newId","username",email, "9899344788","brazil","MA","Sao Luis");
@@ -154,7 +154,7 @@ public class CompanyControllerTest : IDisposable {
     }
 
     [Fact]
-    public async void RegisterUser_ReturnsBadRequest_WhenUsername_Exists() {
+    public async void CreateCompany_ReturnsBadRequest_WhenUsernameExists() {
         // Arrange
         var email = "myemail123@gmail.com";
         var newCompDto = new CompanyDTO("newId","username",email, "9899344788","brazil","MA","Sao Luis");
@@ -172,7 +172,7 @@ public class CompanyControllerTest : IDisposable {
     }
 
     [Fact]
-    public async void RegisterUser_ReturnsCreatedAtAction_WhenCompanyDoesntExist() {
+    public async void CreateCompany_ReturnsCreatedAtAction_WhenCompanyDoesntExist() {
         // Arrange
         var newCompDto = new CompanyDTO("newId","username","myemail123@gmail.com", "9899344788","brazil","MA","Sao Luis");
 
