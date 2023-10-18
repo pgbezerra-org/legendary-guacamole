@@ -1,9 +1,13 @@
 namespace webserver.Utilities.Seeding;
 public class CitySeed {
     
+    public string CityName = string.Empty;
     public string State = string.Empty;
-    public string Street = string.Empty;
-    public string Neighborhood = string.Empty;
-    public string Complement = string.Empty;
+    public Address[]? addresses;
 
+    public class Address{
+        public string neighborhood = string.Empty;
+        public string[] street = new string[] { string.Empty };
+        public decimal costMultiplyer = (decimal)3.0; //The greater it is, the more expensive real-estates tend to be in that area
+    }
 }
