@@ -131,7 +131,7 @@ public class ClientController : ControllerBase {
         return Ok(response);
     }
 
-    [HttpDelete("id")]
+    [HttpDelete("{id}")]
     public async Task<IActionResult> DeleteClient(string id) {
 
         var client = _context.Clients.Find(id);
