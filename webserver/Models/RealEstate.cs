@@ -29,8 +29,7 @@ public class RealEstate {
     [JsonProperty]
     public string houseType = string.Empty;
 
-    public RealEstate(int id, string name, string address, decimal price, string companyId){
-        Id = id;
+    public RealEstate(string name, string address, decimal price, string companyId){
         Name = name;
         Address = address;
         Price = price;
