@@ -48,9 +48,10 @@ namespace webserver.Pages.Manage
             }
         }
     }
-}
-public class ClientINFO{
-    public string Id { get; set; } = string.Empty;
-    public string UserName { get; set; } = string.Empty;
-    public string Occupation{get; set; } = string.Empty;
+
+    public class ClientINFO{
+        public string Id { get; set; } = string.Empty;
+        public string UserName { get; set; } = string.Empty;
+        public string Occupation{get; set; } = string.Empty;
+    }
 }

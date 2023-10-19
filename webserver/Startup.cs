@@ -48,7 +48,7 @@ namespace webserver {
             
             string connectionString="MyConnection";
             services.AddDbContext<WebserverContext>(options =>
-                options.UseMySQL(connectionString));            
+                options.UseMySQL(connectionString));
         }
 
         public async void Configure(IApplicationBuilder app, IWebHostEnvironment env, IServiceProvider serviceProvider) {

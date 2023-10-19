@@ -1,0 +1,18 @@
+@page
+@model webserver.Pages.Views.EmployeeProfile
+@{
+    ViewData["Title"] = "EmployeeProfile";
+}
+<div style="display: flex; align-items: stretch;">
+    <div style="flex: 1;">
+        <h1>@Model.employee!.UserName Profile</h1>
+        <div>
+            <strong>
+                <p>Email: @Model.employee.Email</p>
+                <p>Phone: @Model.employee.PhoneNumber</p>
+                <p>Salary: USD @Model.employee.salary$</p>
+            </strong>
+        </div>
+    </div>
+    <img src="https://source.unsplash.com/random/?employee" alt="Random Employee Image" style="width: 30%; height: auto;">
+</div>

@@ -20,6 +20,7 @@ public class RegisterModel : PageModel {
     }
 
     public void OnGet() {
+        
     }
 
     public async Task<IActionResult> OnPostAsync() {
