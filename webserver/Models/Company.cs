@@ -9,7 +9,10 @@ public class Company : BZEAccount {
 
     public Company(string id, string username, string email, string phonenumber){
         RealEstates = new List<RealEstate>();
-        Id = id; UserName = username; Email = email; PhoneNumber = phonenumber;
+        Id = id;
+        UserName = username;
+        Email = email;
+        PhoneNumber = phonenumber;
     }
 
     public Company(string id, string username, string email, string phonenumber, string country, string state, string city){

@@ -25,9 +25,9 @@ public class CompanyController : ControllerBase {
     }
 
     [HttpGet("unique/{id}")]
-    public async Task<IActionResult> ReadCompany(string id) {
+    public IActionResult ReadCompany(string id) {
 
-        var company = await _context.Company.FindAsync(id);
+        var company = _context.Company.Find(id);
         if(company==null){
             return NotFound();
         }
