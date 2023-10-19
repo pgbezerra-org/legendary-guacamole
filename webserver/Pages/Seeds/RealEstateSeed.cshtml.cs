@@ -1,5 +1,9 @@
+using System.Diagnostics;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Newtonsoft.Json;
+using NuGet.Protocol;
+using webserver.Data;
+using webserver.Models;
 using webserver.Utilities.Seeding;
 
 namespace webserver.Pages.Seeds;
@@ -7,7 +11,13 @@ public class RealEstateSeed : PageModel {
 
     public string generalseed, countryseed;
 
-    public RealEstateSeed() {
+    public RealEstate rsrss;
+    WebserverContext _context;
+    public Company comp;
+
+    public RealEstateSeed(WebserverContext webcon) {
+
+        _context = webcon;
 
         GeneralSeed gs = new GeneralSeed();
         CountrySeed cs = new CountrySeed();
@@ -26,7 +36,7 @@ public class RealEstateSeed : PageModel {
         cs.citySeeds[0] = new CitySeed();
         cs.citySeeds[1] = new CitySeed();
         
-        cs.citySeeds[0].CityName = "pompeii";
+        cs.citySeeds[0].CityName = "SP";
         cs.citySeeds[0].State = "vulcano";
         cs.citySeeds[0].addresses = new CitySeed.Address[2];
         cs.citySeeds[0].addresses![0] = new CitySeed.Address();
@@ -39,7 +49,7 @@ public class RealEstateSeed : PageModel {
         cs.citySeeds[0].addresses![1].neighborhood = "anything";
         cs.citySeeds[0].addresses![1].costMultiplyer = 3.2m;
 
-        cs.citySeeds[1].CityName = "sao luis";
+        cs.citySeeds[1].CityName = "SP";
         cs.citySeeds[1].State = "maranhao";
         cs.citySeeds[1].addresses = new CitySeed.Address[2];
         cs.citySeeds[1].addresses![0] = new CitySeed.Address();
@@ -52,11 +62,21 @@ public class RealEstateSeed : PageModel {
         cs.citySeeds[1].addresses![1].neighborhood = "baixada";
         cs.citySeeds[1].addresses![1].costMultiplyer = 3.6m;
         
+        CountrySeed[] csArray = new CountrySeed[2];
+        csArray[0] = cs;
+        csArray[1] = cs;
+        string csArrayS = JsonConvert.SerializeObject(csArray, Formatting.None).ToString();
 
+        generalseed = JsonConvert.SerializeObject(gs,Formatting.None).ToString();
+        countryseed = JsonConvert.SerializeObject(cs,Formatting.None).ToString();
 
-        generalseed = JsonConvert.SerializeObject(gs,Formatting.Indented).ToString();
-        countryseed = JsonConvert.SerializeObject(cs,Formatting.Indented).ToString();
+        Seeder seeder = new Seeder(generalseed, csArrayS);
+
+        comp = _context.Company.First();
+
+        RealEstate[] states = seeder.GetRealEstates(10, comp);
         
+        //rsrss = states[0];
     }
 
     public void OnGet() {

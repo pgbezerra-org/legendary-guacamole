@@ -1,5 +1,4 @@
 using Newtonsoft.Json;
-using NuGet.Protocol;
 using webserver.Models;
 
 namespace webserver.Utilities.Seeding;
@@ -11,8 +10,8 @@ public class Seeder {
     public CountrySeed[] countrySeeds;
     
     public Seeder(string generalSeed, string countrySeed){
-        generalSeeds = JsonConvert.DeserializeObject<GeneralSeed>(generalSeed.ToJson())!;
-        countrySeeds = JsonConvert.DeserializeObject<CountrySeed[]>(countrySeed.ToJson())!;
+        generalSeeds = JsonConvert.DeserializeObject<GeneralSeed>(generalSeed.ToString())!;
+        countrySeeds = JsonConvert.DeserializeObject<CountrySeed[]>(countrySeed.ToString())!;
     }
 
     public Company[] GetCompanies(int amount, string[] countries){
@@ -41,6 +40,9 @@ public class Seeder {
     public RealEstate[] GetRealEstates(int amount, Company company) {
 
         RealEstate[] estates = new RealEstate[amount];
+        for(int i=0;i<estates.Length;i++){
+            estates[i] = new RealEstate(0, "name", "addr", 100, "comp");
+        }
 
         CountrySeed country;
         CitySeed citySeed;
@@ -52,8 +54,8 @@ public class Seeder {
 
             re.CompanyId = company.Id;
 
-            country = countrySeeds.Where(c=>c.countryName == company.Country).First();
-            citySeed = country.citySeeds!.Where(ct=>ct.CityName == company.City).First();
+            country = countrySeeds.Where(c=>c.countryName == company.Country).FirstOrDefault()!;
+            citySeed = country.citySeeds!.Where(ct=>ct.CityName == company.City).FirstOrDefault()!;
 
             CitySeed.Address addr = citySeed.addresses![ intSeed % citySeed.addresses.Length - 1 ];
 
@@ -104,14 +106,14 @@ public class Seeder {
                 re.Price *= (decimal)1.5;
             }
 
-            re.Name = country.peopleSurname[intSeed%country.peopleSurname.Length] + "'s ";
+            re.Name = country.peopleSurname[intSeed%country.peopleSurname.Length - 1] + "'s ";
 
             if(re.Price > 600000 || addr.costMultiplyer >= 5){
                 re.Name += addr.neighborhood;
             }
 
             re.Name += houseType.ToString();
-        }
+        }        
 
         return estates;
     }
