@@ -41,7 +41,7 @@ public class BZEmployeeController : ControllerBase {
     public async Task<IActionResult> ReadBZEmployees(string? username, int? offset, int? limit, string? sort) {
 
         if(limit<1){
-            return BadRequest("Results amount are limited to less than 1");
+            return BadRequest("Limit parameter must be a natural number greater than 0");
         }
 
         var bzemployees = _context.BZEmployees.AsQueryable();
@@ -97,19 +97,18 @@ public class BZEmployeeController : ControllerBase {
 
         var result = await _userManager.CreateAsync(bzemp, password);
 
-        if (result.Succeeded) {
-
-            var roleExists = await _roleManager.RoleExistsAsync(Common.BZE_Role);
-            if (!roleExists) {
-                await _roleManager.CreateAsync(new IdentityRole(Common.BZE_Role));
-            }
-
-            await _userManager.AddToRoleAsync(bzemp, Common.BZE_Role);
-
-            return CreatedAtAction(nameof(CreateBZEmployee), (BZEmployeeDTO)bzemp);
-        }else{
-            return StatusCode(500, "Internal Server Error: Register BZEmployee Unsuccessful");
+        if(!result.Succeeded){
+            return StatusCode(500, "Internal Server Error: Register BZEmployee Unsuccessful\n\n" + result.Errors);
         }
+        
+        var roleExists = await _roleManager.RoleExistsAsync(Common.BZE_Role);
+        if (!roleExists) {
+            await _roleManager.CreateAsync(new IdentityRole(Common.BZE_Role));
+        }
+
+        await _userManager.AddToRoleAsync(bzemp, Common.BZE_Role);
+
+        return CreatedAtAction(nameof(CreateBZEmployee), (BZEmployeeDTO)bzemp);
     }
 
     [HttpPatch]
