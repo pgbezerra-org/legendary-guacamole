@@ -1,21 +1,32 @@
-﻿namespace webserver.Models;
+﻿using Newtonsoft.Json;
+
+namespace webserver.Models;
 public class RealEstate {
 
+    [JsonProperty]
     public int Id { get; set; }
+    [JsonProperty]
     public string Name { get; set; } = string.Empty;
+    [JsonProperty]
     public string Address { get; set; } = string.Empty;
+    [JsonProperty]
     public decimal Price { get; set; }
 
+    [JsonProperty]
     public string CompanyId { get; set; } = string.Empty;
     // Navigation property
-    [Newtonsoft.Json.JsonIgnore]
+    [JsonIgnore]
     public Company? OwnerCompany { get; set; }
 
-    //These are not part of the DTO
+    [JsonProperty]
     public bool rentable { get; set; }
+    [JsonProperty]
     public int area { get; set; }
+    [JsonProperty]
     public int percentage { get; set; }
+    [JsonProperty]
     public int numBedrooms { get; set; }
+    [JsonProperty]
     public string houseType = string.Empty;
 
     public RealEstate(int id, string name, string address, decimal price, string companyId){
