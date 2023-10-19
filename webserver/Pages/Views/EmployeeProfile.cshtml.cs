@@ -4,7 +4,7 @@ using webserver.Models;
 using webserver.Data;
 
 namespace webserver.Pages.Views;
-[Authorize(Roles=Common.BZE_Role)]
+[Authorize(Roles=Utilities.Common.BZE_Role)]
 public class EmployeeProfile : PageModel {
 
     public WebserverContext _context;

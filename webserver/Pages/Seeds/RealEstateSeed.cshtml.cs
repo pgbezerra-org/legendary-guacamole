@@ -11,7 +11,7 @@ public class RealEstateSeed : PageModel {
 
     public string generalseed, countryseed;
 
-    public RealEstate rsrss;
+    public RealEstate? rsrss;
     WebserverContext _context;
     public Company comp;
 
