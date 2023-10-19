@@ -38,6 +38,6 @@ public class RealEstate {
         area = 50;
         percentage = 100;
         numBedrooms = 1;
-        houseType = Common.HouseType.house.ToString();
+        houseType = Utilities.Common.HouseType.house.ToString();
     }
 }

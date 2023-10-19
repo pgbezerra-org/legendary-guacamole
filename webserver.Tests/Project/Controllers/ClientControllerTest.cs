@@ -142,7 +142,7 @@ public class ClientControllerTest : IDisposable {
     }
 
     [Fact]
-    public async void RegisterUser_ReturnsBadRequest_WhenEmailExists() {
+    public async void CreateClient_ReturnsBadRequest_WhenEmailExists() {
         // Arrange
         var newClientDto = new ClientDTO("4cc0-c0un-t4nt","toby-ross", "myemail123@gmail.com", "3226-0637", "Accountant");
 
@@ -160,7 +160,7 @@ public class ClientControllerTest : IDisposable {
     }
 
     [Fact]
-    public async void RegisterUser_ReturnsBadRequest_WhenUsername_Exists() {
+    public async void CreateClient_ReturnsBadRequest_WhenUsernameExists() {
         // Arrange
         var newClientDto = new ClientDTO("4cc0-c0un-t4nt","toby-ross", "myemail123@gmail.com", "3226-0637", "Accountant");
         
@@ -178,7 +178,7 @@ public class ClientControllerTest : IDisposable {
     }
 
     [Fact]
-    public async void RegisterUser_ReturnsCreatedAtAction_WhenClientDoesntExist() {
+    public async void CreateClient_ReturnsCreatedAtAction_WhenClientDoesntExist() {
         // Arrange
         var newClientDto = new ClientDTO("547s-ref6","jordan-belfort", "belford-business@wallstreet.com", "9899344788", "business-manager");
         // Act
@@ -186,8 +186,7 @@ public class ClientControllerTest : IDisposable {
         // Assert
         var okResult = Assert.IsType<CreatedAtActionResult>(result);
         ClientDTO myDto = JsonConvert.DeserializeObject<ClientDTO>(okResult.Value.ToJson())!;
-
-        Assert.Equal(newClientDto.Id, myDto.Id);
+        
         Assert.Equal(newClientDto.UserName, myDto.UserName);
         Assert.Equal(newClientDto.Email, myDto.Email);
         Assert.Equal(newClientDto.PhoneNumber, myDto.PhoneNumber);

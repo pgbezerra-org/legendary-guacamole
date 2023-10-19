@@ -2,12 +2,13 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Authorization;
 using webserver.Data;
+using webserver.Utilities;
 using webserver.Models;
 using Newtonsoft.Json;
 
 namespace webserver.Controllers;
 
-[Authorize(Roles=Common.BZE_Role+","+Common.Company_Role)]
+[Authorize]
 [ApiController]
 [Route("api/v1/realestates")]
 public class RealEstatesController : ControllerBase {

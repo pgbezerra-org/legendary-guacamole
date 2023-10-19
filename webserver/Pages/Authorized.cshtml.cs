@@ -1,4 +1,4 @@
-using webserver.Models;
+using webserver.Utilities;
 using System.Security.Claims;
 using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Authentication;
@@ -9,7 +9,7 @@ using Microsoft.AspNetCore.Authorization;
 
 //THIS PAGE IS PURELY FOR PROOF-OF-CONCEPT PURPOSES
 namespace webserver.Pages;
-[Authorize (Roles =Common.BZE_Role)]
+[Authorize (Roles=Common.BZE_Role)]
 public class Authorized : PageModel {
     
     public IActionResult OnGet() {

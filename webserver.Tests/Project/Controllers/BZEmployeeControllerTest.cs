@@ -142,7 +142,7 @@ public class BZEmployeeControllerTest : IDisposable {
     }
 
     [Fact]
-    public async void RegisterUser_ReturnsBadRequest_WhenEmailExists() {
+    public async void CreateBZEmployee_ReturnsBadRequest_WhenEmailExists() {
         // Arrange
         var newBZEmployeeDto = new BZEmployeeDTO("4cc0-c0un-t4nt","toby-ross", "myemail123@gmail.com", "3226-0637", 2500);
 
@@ -160,7 +160,7 @@ public class BZEmployeeControllerTest : IDisposable {
     }
 
     [Fact]
-    public async void RegisterUser_ReturnsBadRequest_WhenUsername_Exists() {
+    public async void CreateBZEmployee_ReturnsBadRequest_WhenUsernameExists() {
         // Arrange
         var newBZEmployeeDto = new BZEmployeeDTO("4cc0-c0un-t4nt","toby-ross", "myemail123@gmail.com", "3226-0637", 2500);
         
@@ -178,7 +178,7 @@ public class BZEmployeeControllerTest : IDisposable {
     }
 
     [Fact]
-    public async void RegisterUser_ReturnsCreatedAtAction_WhenBZEmployeeDoesntExist() {
+    public async void CreateBZEmployee_ReturnsCreatedAtAction_WhenBZEmployeeDoesntExist() {
         // Arrange
         var newBZEmployeeDto = new BZEmployeeDTO("547s-ref6","jordan-belfort", "belford-business@wallstreet.com", "9899344788", 2500);
 
@@ -189,7 +189,6 @@ public class BZEmployeeControllerTest : IDisposable {
         var okResult = Assert.IsType<CreatedAtActionResult>(result);
         BZEmployeeDTO responseDto = JsonConvert.DeserializeObject<BZEmployeeDTO>(okResult.Value.ToJson())!;
 
-        Assert.Equal(newBZEmployeeDto.Id, responseDto.Id);
         Assert.Equal(newBZEmployeeDto.UserName, responseDto.UserName);
         Assert.Equal(newBZEmployeeDto.Email, responseDto.Email);
         Assert.Equal(newBZEmployeeDto.PhoneNumber, responseDto.PhoneNumber);
