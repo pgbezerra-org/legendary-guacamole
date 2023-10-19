@@ -6,7 +6,7 @@ using webserver.Models;
 using webserver.Data;
 
 namespace webserver.Pages.Manage;
-[Authorize(Roles =Common.BZE_Role+","+Common.Company_Role)]
+[Authorize(Roles=Common.BZE_Role+","+Common.Company_Role)]
 public class RealEstateCreation : PageModel {
 
     [BindProperty]
@@ -27,12 +27,7 @@ public class RealEstateCreation : PageModel {
             return Page();
         }
 
-        var realEstate = new RealEstate {
-            Name = Input.Name,
-            Address = Input.Address,
-            Price = Input.Price,
-            CompanyId = company.Id
-        };
+        var realEstate = new RealEstate (Input.Name, Input.Address, Input.Price, company.Id);
         
         await context.RealEstates.AddAsync(realEstate);
         await context.SaveChangesAsync();
@@ -41,7 +36,6 @@ public class RealEstateCreation : PageModel {
     }
 
     public class InputModel {
-
         [Required]
         [Display(Name = "Name")]
         public string Name { get; set; } = string.Empty;
@@ -56,7 +50,6 @@ public class RealEstateCreation : PageModel {
 
         [Required]
         [Display(Name = "Price")]
-        public decimal Price { get; set; } = 1;
-        
+        public decimal Price { get; set; } = 1;        
     }
 }

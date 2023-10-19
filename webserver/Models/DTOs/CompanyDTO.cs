@@ -1,5 +1,4 @@
 namespace webserver.Models.DTOs;
-
 public class CompanyDTO {
 
     //Company Fields
@@ -26,16 +25,11 @@ public class CompanyDTO {
     }
 
     public static explicit operator Company(CompanyDTO dto){
-        return new Company {
-            Id = dto.Id,
-            UserName = dto.UserName,
-            Email = dto.Email,
-            PhoneNumber = dto.PhoneNumber,
+        return new Company (
+            dto.Id, dto.UserName, dto.Email, dto.PhoneNumber,
 
-            Country = dto.Country,
-            State = dto.State,
-            City = dto.City
-        };
+            dto.Country, dto.State, dto.City
+        );
     }
 
     public static explicit operator CompanyDTO(Company c){
