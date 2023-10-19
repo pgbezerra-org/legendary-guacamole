@@ -8,7 +8,7 @@ using Newtonsoft.Json;
 
 namespace webserver.Controllers;
 
-//[Authorize(Roles=Common.BZE_Role+","+Common.Company_Role)]
+[Authorize(Roles=Common.BZE_Role+","+Common.Company_Role)]
 [ApiController]
 [Route("api/v1/realestates")]
 public class RealEstatesController : ControllerBase {
