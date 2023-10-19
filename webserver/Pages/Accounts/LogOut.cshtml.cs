@@ -22,5 +22,4 @@ public class LogOut : PageModel {
             return RedirectToPage("/Index");
         }
     }
-
 }
