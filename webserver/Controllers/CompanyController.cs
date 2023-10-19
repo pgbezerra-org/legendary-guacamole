@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace webserver.Controllers;
 
-[Authorize(Roles=Common.BZE_Role+","+Common.Company_Role)]
+[Authorize(Roles=Common.BZE_Role)]
 [ApiController]
 [Route("api/v1/company")]
 public class CompanyController : ControllerBase {
@@ -26,9 +26,9 @@ public class CompanyController : ControllerBase {
     }
 
     [HttpGet("unique/{id}")]
-    public async Task<IActionResult> ReadCompany(string id) {
+    public IActionResult ReadCompany(string id) {
 
-        var company = await _context.Company.FindAsync(id);
+        var company = _context.Company.Find(id);
         if(company==null){
             return NotFound();
         }
@@ -40,6 +40,10 @@ public class CompanyController : ControllerBase {
 
     [HttpGet]
     public async Task<IActionResult> ReadCompanies(int? offset, int? limit, string? Country, string? State, string? City, string? sort) {
+
+        if(limit<1){
+            return BadRequest("Results amount are limited to less than 1");
+        }
 
         var companies = _context.Company.AsQueryable();
 
@@ -104,7 +108,14 @@ public class CompanyController : ControllerBase {
             return BadRequest("UserName already registered!");
         }
 
-        Company company = (Company)companyDto;
+        Company company = new Company {
+            City = companyDto.City,
+            State = companyDto.State,
+            Country = companyDto.Country,
+            UserName = companyDto.UserName,
+            Email = companyDto.Email,
+            PhoneNumber = companyDto.PhoneNumber
+        };        
 
         var result = await _userManager.CreateAsync(company, password);
 
@@ -132,11 +143,11 @@ public class CompanyController : ControllerBase {
         }
 
         existingCompany.UserName = newCompany.UserName;
-        existingCompany.PhoneNumber=newCompany.PhoneNumber;
+        existingCompany.PhoneNumber = newCompany.PhoneNumber;
         
-        existingCompany.City=newCompany.City;
-        existingCompany.State=newCompany.State;
-        existingCompany.Country=newCompany.Country;
+        existingCompany.City = newCompany.City;
+        existingCompany.State = newCompany.State;
+        existingCompany.Country = newCompany.Country;
 
         await _context.SaveChangesAsync();
 

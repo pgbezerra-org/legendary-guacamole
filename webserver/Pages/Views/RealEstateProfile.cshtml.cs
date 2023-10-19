@@ -24,7 +24,7 @@ public class RealEstateProfile : PageModel {
         var result = client.GetAsync(endpoint).Result;
         var json = result.Content.ReadAsStringAsync().Result;
         
-        realEstate = (RealEstate) JsonConvert.DeserializeObject<RealEstate>(json)!;
+        realEstate =  JsonConvert.DeserializeObject<RealEstate>(json)!;
 
         if(realEstate==null){
             Console.WriteLine("ERROR 404");

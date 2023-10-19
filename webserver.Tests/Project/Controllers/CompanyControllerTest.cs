@@ -130,16 +130,14 @@ public class CompanyControllerTest : IDisposable {
     public void ReadCompany_ReturnsNotFound_WhenUserDoesNotExist() {
         // Arrange
         var nonExistentCompanyId = "nonExistentUserId";
-
         // Act
         var result = _controller.ReadCompany(nonExistentCompanyId);
-
         // Assert
         Assert.IsType<NotFoundResult>(result);
     }
 
     [Fact]
-    public async void RegisterUser_ReturnsBadRequest_WhenEmailExists() {
+    public async void CreateCompany_ReturnsBadRequest_WhenEmailExists() {
         // Arrange
         var email = "myemail123@gmail.com";
         var newCompDto = new CompanyDTO("newId","username",email, "9899344788","brazil","MA","Sao Luis");
@@ -156,7 +154,7 @@ public class CompanyControllerTest : IDisposable {
     }
 
     [Fact]
-    public async void RegisterUser_ReturnsBadRequest_WhenUsername_Exists() {
+    public async void CreateCompany_ReturnsBadRequest_WhenUsernameExists() {
         // Arrange
         var email = "myemail123@gmail.com";
         var newCompDto = new CompanyDTO("newId","username",email, "9899344788","brazil","MA","Sao Luis");
@@ -174,7 +172,7 @@ public class CompanyControllerTest : IDisposable {
     }
 
     [Fact]
-    public async void RegisterUser_ReturnsCreatedAtAction_WhenCompanyDoesntExist() {
+    public async void CreateCompany_ReturnsCreatedAtAction_WhenCompanyDoesntExist() {
         // Arrange
         var newCompDto = new CompanyDTO("newId","username","myemail123@gmail.com", "9899344788","brazil","MA","Sao Luis");
 
@@ -185,7 +183,6 @@ public class CompanyControllerTest : IDisposable {
         var okResult = Assert.IsType<CreatedAtActionResult>(result);
         CompanyDTO myDto = JsonConvert.DeserializeObject<CompanyDTO>(okResult.Value.ToJson())!;
 
-        Assert.Equal(newCompDto.Id, myDto.Id);
         Assert.Equal(newCompDto.UserName, myDto.UserName);
         Assert.Equal(newCompDto.Email, myDto.Email);
     }
