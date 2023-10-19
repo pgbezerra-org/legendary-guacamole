@@ -26,9 +26,14 @@ public class CompanyDTO {
 
     public static explicit operator Company(CompanyDTO dto){
         return new Company (
-            dto.Id, dto.UserName, dto.Email, dto.PhoneNumber,
+            dto.Id,
+            dto.UserName,
+            dto.Email,
+            dto.PhoneNumber,
 
-            dto.Country, dto.State, dto.City
+            dto.Country,
+            dto.State,
+            dto.City
         );
     }
 
