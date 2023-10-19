@@ -69,7 +69,7 @@ public class RealEstatesController : ControllerBase {
 
         var resultArray = await realEstates.ToArrayAsync();
 
-        if(resultArray==null || resultArray.Length==0){
+        if(resultArray.Length==0){
             return NotFound();
         }
 
