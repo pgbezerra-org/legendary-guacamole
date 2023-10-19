@@ -41,7 +41,7 @@ public class CompanyController : ControllerBase {
     public async Task<IActionResult> ReadCompanies(int? offset, int? limit, string? Country, string? State, string? City, string? sort) {
 
         if(limit<1){
-            return BadRequest("Results amount are limited to less than 1");
+            return BadRequest("Limit parameter must be a natural number greater than 0");
         }
 
         var companies = _context.Company.AsQueryable();
