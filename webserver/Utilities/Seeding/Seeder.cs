@@ -41,7 +41,7 @@ public class Seeder {
 
         RealEstate[] estates = new RealEstate[amount];
         for(int i=0;i<estates.Length;i++){
-            estates[i] = new RealEstate(0, "name", "addr", 100, "comp");
+            estates[i] = new RealEstate("name", "addr", 100, "comp");
         }
 
         CountrySeed country;
