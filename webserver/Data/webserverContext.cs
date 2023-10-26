@@ -2,13 +2,12 @@
 using webserver.Models;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 
-namespace webserver.Data
-{
+namespace webserver.Data {
+    
     public class WebserverContext : IdentityDbContext {
 
         public WebserverContext (DbContextOptions<WebserverContext> options)
-            : base(options)
-        {
+            : base(options) {
 
         }
 
