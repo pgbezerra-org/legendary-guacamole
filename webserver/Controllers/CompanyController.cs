@@ -103,7 +103,14 @@ public class CompanyController : ControllerBase {
             return BadRequest("UserName already registered!");
         }
 
-        Company company = (Company)companyDto;
+        Company company = new Company {
+            City = companyDto.City,
+            State = companyDto.State,
+            Country = companyDto.Country,
+            UserName = companyDto.UserName,
+            Email = companyDto.Email,
+            PhoneNumber = companyDto.PhoneNumber
+        }; 
 
         var result = await _userManager.CreateAsync(company, password);
 
@@ -131,11 +138,11 @@ public class CompanyController : ControllerBase {
         }
 
         existingCompany.UserName = newCompany.UserName;
-        existingCompany.PhoneNumber=newCompany.PhoneNumber;
+        existingCompany.PhoneNumber = newCompany.PhoneNumber;
         
-        existingCompany.City=newCompany.City;
-        existingCompany.State=newCompany.State;
-        existingCompany.Country=newCompany.Country;
+        existingCompany.City = newCompany.City;
+        existingCompany.State = newCompany.State;
+        existingCompany.Country = newCompany.Country;
 
         await _context.SaveChangesAsync();
 

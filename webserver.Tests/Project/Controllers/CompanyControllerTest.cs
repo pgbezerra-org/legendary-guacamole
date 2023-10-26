@@ -121,7 +121,6 @@ public class CompanyControllerTest : IDisposable {
         string valueJson = okResult.Value!.ToString()!;
         CompanyDTO myDto = JsonConvert.DeserializeObject<CompanyDTO>(valueJson)!;
 
-        Assert.Equal(companyId, myDto.Id);
         Assert.Equal(companyUser, myDto.UserName);
         Assert.Equal(companyEmail, myDto.Email);
     }
@@ -139,13 +138,12 @@ public class CompanyControllerTest : IDisposable {
     }
 
     [Fact]
-    public async void RegisterUser_ReturnsBadRequest_WhenEmailExists() {
+    public async void CreateCompany_ReturnsBadRequest_WhenEmailExists() {
         // Arrange
         var email = "myemail123@gmail.com";
         var newCompDto = new CompanyDTO("newId","username",email, "9899344788","brazil","MA","Sao Luis");
 
         var newComp = (Company)newCompDto;
-        newComp.Id = "newCompId1234";
 
         // Act
         await userManager.CreateAsync(newComp, "#Company1234");
@@ -156,7 +154,7 @@ public class CompanyControllerTest : IDisposable {
     }
 
     [Fact]
-    public async void RegisterUser_ReturnsBadRequest_WhenUsername_Exists() {
+    public async void CreateCompany_ReturnsBadRequest_WhenUsername_Exists() {
         // Arrange
         var email = "myemail123@gmail.com";
         var newCompDto = new CompanyDTO("newId","username",email, "9899344788","brazil","MA","Sao Luis");
@@ -174,7 +172,7 @@ public class CompanyControllerTest : IDisposable {
     }
 
     [Fact]
-    public async void RegisterUser_ReturnsCreatedAtAction_WhenCompanyDoesntExist() {
+    public async void CreateCompany_ReturnsCreatedAtAction_WhenCompanyDoesntExist() {
         // Arrange
         var newCompDto = new CompanyDTO("newId","username","myemail123@gmail.com", "9899344788","brazil","MA","Sao Luis");
 
@@ -185,7 +183,6 @@ public class CompanyControllerTest : IDisposable {
         var okResult = Assert.IsType<CreatedAtActionResult>(result);
         CompanyDTO myDto = JsonConvert.DeserializeObject<CompanyDTO>(okResult.Value.ToJson())!;
 
-        Assert.Equal(newCompDto.Id, myDto.Id);
         Assert.Equal(newCompDto.UserName, myDto.UserName);
         Assert.Equal(newCompDto.Email, myDto.Email);
     }
@@ -209,7 +206,6 @@ public class CompanyControllerTest : IDisposable {
         string valueJson = okResult.Value!.ToString()!;
         CompanyDTO myDto = JsonConvert.DeserializeObject<CompanyDTO>(valueJson)!;
 
-        Assert.Equal(myDto.Id, newCompDto.Id);
         Assert.Equal(myDto.Email, newCompDto.Email);
         Assert.Equal(myDto.PhoneNumber, newCompDto.PhoneNumber);
         Assert.Equal(myDto.UserName, newCompDto.UserName);
