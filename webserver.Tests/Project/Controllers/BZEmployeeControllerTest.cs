@@ -65,11 +65,11 @@ public class BZEmployeeControllerTest : IDisposable {
     [Fact]
     public async void ReadBZEmployees_ReturnsNotFound_NoMatchesFound() {
         // Arrannge
-        var newBZEmployeeDto = new BZEmployeeDTO("a1b1-c1d1","peter-parker","peter-parker@hotmail.com","9899344788", 6800);
+        var newBZEmployeeDto = new BZEmployeeDTO("a1b1-c1d1","spider-man", "peter-parker", "peter-parker@hotmail.com","9899344788", 6800);
         await userManager.CreateAsync((BZEmployee)newBZEmployeeDto, "#BZEmployee1234");
-        newBZEmployeeDto = new BZEmployeeDTO("qwe123-ert345", "yusaku-takahara", "yusaku_takahara@gmail.com","5559870123", 7100);
+        newBZEmployeeDto = new BZEmployeeDTO("qwe123-ert345","Kenshi", "kenshi-takahasi", "yusaku_takahara@gmail.com","5559870123", 7100);
         await userManager.CreateAsync((BZEmployee)newBZEmployeeDto, "#BZEmployee1234");
-        newBZEmployeeDto = new BZEmployeeDTO("asd213-xcv456", "johnny-carlos", "carlos-john@outlook.com","555159753", 7300);
+        newBZEmployeeDto = new BZEmployeeDTO("asd213-xcv456","$JohnnyCage", "jonathan carlton", "johnny-cage@outlook.com","555159753", 7300);
         await userManager.CreateAsync((BZEmployee)newBZEmployeeDto, "#BZEmployee1234");
     
         // Act
@@ -82,14 +82,14 @@ public class BZEmployeeControllerTest : IDisposable {
     [Fact]
     public async void ReadBZEmployees_ReturnsOK_MatchesFound() {
         // Arrannge
-        var newBZEmployeeDto = new BZEmployeeDTO("a1b1-c1d1","judge-dread","judgedread@hotmail.com","9899344788", 8500);
+        var newBZEmployeeDto = new BZEmployeeDTO("a1b1-c1d1","judge-dread", "judge dread","judgedread@hotmail.com","9899344788", 8500);
         await userManager.CreateAsync((BZEmployee)newBZEmployeeDto, "#BZEmployee1234");
-        newBZEmployeeDto = new BZEmployeeDTO("qwe123-ert345", "yusaku-takahara", "yusaku_takahara@gmail.com","5559870123", 8700);
+        newBZEmployeeDto = new BZEmployeeDTO("qwe123-ert345","kenshi-takahashi", "Kenshi", "yusaku_takahara@gmail.com","5559870123", 8700);
         await userManager.CreateAsync((BZEmployee)newBZEmployeeDto, "#BZEmployee1234");
-        newBZEmployeeDto = new BZEmployeeDTO("asd213-xcv456", "john-skywaler", "skywaler-john@empire.com","555159753", 8900);
+        newBZEmployeeDto = new BZEmployeeDTO("asd213-xcv456","Johnatan Carlton", "JohnnyCage", "skywaler-john@empire.com","555159753", 8900);
         await userManager.CreateAsync((BZEmployee)newBZEmployeeDto, "#BZEmployee1234");
 
-        var expectedDto = new BZEmployeeDTO("6a4s-q87e", "john-carlos", "el_john96@empire.com","5557770123", 9100); //we expect this one
+        var expectedDto = new BZEmployeeDTO("6a4s-q87e", "johnny-cage", "johnatan carlton", "el_john96@empire.com","5557770123", 9100); //we expect this one
         await userManager.CreateAsync((BZEmployee)expectedDto, "#BZEmployee1234");
     
         // Act
@@ -113,7 +113,7 @@ public class BZEmployeeControllerTest : IDisposable {
     public async void ReadBZEmployee_ReturnsOk_WhenUserExists() {
         // Arrange
         var BZEmployeeId = "newId";
-        var newBZEmployeeDto = new BZEmployeeDTO(BZEmployeeId, "myusername123", "myemail123@gmail.com", "9899344788", 2500);
+        var newBZEmployeeDto = new BZEmployeeDTO(BZEmployeeId, "myusername123", "james bond", "myemail123@gmail.com", "9899344788", 2500);
 
         // Act
         await userManager.CreateAsync((BZEmployee)newBZEmployeeDto, "#BZEmployee1234");
@@ -144,7 +144,7 @@ public class BZEmployeeControllerTest : IDisposable {
     [Fact]
     public async void CreateBZEmployee_ReturnsBadRequest_WhenEmailExists() {
         // Arrange
-        var newBZEmployeeDto = new BZEmployeeDTO("4cc0-c0un-t4nt","toby-ross", "myemail123@gmail.com", "3226-0637", 2500);
+        var newBZEmployeeDto = new BZEmployeeDTO("4cc0-c0un-t4nt", "toby-ross", "john tobias", "myemail123@gmail.com", "3226-0637", 2500);
 
         var newBZEmployee = (BZEmployee)newBZEmployeeDto;
         newBZEmployee.Id = "newBZEmployeeId1234";
@@ -162,7 +162,7 @@ public class BZEmployeeControllerTest : IDisposable {
     [Fact]
     public async void CreateBZEmployee_ReturnsBadRequest_WhenUsernameExists() {
         // Arrange
-        var newBZEmployeeDto = new BZEmployeeDTO("4cc0-c0un-t4nt","toby-ross", "myemail123@gmail.com", "3226-0637", 2500);
+        var newBZEmployeeDto = new BZEmployeeDTO("4cc0-c0un-t4nt","toby-ross","toby-ross", "myemail123@gmail.com", "3226-0637", 2500);
         
         var newBZEmployee = (BZEmployee)newBZEmployeeDto;
         newBZEmployee.Id = "newBZEmployeeId1234";
@@ -180,7 +180,7 @@ public class BZEmployeeControllerTest : IDisposable {
     [Fact]
     public async void CreateBZEmployee_ReturnsCreatedAtAction_WhenBZEmployeeDoesntExist() {
         // Arrange
-        var newBZEmployeeDto = new BZEmployeeDTO("547s-ref6","jordan-belfort", "belford-business@wallstreet.com", "9899344788", 2500);
+        var newBZEmployeeDto = new BZEmployeeDTO("547s-ref6","jordan-belfort", "jordan-belfort", "belford-business@wallstreet.com", "9899344788", 2500);
 
         // Act
         var result = await _controller.CreateBZEmployee(newBZEmployeeDto, "@1234Password");
@@ -198,7 +198,7 @@ public class BZEmployeeControllerTest : IDisposable {
     [Fact]
     public async void UpdateBZEmployee_ReturnsBadRequest_WhenIdDoesntExist() {
         // Arrange
-        var nonExistBZEmployeeDto = new BZEmployeeDTO("nonexistingId","jordan-belfort", "belford-business@wallstreet.com", "9899344788", 2500);
+        var nonExistBZEmployeeDto = new BZEmployeeDTO("nonexistingId","wolf-of-wall-street","jordan-belfort", "belford-business@wallstreet.com", "9899344788", 2500);
         // Act
         var result = await _controller.UpdateBZEmployee(nonExistBZEmployeeDto);
         // Arrange
@@ -210,7 +210,7 @@ public class BZEmployeeControllerTest : IDisposable {
     public async void UpdateBZEmployee_ReturnsOk_ExistingId() {
         // Arrange
         var existingId = "existing-id";
-        var oldBZEmployeeDto = new BZEmployeeDTO(existingId,"jordan-belfort", "belford-business@wallstreet.com", "9899344788", 2500);
+        var oldBZEmployeeDto = new BZEmployeeDTO(existingId,"wolf-of-wall-street","jordan-belfort", "belford-business@wallstreet.com", "9899344788", 2500);
 
         var newBZEmployeeDto = oldBZEmployeeDto;
         newBZEmployeeDto.UserName = "newNameForTheUser1234";
@@ -247,7 +247,7 @@ public class BZEmployeeControllerTest : IDisposable {
     public async void DeleteBZEmployee_ReturnsNoContent_WhenIdExists() {
         // Arrange
         var existingId = "existing-id";
-        var newBZEmployeeDto = new BZEmployeeDTO(existingId,"johnny-ross","john-account@business.com", "3226-0637", 2500);
+        var newBZEmployeeDto = new BZEmployeeDTO(existingId,"johnny-ross","johnny-ross","john-account@business.com", "3226-0637", 2500);
 
         // Act
         await userManager.CreateAsync((BZEmployee)newBZEmployeeDto, "#BZEmployee1234");

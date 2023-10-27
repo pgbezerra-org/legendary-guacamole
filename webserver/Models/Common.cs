@@ -11,6 +11,6 @@ public static class Common {
     public const string Client_Role = "Client_Role";
 
     public enum HouseType {
-        house = 1, condominium, apartment
+        house = 1, condominium, apartment, commercial
     }
 }    
