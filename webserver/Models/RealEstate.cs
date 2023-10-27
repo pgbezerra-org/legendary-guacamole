@@ -22,7 +22,7 @@ public class RealEstate {
     public string Name { get; set; } = string.Empty;
     /// <summary>
     /// Address of the Real Estate. Owner's discretion is advised
-    /// If the city isn't specified, the Owner Company's City is assumed
+    /// The City, State and Country are assumed to be the Owner Company's, in case they aren't specified here
     /// </summary>
     [JsonProperty]
     public string Address { get; set; } = string.Empty;
