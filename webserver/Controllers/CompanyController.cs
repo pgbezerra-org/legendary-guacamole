@@ -16,6 +16,7 @@ namespace webserver.Controllers;
 [Authorize(Roles=Common.BZE_Role+","+Common.Company_Role)]
 [ApiController]
 [Route("api/v1/company")]
+[Produces("application/json")]
 public class CompanyController : ControllerBase {
     
     private readonly WebserverContext _context;

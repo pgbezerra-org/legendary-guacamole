@@ -16,6 +16,7 @@ namespace webserver.Controllers;
 [Authorize]
 [ApiController]
 [Route("api/v1/client")]
+[Produces("application/json")]
 public class ClientController : ControllerBase {
 
     private readonly WebserverContext _context;

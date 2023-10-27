@@ -16,6 +16,7 @@ namespace webserver.Controllers;
 [Authorize(Roles=Common.BZE_Role)]
 [ApiController]
 [Route("api/v1/bzemployee")]
+[Produces("application/json")]
 public class BZEmployeeController : ControllerBase {
 
     private readonly WebserverContext _context;
