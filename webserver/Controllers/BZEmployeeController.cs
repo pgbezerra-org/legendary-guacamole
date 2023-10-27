@@ -24,7 +24,7 @@ public class BZEmployeeController : ControllerBase {
 
     /// <summary>
     /// BZEmployee API Controller Constructor
-    /// Contains the essential for such Controller: IdentityDbController, UserManager<SpecificIdentityUser> and RoleManager<IdentityRole>
+    /// Contains the essential for such Controller: IdentityDbController, UserManager TSpecificIdentityUser and RoleManager TIdentityRole
     /// </summary>
     public BZEmployeeController(WebserverContext context, UserManager<BZEmployee> userManager, RoleManager<IdentityRole> roleManager){
         _context = context;
@@ -56,6 +56,9 @@ public class BZEmployeeController : ControllerBase {
     /// </summary>
     /// <returns>BZEmployeeDTO Array</returns>
     /// <param name="username">Filters results to only Users whose username contains this string</param>
+    /// <param name="offset">Offsets the result by a given amount</param>
+    /// <param name="limit">Limits the number of results</param>
+    /// <param name="sort">Orders the result by a given field. Does not order if the field does not exist</param>
     /// <response code="200">Returns an array of BZEmployee DTOs</response>
     /// <response code="404">If no BZEmployees fit the given filters</response>
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<BZEmployee>))]
@@ -72,7 +75,6 @@ public class BZEmployeeController : ControllerBase {
         if(!string.IsNullOrEmpty(username)){
             bzemployees = bzemployees.Where(bzemp => bzemp.UserName!.Contains(username));
         }
-
 
         if(!string.IsNullOrEmpty(sort)){
             sort = sort.ToLower();

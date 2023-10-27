@@ -23,8 +23,8 @@ public class ClientController : ControllerBase {
     private readonly RoleManager<IdentityRole> _roleManager;
 
     /// <summary>
-    /// Client API Controller Constructor
-    /// Contains the essential for such Controller: IdentityDbController, UserManager<SpecificIdentityUser> and RoleManager<IdentityRole>
+    /// Controller class for Client CRUD requests via the HTTP API
+    /// Responses are sent only in JSON
     /// </summary>
     public ClientController(WebserverContext context, UserManager<Client> userManager, RoleManager<IdentityRole> roleManager){
         _context = context;
@@ -32,7 +32,7 @@ public class ClientController : ControllerBase {
         _roleManager = roleManager;
     }
 
-    // <summary>
+    /// <summary>
     /// Get the Client with the given Id
     /// </summary>
     /// <returns>Client of the given User. NotFoundResult if there is none</returns>
@@ -56,6 +56,9 @@ public class ClientController : ControllerBase {
     /// </summary>
     /// <returns>ClientDTO Array</returns>
     /// <param name="username">Filters results to only Users whose username contains this string</param>
+    /// <param name="offset">Offsets the result by a given amount</param>
+    /// <param name="limit">Limits the number of results</param>
+    /// <param name="sort">Orders the result by a given field. Does not order if the field does not exist</param>
     /// <response code="200">Returns an array of Client DTOs</response>
     /// <response code="404">If no Clients fit the given filters</response>
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<Client>))]
@@ -64,7 +67,7 @@ public class ClientController : ControllerBase {
     public async Task<IActionResult> ReadClients(string? username, int? offset, int limit, string? sort) {
 
         if(limit<1){
-            return BadRequest("Results amount are limited to less than 1");
+            return BadRequest("Limit parameter must be a natural number greater than 0");
         }
 
         var clients = _context.Clients.AsQueryable();
@@ -72,7 +75,6 @@ public class ClientController : ControllerBase {
         if(!string.IsNullOrEmpty(username)){
             clients = clients.Where(client => client.UserName!.Contains(username));
         }
-
 
         if(!string.IsNullOrEmpty(sort)){
             sort = sort.ToLower();

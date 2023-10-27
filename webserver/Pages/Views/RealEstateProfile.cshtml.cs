@@ -3,7 +3,6 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Newtonsoft.Json;
 using webserver.Data;
 using webserver.Models;
-using webserver.Models.DTOs;
 
 namespace webserver.Pages.Views;
 [Authorize]

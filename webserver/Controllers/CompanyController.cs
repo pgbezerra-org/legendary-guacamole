@@ -24,7 +24,7 @@ public class CompanyController : ControllerBase {
 
     /// <summary>
     /// Company API Controller Constructor
-    /// Contains the essential for such Controller: IdentityDbController, UserManager<SpecificIdentityUser> and RoleManager<IdentityRole>
+    /// Contains the essential for such Controller: IdentityDbController, UserManager TSpecificIdentityUser and RoleManager TIdentityRole
     /// </summary>
     public CompanyController(WebserverContext context, UserManager<Company> userManager, RoleManager<IdentityRole> roleManager) {
         _context = context;
@@ -32,7 +32,7 @@ public class CompanyController : ControllerBase {
         _roleManager = roleManager;
     }
 
-    // <summary>
+    /// <summary>
     /// Get the Company with the given Id
     /// </summary>
     /// <returns>Company of the given User. NotFoundResult if there is none</returns>
@@ -55,13 +55,22 @@ public class CompanyController : ControllerBase {
     /// Get an array of Companies DTO, with optional filters
     /// </summary>
     /// <returns>CompanyDTO Array</returns>
-    /// <param name="username">Filters results to only Users whose username contains this string</param>
+    /// <param name="Country">Filters the Companies by Country of origin</param>
+    /// <param name="State">Filters the Companies by State of origin</param>
+    /// <param name="City">Filters the Companies by City of origin</param>
+    /// <param name="offset">Offsets the result by a given amount</param>
+    /// <param name="limit">Limits the number of results</param>
+    /// <param name="sort">Orders the result by a given field. Does not order if the field does not exist</param>
     /// <response code="200">Returns an array of Company DTOs</response>
     /// <response code="404">If no Companies fit the given filters</response>
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<Company>))]
     [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(string))]
     [HttpGet]
     public async Task<IActionResult> ReadCompanies(int? offset, int limit, string? Country, string? State, string? City, string? sort) {
+
+        if(limit<1){
+            return BadRequest("Limit parameter must be a natural number greater than 0");
+        }
 
         var companies = _context.Company.AsQueryable();
 

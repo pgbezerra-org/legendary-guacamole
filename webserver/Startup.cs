@@ -6,14 +6,26 @@ using Microsoft.AspNetCore.Authentication.Cookies;
 
 namespace webserver {
 
+    /// <summary>
+    /// Startup class. Any change in it requires the project to restart
+    /// </summary>
     public class Startup {
 
+        /// <summary>
+        /// Represents a set of key/value application configuration properties
+        /// </summary>
         public IConfiguration Configuration { get; }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public Startup(IConfiguration configuration) {
             Configuration = configuration;
         }
 
+        /// <summary>
+        /// Optional method where configuration options are set by convention
+        /// </summary>
         public void ConfigureServices(IServiceCollection services) {
 
             services.AddDefaultIdentity<BZEAccount>()
@@ -50,6 +62,9 @@ namespace webserver {
                 options.UseMySQL(connectionString));
         }
 
+        /// <summary>
+        /// Used to specify how the app responds to HTTP requests
+        /// </summary>
         public async void Configure(IApplicationBuilder app, IWebHostEnvironment env, IServiceProvider serviceProvider) {
             // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
             

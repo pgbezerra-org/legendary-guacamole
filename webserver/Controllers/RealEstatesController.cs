@@ -46,12 +46,21 @@ public class RealEstatesController : ControllerBase {
     /// Get an array of Real Estates, with optional filters
     /// </summary>
     /// <returns>Real Estates Array</returns>
+    /// <param name="minPrice">MinimumPrice filter</param>
+    /// <param name="maxPrice">Maximum Price filter</param>
+    /// <param name="offset">Offsets the result by a given amount</param>
+    /// <param name="limit">Limits the number of results</param>
+    /// <param name="sort">Orders the result by a given field. Does not order if the field does not exist</param>
     /// <response code="200">Returns an array of Real Estates</response>
     /// <response code="404">No Real Estates matching the given filters were found</response>
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<Company>))]
     [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(string))]
     [HttpGet]
     public async Task<IActionResult> ReadRealEstates(int? minPrice, int? maxPrice, int? offset, int limit, string sort = "Id") {
+
+        if(limit<1){
+            return BadRequest("Limit parameter must be a natural number greater than 0");
+        }
 
         var realEstates = _context.RealEstates.AsQueryable();
 
@@ -75,9 +84,6 @@ public class RealEstatesController : ControllerBase {
                 break;
             case "address":
                 realEstates = realEstates.OrderBy(re => re.Address);
-                break;
-            default:
-                realEstates = realEstates.OrderBy(re => re.Id);
                 break;
         }
 
