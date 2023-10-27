@@ -10,6 +10,8 @@ public class RealEstate {
     [JsonProperty]
     public string Address { get; set; } = string.Empty;
     [JsonProperty]
+    public string Description { get; set; } = string.Empty;
+    [JsonProperty]
     public decimal Price { get; set; }
 
     [JsonProperty]
@@ -18,8 +20,11 @@ public class RealEstate {
     [JsonIgnore]
     public Company? OwnerCompany { get; set; }
 
+    /// <summary>
+    /// If it's 0, we assume it's not up for renting
+    /// </summary>
     [JsonProperty]
-    public bool rentable { get; set; }
+    public float rentPrice { get; set; }
     [JsonProperty]
     public int area { get; set; }
     [JsonProperty]
@@ -27,7 +32,9 @@ public class RealEstate {
     [JsonProperty]
     public int numBedrooms { get; set; }
     [JsonProperty]
-    public string houseType = string.Empty;
+    public string houseType { get; set; } = string.Empty;
+
+
 
     public RealEstate(string name, string address, decimal price, string companyId){
         Name = name;

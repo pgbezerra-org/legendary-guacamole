@@ -40,8 +40,8 @@
     </p>
 
 
-    @if(@Model.realEstate.rentable){
-        <strong>Up for renting</strong>
+    @if(@Model.realEstate.rentPrice > 0){
+        <strong>Up for renting: @Model.realEstate.rentPrice</strong>
     }
     </p>
 
