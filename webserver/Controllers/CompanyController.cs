@@ -9,11 +9,11 @@ using Microsoft.EntityFrameworkCore;
 
 namespace webserver.Controllers;
 
+[Authorize(Roles=Common.BZE_Role)]
 /// <summary>
 /// Controller class for Company CRUD requests via the HTTP API
 /// Responses are sent only in JSON
 /// </summary>
-[Authorize(Roles=Common.BZE_Role+","+Common.Company_Role)]
 [ApiController]
 [Route("api/v1/company")]
 [Produces("application/json")]
@@ -33,16 +33,15 @@ public class CompanyController : ControllerBase {
         _roleManager = roleManager;
     }
 
+    [HttpGet("unique/{id}")]
+    public IActionResult ReadCompany(string id) {
     /// <summary>
     /// Get the Company with the given Id
     /// </summary>
     /// <returns>Company of the given User. NotFoundResult if there is none</returns>
     /// <response code="200">Returns the Company's DTO</response>
     /// <response code="404">If there is none with the given Id</response>
-    [HttpGet("{id}")]
-    public async Task<IActionResult> ReadCompany(string id) {
-
-        var company = await _context.Company.FindAsync(id);
+        var company = _context.Company.Find(id);
         if(company==null){
             return NotFound();
         }
@@ -71,6 +70,10 @@ public class CompanyController : ControllerBase {
 
         if(limit<1){
             return BadRequest("Limit parameter must be a natural number greater than 0");
+        }
+
+        if(limit<1){
+            return BadRequest("Results amount are limited to less than 1");
         }
 
         var companies = _context.Company.AsQueryable();
@@ -152,8 +155,8 @@ public class CompanyController : ControllerBase {
             UserName = companyDto.UserName,
             Email = companyDto.Email,
             PhoneNumber = companyDto.PhoneNumber
-        }; 
-
+            
+        };
         var result = await _userManager.CreateAsync(company, password);
 
         if (result.Succeeded) {

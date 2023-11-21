@@ -187,7 +187,8 @@ public class BZEmployeeControllerTest : IDisposable {
     /// Tests the Create method, expects a Bad Request response since the UserName is already registered
     /// </summary>
     [Fact]
-    public async void CreateBZEmployee_ReturnsBadRequest_WhenUsername_Exists() {
+    public async void CreateBZEmployee_ReturnsBadRequest_WhenUsernameExists() {
+
         // Arrange
         var newBZEmployeeDto = new BZEmployeeDTO("4cc0-c0un-t4nt","toby-ross", "myemail123@gmail.com", "3226-0637", 2500);
         

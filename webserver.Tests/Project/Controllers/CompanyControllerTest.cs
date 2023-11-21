@@ -153,10 +153,8 @@ public class CompanyControllerTest : IDisposable {
     public void ReadCompany_ReturnsNotFound_WhenUserDoesNotExist() {
         // Arrange
         var nonExistentCompanyId = "nonExistentUserId";
-
         // Act
         var result = _controller.ReadCompany(nonExistentCompanyId);
-
         // Assert
         Assert.IsType<NotFoundResult>(result);
     }
@@ -184,7 +182,7 @@ public class CompanyControllerTest : IDisposable {
     /// Tests the Create method, expects a Bad Request response since the UserName is already registered
     /// </summary>
     [Fact]
-    public async void CreateCompany_ReturnsBadRequest_WhenUsername_Exists() {
+    public async void CreateCompany_ReturnsBadRequest_WhenUsernameExists() {
         // Arrange
         var email = "myemail123@gmail.com";
         var newCompDto = new CompanyDTO("newId","username",email, "9899344788","brazil","MA","Sao Luis");

@@ -96,14 +96,14 @@ public class RealEstatesControllerTest : IDisposable {
         Company comp = new Company("c0mp4=ny55","initialcomp","initialcomp@gmail.com","9832263255","Brazil","RJ","RJ");
         _context.Company.Add(comp);
 
-        _context.RealEstates.Add(new RealEstate("Hollywood Boulevard", "Property2", 200, comp.Id));
-        _context.RealEstates.Add(new RealEstate("Sunset Boulevard", "Property3", 99, comp.Id));
-        _context.RealEstates.Add(new RealEstate("Something", "Property5", 101, comp.Id));
-        _context.RealEstates.Add(new RealEstate("Anything", "Property6", 102, comp.Id));
-        _context.RealEstates.Add(new RealEstate("Whatsoever", "Property7", 103, comp.Id));
+        RealEstate targetEstate = new RealEstate("Cavalier", "Property4", 200, comp.Id);
 
-        RealEstate targetEstate = new RealEstate("The Bar", "Property4", 100, comp.Id);
+        _context.RealEstates.Add(new RealEstate("Abacuque", "Property2", 100, comp.Id));
+        _context.RealEstates.Add(new RealEstate("Boulevard", "Property3", 150, comp.Id));
         _context.RealEstates.Add(targetEstate);
+        _context.RealEstates.Add(new RealEstate("Delta", "Property5", 250, comp.Id));
+        _context.RealEstates.Add(new RealEstate("Echo echo", "Property6", 300, comp.Id));
+        _context.RealEstates.Add(new RealEstate("Forgery", "Property7", 350, comp.Id));
 
         _context.SaveChanges();
         
@@ -111,10 +111,10 @@ public class RealEstatesControllerTest : IDisposable {
         int length = 3;
 
         var query = _context.RealEstates.AsQueryable();
-        query = query.Where(re => re.Price >= 50 && re.Price <= 150).Skip(1).Take(length);
+        query = query.Where(re => re.Price >= 150 && re.Price <= 350).Skip(1).Take(length);
 
         RealEstate[] realEstates = query.ToArray();
-        var response = await _controller.ReadRealEstates(minPrice: 50, maxPrice: 150, offset: 1, limit: length, sort: "price");
+        var response = await _controller.ReadRealEstates(minPrice: 101, maxPrice: 350, offset: 1, limit: length, sort: "address");
 
         // Assert
         var result = Assert.IsType<OkObjectResult>(response);
@@ -164,11 +164,14 @@ public class RealEstatesControllerTest : IDisposable {
     [Fact]
     public async Task ReadRealEstate_ReturnsOkResult_WhenRealEstateExists() {
         // Arrange
+        int idToRead = 142;
+
         Company comp = new Company("a1b1c1d1","exampleCompany","comp123@gmail.com","9832263255","Brazil","RJ","RJ");
         RealEstate realEstateToRead = new RealEstate("Sesame Street", "Sesame House", 40, "a1b1c1d1");
+        realEstateToRead.Id = idToRead;
 
         _context.Company.Add(comp);
-        int idToRead = _context.RealEstates.Add(realEstateToRead).Entity.Id;
+        _context.RealEstates.Add(realEstateToRead);
         _context.SaveChanges();
 
         // Act
@@ -248,11 +251,14 @@ public class RealEstatesControllerTest : IDisposable {
     [Fact]
     public async Task DeleteRealEstate_ReturnsNoContent_WhenRealEstateExists() {
         // Arrange
-        RealEstate realEstate = new RealEstate("Sesame Street", "Sesame House", 40, "a1b1c1d1");
+        int idExist = 2;
         CompanyDTO companyDto = new CompanyDTO("a1b1c1d1", "company", "company123@hotmail.com", "5557890123", "Brazil", "RJ", "RJ");
 
+        RealEstate realEstate = new RealEstate("Sesame Street", "Sesame House", 40, "a1b1c1d1");
+        realEstate.Id = idExist;
+
         _context.Company.Add((Company)companyDto);
-        int idExist = _context.RealEstates.Add(realEstate).Entity.Id;
+        _context.RealEstates.Add(realEstate);
         _context.SaveChanges();
 
         // Act

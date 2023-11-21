@@ -7,11 +7,11 @@ using Newtonsoft.Json;
 
 namespace webserver.Controllers;
 
+[Authorize]
 /// <summary>
 /// Controller class for Real Estate CRUD requests via the HTTP API
 /// Responses are sent only in JSON
 /// </summary>
-[Authorize(Roles=Common.BZE_Role+","+Common.Company_Role)]
 [ApiController]
 [Route("api/v1/realestates")]
 [Produces("application/json")]

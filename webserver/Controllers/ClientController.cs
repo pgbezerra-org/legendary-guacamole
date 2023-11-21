@@ -137,10 +137,10 @@ public class ClientController : ControllerBase {
 
         var result = await _userManager.CreateAsync(client, password);
 
-        if (!result.Succeeded) {
-            return StatusCode(500, "Internal Server Error: Register Client Unsuccessful\n\n" + result.Errors);
+        if(!result.Succeeded){
+            return StatusCode(500, "Internal Server Error: Register Client Unsuccessful\n\n"+result.Errors);
         }
-        
+
         var roleExists = await _roleManager.RoleExistsAsync(Common.Client_Role);
         if (!roleExists) {
             await _roleManager.CreateAsync(new IdentityRole(Common.Client_Role));

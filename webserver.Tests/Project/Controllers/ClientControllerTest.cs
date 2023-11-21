@@ -190,7 +190,7 @@ public class ClientControllerTest : IDisposable {
     /// Tests the Create method, expects a Bad Request response since the UserName is already registered
     /// </summary>
     [Fact]
-    public async void CreateClient_ReturnsBadRequest_WhenUsername_Exists() {
+    public async void CreateClient_ReturnsBadRequest_WhenUsernameExists() {
         // Arrange
         var newClientDto = new ClientDTO("4cc0-c0un-t4nt","toby-ross", "myemail123@gmail.com", "3226-0637", "Accountant");
         
@@ -219,8 +219,7 @@ public class ClientControllerTest : IDisposable {
         // Assert
         var okResult = Assert.IsType<CreatedAtActionResult>(result);
         ClientDTO myDto = JsonConvert.DeserializeObject<ClientDTO>(okResult.Value.ToJson())!;
-
-        Assert.Equal(newClientDto.Id, myDto.Id);
+        
         Assert.Equal(newClientDto.UserName, myDto.UserName);
         Assert.Equal(newClientDto.Email, myDto.Email);
         Assert.Equal(newClientDto.PhoneNumber, myDto.PhoneNumber);

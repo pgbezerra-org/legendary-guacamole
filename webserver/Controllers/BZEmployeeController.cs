@@ -139,9 +139,9 @@ public class BZEmployeeController : ControllerBase {
         var result = await _userManager.CreateAsync(bzemp, password);
 
         if(!result.Succeeded){
-            return StatusCode(500, "Internal Server Error: Register BZEmployee Unsuccessful\n\n" + result.Errors);
+            return StatusCode(500, "Internal Server Error: Register Client Unsuccessful\n\n"+result.Errors);
         }
-        
+
         var roleExists = await _roleManager.RoleExistsAsync(Common.BZE_Role);
         if (!roleExists) {
             await _roleManager.CreateAsync(new IdentityRole(Common.BZE_Role));
