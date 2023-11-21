@@ -5,6 +5,7 @@ using webserver.Models;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.SwaggerUI;
+using System.Reflection;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -35,10 +36,18 @@ builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationSc
 builder.Services.AddAuthorization();
 
 builder.Services.AddEndpointsApiExplorer();
+
 builder.Services.AddSwaggerGen(c => {
     c.SwaggerDoc("api", new OpenApiInfo { Title = "GuacAPI", Version = "v1" });
     c.ResolveConflictingActions(apiDescriptions => apiDescriptions.First());
+
+    // Add XML comments
+    var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
+    var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
+    c.IncludeXmlComments(xmlPath);
+
 });
+
 
 var app = builder.Build();
 

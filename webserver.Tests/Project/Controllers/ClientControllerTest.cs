@@ -5,14 +5,17 @@ using Microsoft.Extensions.Options;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Newtonsoft.Json;
+using NuGet.Protocol;
 using webserver.Data;
 using webserver.Models;
 using webserver.Models.DTOs;
 using webserver.Controllers;
-using Newtonsoft.Json;
-using NuGet.Protocol;
 
 namespace webserver.Tests.Project.Controllers;
+/// <summary>
+/// XUnit tests of the Client ControllerBase class
+/// </summary>
 public class ClientControllerTest : IDisposable {
     
     private readonly WebserverContext _context;
@@ -20,6 +23,12 @@ public class ClientControllerTest : IDisposable {
     private readonly UserManager<Client> userManager;    
     private readonly RoleManager<IdentityRole> roleManager;
 
+    /// <summary>
+    /// BZE_Controller Tests constructor
+    /// Creates a SQLite database for testing
+    /// Also manually creates services that would've been created as singletons in the real project,
+    /// such as Managers, IdentityClasses and DbCOntext
+    /// </summary>
     public ClientControllerTest(){
         var connectionStringBuilder = new SqliteConnectionStringBuilder {
             DataSource = ":memory:"
@@ -57,11 +66,17 @@ public class ClientControllerTest : IDisposable {
         _controller = new ClientController(_context, userManager, roleManager);
     }
 
+    /// <summary>
+    /// Method that MUST be called to free resources when finishing using IDisposable classes
+    /// </summary>
     public void Dispose() {
         _context.Database.EnsureDeleted();
         _context.Dispose();
     }
 
+    /// <summary>
+    /// Tests the ReadClients method, expects a NotFound return since no results are expected to meet the criteria
+    /// </summary>
     [Fact]
     public async void ReadClients_ReturnsNotFound_NoMatchesFound() {
         // Arrannge
@@ -79,6 +94,9 @@ public class ClientControllerTest : IDisposable {
         Assert.IsType<NotFoundResult>(result);
     }
 
+    /// <summary>
+    /// Tests the ReadClients method, expects a result with specific element as it's first element
+    /// </summary>
     [Fact]
     public async void ReadClients_ReturnsOK_MatchesFound() {
         // Arrannge
@@ -109,6 +127,9 @@ public class ClientControllerTest : IDisposable {
         Assert.Equal(expectedDto.PhoneNumber,responseDto[0].PhoneNumber);
     }
 
+    /// <summary>
+    /// Tests the ReadBZEmployees method, expects no result since there are no users in the database
+    /// </summary>
     [Fact]
     public void ReadClient_ReturnsNotFound_WhenUserDoesNotExist() {
         // Arrange
@@ -119,6 +140,9 @@ public class ClientControllerTest : IDisposable {
         Assert.IsType<NotFoundResult>(result);
     }
 
+    /// <summary>
+    /// Tests the Read method for a specific Client, expects a specific returned Client
+    /// </summary>
     [Fact]
     public async void ReadClient_ReturnsOk_WhenUserExists() {
         // Arrange
@@ -141,8 +165,11 @@ public class ClientControllerTest : IDisposable {
         Assert.Equal(newClientDto.Occupation, responseDto.Occupation);
     }
 
+    /// <summary>
+    /// Tests the Create method, expects a Bad Request response since the Email is already registered
+    /// </summary>
     [Fact]
-    public async void RegisterUser_ReturnsBadRequest_WhenEmailExists() {
+    public async void CreateClient_ReturnsBadRequest_WhenEmailExists() {
         // Arrange
         var newClientDto = new ClientDTO("4cc0-c0un-t4nt","toby-ross", "myemail123@gmail.com", "3226-0637", "Accountant");
 
@@ -159,8 +186,11 @@ public class ClientControllerTest : IDisposable {
         Assert.Equal(response.Value, "Email already registered!");
     }
 
+    /// <summary>
+    /// Tests the Create method, expects a Bad Request response since the UserName is already registered
+    /// </summary>
     [Fact]
-    public async void RegisterUser_ReturnsBadRequest_WhenUsername_Exists() {
+    public async void CreateClient_ReturnsBadRequest_WhenUsername_Exists() {
         // Arrange
         var newClientDto = new ClientDTO("4cc0-c0un-t4nt","toby-ross", "myemail123@gmail.com", "3226-0637", "Accountant");
         
@@ -177,8 +207,11 @@ public class ClientControllerTest : IDisposable {
         Assert.Equal(response.Value, "UserName already registered!");
     }
 
+    /// <summary>
+    /// Tests the Create method, expects a Successfull result
+    /// </summary>
     [Fact]
-    public async void RegisterUser_ReturnsCreatedAtAction_WhenClientDoesntExist() {
+    public async void CreateClient_ReturnsCreatedAtAction_WhenClientDoesntExist() {
         // Arrange
         var newClientDto = new ClientDTO("547s-ref6","jordan-belfort", "belford-business@wallstreet.com", "9899344788", "business-manager");
         // Act
@@ -194,6 +227,9 @@ public class ClientControllerTest : IDisposable {
         Assert.Equal(newClientDto.Occupation, myDto.Occupation);
     }
 
+    /// <summary>
+    /// Tests the Update method, expects NotFoundResult since there are no users in the database
+    /// </summary>
     [Fact]
     public async void UpdateClient_ReturnsBadRequest_WhenIdDoesntExist() {
         // Arrange
@@ -205,6 +241,9 @@ public class ClientControllerTest : IDisposable {
         Assert.Equal(response.Value, "Client does not Exist!");
     }
 
+    /// <summary>
+    /// Tests the Update method, expects a Succesfull response with the updated user's data
+    /// </summary>
     [Fact]
     public async void UpdateClient_ReturnsOk_ExistingId() {
         // Arrange
@@ -232,6 +271,9 @@ public class ClientControllerTest : IDisposable {
         Assert.Equal(respondeDto.Occupation, newClientDto.Occupation);
     }
 
+    /// <summary>
+    /// Tests the Delete method, expects a Bad Request since the Id isn't there
+    /// </summary>
     [Fact]
     public async void DeleteClient_ReturnsBadRequest_WhenIdDoesntExist() {
         // Arrange
@@ -243,6 +285,9 @@ public class ClientControllerTest : IDisposable {
         Assert.Equal(response.Value, "Client does not Exist!");
     }
 
+    /// <summary>
+    /// Tests the Delete method, expects a successful response, meaning NoContentResult
+    /// </summary>
     [Fact]
     public async void DeleteClient_ReturnsNoContent_WhenIdExists() {
         // Arrange

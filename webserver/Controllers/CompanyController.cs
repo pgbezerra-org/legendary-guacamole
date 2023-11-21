@@ -9,22 +9,37 @@ using Microsoft.EntityFrameworkCore;
 
 namespace webserver.Controllers;
 
+/// <summary>
+/// Controller class for Company CRUD requests via the HTTP API
+/// Responses are sent only in JSON
+/// </summary>
 [Authorize(Roles=Common.BZE_Role+","+Common.Company_Role)]
 [ApiController]
 [Route("api/v1/company")]
+[Produces("application/json")]
 public class CompanyController : ControllerBase {
     
     private readonly WebserverContext _context;
     private readonly UserManager<Company> _userManager;
     private readonly RoleManager<IdentityRole> _roleManager;
 
+    /// <summary>
+    /// Company API Controller Constructor
+    /// Contains the essential for such Controller: IdentityDbController, UserManager TSpecificIdentityUser and RoleManager TIdentityRole
+    /// </summary>
     public CompanyController(WebserverContext context, UserManager<Company> userManager, RoleManager<IdentityRole> roleManager) {
         _context = context;
         _userManager = userManager;
         _roleManager = roleManager;
     }
 
-    [HttpGet("unique/{id}")]
+    /// <summary>
+    /// Get the Company with the given Id
+    /// </summary>
+    /// <returns>Company of the given User. NotFoundResult if there is none</returns>
+    /// <response code="200">Returns the Company's DTO</response>
+    /// <response code="404">If there is none with the given Id</response>
+    [HttpGet("{id}")]
     public async Task<IActionResult> ReadCompany(string id) {
 
         var company = await _context.Company.FindAsync(id);
@@ -37,8 +52,26 @@ public class CompanyController : ControllerBase {
         return Ok(response);
     }
 
+    /// <summary>
+    /// Get an array of Companies DTO, with optional filters
+    /// </summary>
+    /// <returns>CompanyDTO Array</returns>
+    /// <param name="Country">Filters the Companies by Country of origin</param>
+    /// <param name="State">Filters the Companies by State of origin</param>
+    /// <param name="City">Filters the Companies by City of origin</param>
+    /// <param name="offset">Offsets the result by a given amount</param>
+    /// <param name="limit">Limits the number of results</param>
+    /// <param name="sort">Orders the result by a given field. Does not order if the field does not exist</param>
+    /// <response code="200">Returns an array of Company DTOs</response>
+    /// <response code="404">If no Companies fit the given filters</response>
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<Company>))]
+    [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(string))]
     [HttpGet]
-    public async Task<IActionResult> ReadCompanies(int? offset, int? limit, string? Country, string? State, string? City, string? sort) {
+    public async Task<IActionResult> ReadCompanies(int? offset, int limit, string? Country, string? State, string? City, string? sort) {
+
+        if(limit<1){
+            return BadRequest("Limit parameter must be a natural number greater than 0");
+        }
 
         var companies = _context.Company.AsQueryable();
 
@@ -73,9 +106,7 @@ public class CompanyController : ControllerBase {
         if(offset.HasValue){
             companies = companies.Skip(offset.Value);
         }
-        if(limit.HasValue){
-            companies = companies.Take(limit.Value);
-        }
+        companies = companies.Take(limit);
 
         var resultArray = await companies.ToArrayAsync();
         var resultDtoArray = resultArray.Select(c=>(CompanyDTO)c).ToArray();
@@ -89,6 +120,17 @@ public class CompanyController : ControllerBase {
         return Ok(response);
     }
 
+    /// <summary>
+    /// Creates a Company User
+    /// </summary>
+    /// <returns>The created Company Data</returns>
+    /// <response code="200">CompanyDTO</response>
+    /// <response code="400">In case the Email or Username is already Registered (it will tell which)</response>
+    /// <response code="500">Returns a string with the requirements in the data which weren't filled (weak password, empty fields, etc)</response>
+    /// <response code="500">Returns a string with server-side error(s)</response>
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(Company))]
+    [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(BadRequestObjectResult))]
+    [ProducesResponseType(typeof(ObjectResult), StatusCodes.Status500InternalServerError)]
     [HttpPost]
     public async Task<IActionResult> CreateCompany([FromBody] CompanyDTO companyDto, string password) {
 
@@ -103,7 +145,14 @@ public class CompanyController : ControllerBase {
             return BadRequest("UserName already registered!");
         }
 
-        Company company = (Company)companyDto;
+        Company company = new Company {
+            City = companyDto.City,
+            State = companyDto.State,
+            Country = companyDto.Country,
+            UserName = companyDto.UserName,
+            Email = companyDto.Email,
+            PhoneNumber = companyDto.PhoneNumber
+        }; 
 
         var result = await _userManager.CreateAsync(company, password);
 
@@ -122,6 +171,15 @@ public class CompanyController : ControllerBase {
         }
     }
 
+    /// <summary>
+    /// Updates the Company with the given Id and data
+    /// </summary>
+    /// <returns>Company's DTO with the updated Data</returns>
+    /// <response code="200">CompanydDTO with the updated data</response>
+    /// <response code="400">If a Company with the given Id was not found</response>
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(Company))]
+    [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(BadRequestObjectResult))]
+    [ProducesResponseType(typeof(ObjectResult), StatusCodes.Status500InternalServerError)]
     [HttpPatch]
     public async Task<IActionResult> UpdateCompany([FromBody] CompanyDTO newCompany) {
 
@@ -131,11 +189,11 @@ public class CompanyController : ControllerBase {
         }
 
         existingCompany.UserName = newCompany.UserName;
-        existingCompany.PhoneNumber=newCompany.PhoneNumber;
+        existingCompany.PhoneNumber = newCompany.PhoneNumber;
         
-        existingCompany.City=newCompany.City;
-        existingCompany.State=newCompany.State;
-        existingCompany.Country=newCompany.Country;
+        existingCompany.City = newCompany.City;
+        existingCompany.State = newCompany.State;
+        existingCompany.Country = newCompany.Country;
 
         await _context.SaveChangesAsync();
 
@@ -144,6 +202,15 @@ public class CompanyController : ControllerBase {
         return Ok(response);
     }
 
+    /// <summary>
+    /// Deletes the Company with the given Id
+    /// </summary>
+    /// <returns>NoContent if successfull</returns>
+    /// <response code="200">User was found, and thus deleted</response>
+    /// <response code="400">User not found</response>
+    [ProducesResponseType(StatusCodes.Status204NoContent, Type = typeof(Company))]
+    [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(BadRequestObjectResult))]
+    [ProducesResponseType(typeof(ObjectResult), StatusCodes.Status500InternalServerError)]
     [HttpDelete("id")]
     public async Task<IActionResult> DeleteCompany(string id) {
 
