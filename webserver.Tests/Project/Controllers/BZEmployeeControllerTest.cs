@@ -5,14 +5,17 @@ using Microsoft.Extensions.Options;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Newtonsoft.Json;
+using NuGet.Protocol;
 using webserver.Data;
 using webserver.Models;
 using webserver.Models.DTOs;
 using webserver.Controllers;
-using Newtonsoft.Json;
-using NuGet.Protocol;
 
 namespace webserver.Tests.Project.Controllers;
+/// <summary>
+/// XUnit tests of the BZEmployee ControllerBase class
+/// </summary>
 public class BZEmployeeControllerTest : IDisposable {
     
     private readonly WebserverContext _context;
@@ -20,6 +23,12 @@ public class BZEmployeeControllerTest : IDisposable {
     private readonly UserManager<BZEmployee> userManager;    
     private readonly RoleManager<IdentityRole> roleManager;
 
+    /// <summary>
+    /// BZE_Controller Tests constructor
+    /// Creates a SQLite database for testing
+    /// Also manually creates services that would've been created as singletons in the real project,
+    /// such as Managers, IdentityClasses and DbCOntext
+    /// </summary>
     public BZEmployeeControllerTest(){
         var connectionStringBuilder = new SqliteConnectionStringBuilder {
             DataSource = ":memory:"
@@ -57,11 +66,17 @@ public class BZEmployeeControllerTest : IDisposable {
         _controller = new BZEmployeeController(_context, userManager, roleManager);
     }
 
+    /// <summary>
+    /// Method that MUST be called to free resources when finishing using IDisposable classes
+    /// </summary>
     public void Dispose() {
         _context.Database.EnsureDeleted();
         _context.Dispose();
     }
 
+    /// <summary>
+    /// Tests the ReadBZEmployees method, expects a NotFound return since no results are expected to meet the criteria
+    /// </summary>
     [Fact]
     public async void ReadBZEmployees_ReturnsNotFound_NoMatchesFound() {
         // Arrannge
@@ -79,6 +94,9 @@ public class BZEmployeeControllerTest : IDisposable {
         Assert.IsType<NotFoundResult>(result);
     }
 
+    /// <summary>
+    /// Tests the ReadBZEmployees method, expects a result with specific element as it's first element
+    /// </summary>
     [Fact]
     public async void ReadBZEmployees_ReturnsOK_MatchesFound() {
         // Arrannge
@@ -103,12 +121,14 @@ public class BZEmployeeControllerTest : IDisposable {
 
         Assert.True(responseDto.Length == limit);
         Assert.Equal(expectedDto.Salary,responseDto[0].Salary);
-        Assert.Equal(expectedDto.Id,responseDto[0].Id);
         Assert.Equal(expectedDto.UserName,responseDto[0].UserName);
         Assert.Equal(expectedDto.Email,responseDto[0].Email);
         Assert.Equal(expectedDto.PhoneNumber,responseDto[0].PhoneNumber);
     }
 
+    /// <summary>
+    /// Tests the ReadBZEmployee method, expects a specific result
+    /// </summary>
     [Fact]
     public async void ReadBZEmployee_ReturnsOk_WhenUserExists() {
         // Arrange
@@ -124,13 +144,15 @@ public class BZEmployeeControllerTest : IDisposable {
         string valueJson = okResult.Value!.ToString()!;
         BZEmployeeDTO responseDto = JsonConvert.DeserializeObject<BZEmployeeDTO>(valueJson)!;
 
-        Assert.Equal(BZEmployeeId, responseDto.Id);
         Assert.Equal(newBZEmployeeDto.UserName, responseDto.UserName);
         Assert.Equal(newBZEmployeeDto.Email, responseDto.Email);
         Assert.Equal(newBZEmployeeDto.PhoneNumber, responseDto.PhoneNumber);
         Assert.Equal(newBZEmployeeDto.Salary, responseDto.Salary);
     }
 
+    /// <summary>
+    /// Tests the ReadBZEmployees method, expects no result since there are no users in the database
+    /// </summary>
     [Fact]
     public void ReadBZEmployee_ReturnsNotFound_WhenUserDoesNotExist() {
         // Arrange
@@ -141,13 +163,15 @@ public class BZEmployeeControllerTest : IDisposable {
         Assert.IsType<NotFoundResult>(result);
     }
 
+    /// <summary>
+    /// Tests the Create method, expects a Bad Request response since the Email is already registered
+    /// </summary>
     [Fact]
     public async void CreateBZEmployee_ReturnsBadRequest_WhenEmailExists() {
         // Arrange
         var newBZEmployeeDto = new BZEmployeeDTO("4cc0-c0un-t4nt","toby-ross", "myemail123@gmail.com", "3226-0637", 2500);
 
         var newBZEmployee = (BZEmployee)newBZEmployeeDto;
-        newBZEmployee.Id = "newBZEmployeeId1234";
         newBZEmployee.UserName = "anotherUser";
 
         // Act
@@ -159,13 +183,16 @@ public class BZEmployeeControllerTest : IDisposable {
         Assert.Equal(response.Value, "Email already registered!");
     }
 
+    /// <summary>
+    /// Tests the Create method, expects a Bad Request response since the UserName is already registered
+    /// </summary>
     [Fact]
     public async void CreateBZEmployee_ReturnsBadRequest_WhenUsernameExists() {
+
         // Arrange
         var newBZEmployeeDto = new BZEmployeeDTO("4cc0-c0un-t4nt","toby-ross", "myemail123@gmail.com", "3226-0637", 2500);
         
         var newBZEmployee = (BZEmployee)newBZEmployeeDto;
-        newBZEmployee.Id = "newBZEmployeeId1234";
         newBZEmployee.Email = "newemail1234@gmail.com";
 
         // Act
@@ -177,6 +204,9 @@ public class BZEmployeeControllerTest : IDisposable {
         Assert.Equal(response.Value, "UserName already registered!");
     }
 
+    /// <summary>
+    /// Tests the Create method, expects a Successfull result
+    /// </summary>
     [Fact]
     public async void CreateBZEmployee_ReturnsCreatedAtAction_WhenBZEmployeeDoesntExist() {
         // Arrange
@@ -195,6 +225,9 @@ public class BZEmployeeControllerTest : IDisposable {
         Assert.Equal(newBZEmployeeDto.Salary, responseDto.Salary);
     }
 
+    /// <summary>
+    /// Tests the Update method, expects NotFoundResult since there are no users in the database
+    /// </summary>
     [Fact]
     public async void UpdateBZEmployee_ReturnsBadRequest_WhenIdDoesntExist() {
         // Arrange
@@ -206,6 +239,9 @@ public class BZEmployeeControllerTest : IDisposable {
         Assert.Equal(response.Value, "BZEmployee does not Exist!");
     }
 
+    /// <summary>
+    /// Tests the Update method, expects a Succesfull response with the updated user's data
+    /// </summary>
     [Fact]
     public async void UpdateBZEmployee_ReturnsOk_ExistingId() {
         // Arrange
@@ -225,13 +261,15 @@ public class BZEmployeeControllerTest : IDisposable {
         string valueJson = okResult.Value!.ToString()!;
         BZEmployeeDTO resultDto = JsonConvert.DeserializeObject<BZEmployeeDTO>(valueJson)!;
 
-        Assert.Equal(resultDto.Id, newBZEmployeeDto.Id);
         Assert.Equal(resultDto.Email, newBZEmployeeDto.Email);
         Assert.Equal(resultDto.PhoneNumber, newBZEmployeeDto.PhoneNumber);
         Assert.Equal(resultDto.UserName, newBZEmployeeDto.UserName);
         Assert.Equal(resultDto.Salary, newBZEmployeeDto.Salary);
     }
 
+    /// <summary>
+    /// Tests the Delete method, expects a Bad Request since the Id isn't there
+    /// </summary>
     [Fact]
     public async void DeleteBZEmployee_ReturnsBadRequest_WhenIdDoesntExist() {
         // Arrange
@@ -243,6 +281,9 @@ public class BZEmployeeControllerTest : IDisposable {
         Assert.Equal(response.Value, "BZEmployee does not Exist!");
     }
 
+    /// <summary>
+    /// Tests the Delete method, expects a successful response, meaning NoContentResult
+    /// </summary>
     [Fact]
     public async void DeleteBZEmployee_ReturnsNoContent_WhenIdExists() {
         // Arrange

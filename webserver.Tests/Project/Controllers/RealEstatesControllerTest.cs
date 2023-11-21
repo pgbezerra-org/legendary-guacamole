@@ -1,18 +1,27 @@
-using Microsoft.EntityFrameworkCore;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.Data.Sqlite;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json;
+using webserver.Data;
 using webserver.Models;
 using webserver.Controllers;
-using webserver.Data;
 using webserver.Models.DTOs;
-using Newtonsoft.Json;
 
 namespace webserver.Tests.Project.Controllers;
+/// <summary>
+/// XUnit tests of the RealEstates ControllerBase class
+/// </summary>
 public class RealEstatesControllerTest : IDisposable {
 
     private readonly WebserverContext _context;
     private readonly RealEstatesController _controller;
 
+    /// <summary>
+    /// RealEstatesController Tests constructor
+    /// Creates a SQLite database for testing
+    /// Also manually creates services that would've been created as singletons in the real project,
+    /// such as Managers, IdentityClasses and DbCOntext
+    /// </summary>
     public RealEstatesControllerTest(){
         var connectionStringBuilder = new SqliteConnectionStringBuilder {
             DataSource = ":memory:"
@@ -30,11 +39,17 @@ public class RealEstatesControllerTest : IDisposable {
         _controller = new RealEstatesController(_context);
     }
 
+    /// <summary>
+    /// Method that MUST be called to free resources when finishing using IDisposable classes
+    /// </summary>
     public void Dispose() {
         _context.Database.EnsureDeleted();
         _context.Dispose();
     }
 
+    /// <summary>
+    /// Tests the Create method, expects a Successfull result
+    /// </summary>
     [Fact]
     public async Task CreateRealEstate_ReturnsOkResult_WhenRealEstateDoesNotExist() {
         // Arrange
@@ -58,6 +73,9 @@ public class RealEstatesControllerTest : IDisposable {
         Assert.Equal(responseRealEstate.CompanyId, newRealEstate.CompanyId);
     }
 
+    /// <summary>
+    /// Tests the Create method, expects a Bad Request response since the Real Estate must be Owned by a Registered Company
+    /// </summary>
     [Fact]
     public async Task CreateRealEstate_ReturnsBadRequest_WhenOwnerCompanyNotExists() {
         // Arrange
@@ -69,6 +87,9 @@ public class RealEstatesControllerTest : IDisposable {
         Assert.Equal(response.Value, "Owner Company does Not Exist!");
     }
 
+    /// <summary>
+    /// Tests the ReadRealEstates method, expects a result with specific element as it's first element
+    /// </summary>
     [Fact]
     public async Task ReadRealEstates_ReturnsOkResult_WithValidParameters() {
         //Arrange
@@ -107,6 +128,9 @@ public class RealEstatesControllerTest : IDisposable {
         Assert.Equal(targetEstate.CompanyId, realEstates[0].CompanyId);
     }
 
+    /// <summary>
+    /// Tests the ReadRealEstates method, expects a NotFound return since no results are expected to meet the criteria
+    /// </summary>
     [Fact]
     public async Task ReadRealEstates_ReturnsNotFound_NoMatchesFound() {
         Company comp = new Company("c0mp4=ny55","initialcomp","initialcomp@gmail.com","9832263255","Brazil","RJ","RJ");
@@ -134,6 +158,9 @@ public class RealEstatesControllerTest : IDisposable {
         var result = Assert.IsType<NotFoundResult>(response);
     }
 
+    /// <summary>
+    /// Tests the ReadBZEmployee method, expects a specific result
+    /// </summary>
     [Fact]
     public async Task ReadRealEstate_ReturnsOkResult_WhenRealEstateExists() {
         // Arrange
@@ -142,7 +169,6 @@ public class RealEstatesControllerTest : IDisposable {
         Company comp = new Company("a1b1c1d1","exampleCompany","comp123@gmail.com","9832263255","Brazil","RJ","RJ");
         RealEstate realEstateToRead = new RealEstate("Sesame Street", "Sesame House", 40, "a1b1c1d1");
         realEstateToRead.Id = idToRead;
-        
 
         _context.Company.Add(comp);
         _context.RealEstates.Add(realEstateToRead);
@@ -163,6 +189,9 @@ public class RealEstatesControllerTest : IDisposable {
         Assert.Equal(realEstateToRead.CompanyId, responseRealEstate.CompanyId);
     }
 
+    /// <summary>
+    /// Tests the Update method, expects a Bad Request since the Id is not found
+    /// </summary>
     [Fact]
     public async Task ReadRealEstate_ReturnsNotFound_WhenRealEstateDoesNotExist() {
         // Act
@@ -171,6 +200,9 @@ public class RealEstatesControllerTest : IDisposable {
         Assert.IsType<NotFoundResult>(result);
     }
 
+    /// <summary>
+    /// Tests the Update method, expects a Succesfull response with the updated Real Estate's data
+    /// </summary>
     [Fact]
     public async Task UpdateRealEstate_ReturnsOkResult_WhenRealEstateExists() {
         // Assert
@@ -200,6 +232,9 @@ public class RealEstatesControllerTest : IDisposable {
         Assert.Equal(responseRealEstate.CompanyId, newRealEstate.CompanyId);
     }
 
+    /// <summary>
+    /// Tests the Update method, expects NotFoundResult since there are no users in the database
+    /// </summary>
     [Fact]
     public async Task UpdateRealEstate_ReturnsNotFound_WhenRealEstateDoesNotExist() {
         // Assert
@@ -210,6 +245,9 @@ public class RealEstatesControllerTest : IDisposable {
         var response = Assert.IsType<NotFoundResult>(result);
     }
 
+    /// <summary>
+    /// Tests the Delete method, expects a Bad Request since the Id isn't there
+    /// </summary>
     [Fact]
     public async Task DeleteRealEstate_ReturnsNoContent_WhenRealEstateExists() {
         // Arrange
@@ -230,6 +268,9 @@ public class RealEstatesControllerTest : IDisposable {
         Assert.IsType<NoContentResult>(result);
     }
 
+    /// <summary>
+    /// Tests the Delete method, expects a successful response, meaning NoContentResult
+    /// </summary>
     [Fact]
     public async Task DeleteRealEstate_ReturnsNotFound_WhenRealEstateDoesNotExist() {
         // Act

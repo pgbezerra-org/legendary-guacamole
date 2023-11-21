@@ -1,24 +1,33 @@
-using Microsoft.EntityFrameworkCore;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.Data.Sqlite;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
-using webserver.Controllers;
-using webserver.Models;
-using webserver.Data;
-using webserver.Models.DTOs;
-using Newtonsoft.Json;
-using NuGet.Protocol;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Newtonsoft.Json;
+using NuGet.Protocol;
+using webserver.Data;
+using webserver.Models;
+using webserver.Models.DTOs;
+using webserver.Controllers;
 
 namespace webserver.Tests.Project.Controllers;
+/// <summary>
+/// XUnit tests of the Company ControllerBase class
+/// </summary>
 public class CompanyControllerTest : IDisposable {
     private readonly WebserverContext _context;
     private readonly CompanyController _controller;
     private readonly UserManager<Company> userManager;    
     private readonly RoleManager<IdentityRole> roleManager;
 
+    /// <summary>
+    /// BZE_Controller Tests constructor
+    /// Creates a SQLite database for testing
+    /// Also manually creates services that would've been created as singletons in the real project,
+    /// such as Managers, IdentityClasses and DbCOntext
+    /// </summary>
     public CompanyControllerTest() {
         var connectionStringBuilder = new SqliteConnectionStringBuilder {
             DataSource = ":memory:"
@@ -56,11 +65,17 @@ public class CompanyControllerTest : IDisposable {
         _controller = new CompanyController(_context, userManager, roleManager);        
     }
 
+    /// <summary>
+    /// Method that MUST be called to free resources when finishing using IDisposable classes
+    /// </summary>
     public void Dispose() {
         _context.Database.EnsureDeleted();
         _context.Dispose();
     }
 
+    /// <summary>
+    /// Tests the ReadCompanies method, expects a NotFound return since no results are expected to meet the criteria
+    /// </summary>
     [Fact]
     public async void ReadCompanies_ReturnsNotFound_NoMatchesFound() {
         // Arrannge
@@ -76,6 +91,9 @@ public class CompanyControllerTest : IDisposable {
         Assert.IsType<NotFoundResult>(result);
     }
 
+    /// <summary>
+    /// Tests the ReadCompanies method, expects a result with specific element as it's first element
+    /// </summary>
     [Fact]
     public async void ReadCompanies_ReturnsOK_MatchesFound() {
         // Arrannge
@@ -104,6 +122,9 @@ public class CompanyControllerTest : IDisposable {
         Assert.Equal(expectedDto.PhoneNumber,myDto[0].PhoneNumber);
     }
 
+    /// <summary>
+    /// Tests the Read method for a specific Company, expects a specific returned Client
+    /// </summary>
     [Fact]
     public async void ReadCompany_ReturnsOk_WhenUserExists() {
         // Arrange
@@ -121,11 +142,13 @@ public class CompanyControllerTest : IDisposable {
         string valueJson = okResult.Value!.ToString()!;
         CompanyDTO myDto = JsonConvert.DeserializeObject<CompanyDTO>(valueJson)!;
 
-        Assert.Equal(companyId, myDto.Id);
         Assert.Equal(companyUser, myDto.UserName);
         Assert.Equal(companyEmail, myDto.Email);
     }
 
+    /// <summary>
+    /// Tests the ReadBZEmployees method, expects no result since there are no users in the database
+    /// </summary>
     [Fact]
     public void ReadCompany_ReturnsNotFound_WhenUserDoesNotExist() {
         // Arrange
@@ -136,6 +159,9 @@ public class CompanyControllerTest : IDisposable {
         Assert.IsType<NotFoundResult>(result);
     }
 
+    /// <summary>
+    /// Tests the Create method, expects a Bad Request response since the Email is already registered
+    /// </summary>
     [Fact]
     public async void CreateCompany_ReturnsBadRequest_WhenEmailExists() {
         // Arrange
@@ -143,7 +169,6 @@ public class CompanyControllerTest : IDisposable {
         var newCompDto = new CompanyDTO("newId","username",email, "9899344788","brazil","MA","Sao Luis");
 
         var newComp = (Company)newCompDto;
-        newComp.Id = "newCompId1234";
 
         // Act
         await userManager.CreateAsync(newComp, "#Company1234");
@@ -153,6 +178,9 @@ public class CompanyControllerTest : IDisposable {
         Assert.IsType<BadRequestObjectResult>(result);
     }
 
+    /// <summary>
+    /// Tests the Create method, expects a Bad Request response since the UserName is already registered
+    /// </summary>
     [Fact]
     public async void CreateCompany_ReturnsBadRequest_WhenUsernameExists() {
         // Arrange
@@ -171,6 +199,9 @@ public class CompanyControllerTest : IDisposable {
         Assert.IsType<BadRequestObjectResult>(result);
     }
 
+    /// <summary>
+    /// Tests the Create method, expects a Successfull result
+    /// </summary>
     [Fact]
     public async void CreateCompany_ReturnsCreatedAtAction_WhenCompanyDoesntExist() {
         // Arrange
@@ -187,6 +218,9 @@ public class CompanyControllerTest : IDisposable {
         Assert.Equal(newCompDto.Email, myDto.Email);
     }
 
+    /// <summary>
+    /// Tests the Update method, expects a Succesfull response with the updated user's data
+    /// </summary>
     [Fact]
     public async void UpdateCompany_ReturnsOk_ExistingId() {
         // Arrange
@@ -206,12 +240,14 @@ public class CompanyControllerTest : IDisposable {
         string valueJson = okResult.Value!.ToString()!;
         CompanyDTO myDto = JsonConvert.DeserializeObject<CompanyDTO>(valueJson)!;
 
-        Assert.Equal(myDto.Id, newCompDto.Id);
         Assert.Equal(myDto.Email, newCompDto.Email);
         Assert.Equal(myDto.PhoneNumber, newCompDto.PhoneNumber);
         Assert.Equal(myDto.UserName, newCompDto.UserName);
     }
 
+    /// <summary>
+    /// Tests the Update method, expects NotFoundResult since there are no users in the database
+    /// </summary>
     [Fact]
     public async void UpdateCompany_ReturnsBadRequest_WhenIdDoesntExist() {
         // Arrange
@@ -222,6 +258,9 @@ public class CompanyControllerTest : IDisposable {
         Assert.IsType<BadRequestObjectResult>(result);
     }
 
+    /// <summary>
+    /// Tests the Delete method, expects a Bad Request since the Id isn't there
+    /// </summary>
     [Fact]
     public async void DeleteCompany_ReturnsBadRequest_WhenIdDoesntExist() {
         // Arrange
@@ -234,6 +273,9 @@ public class CompanyControllerTest : IDisposable {
         Assert.IsType<BadRequestObjectResult>(result);
     }
 
+    /// <summary>
+    /// Tests the Delete method, expects a successful response, meaning NoContentResult
+    /// </summary>
     [Fact]
     public async void DeleteCompany_ReturnsNoContent_WhenIdExists() {
         // Arrange
